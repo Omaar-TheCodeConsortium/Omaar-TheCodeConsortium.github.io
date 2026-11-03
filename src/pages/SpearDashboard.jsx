@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const SpearDashboard = () => {
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading] = useState(true);
     const textLetters = Array.from("THE CODE CONSORTIUM");
 
     useEffect(() => {

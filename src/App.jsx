@@ -73,6 +73,7 @@ function LandingPage() {
         setTimeout(() => setFormStatus('idle'), 5000);
       }
     } catch (error) {
+      console.error(error);
       setFormStatus('error');
       setTimeout(() => setFormStatus('idle'), 5000);
     }
