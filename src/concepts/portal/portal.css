@@ -1,0 +1,56 @@
+/* Full-screen layer used while travelling between the library and a concept site. */
+.portal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  visibility: hidden;
+  pointer-events: none;
+  will-change: clip-path, opacity;
+  /* The main site runs at 92% page zoom and concept sites at 100%. The switch happens while this
+     layer is on screen, so its sizes are scaled to look identical on both sides of it. */
+  --portal-scale: 1;
+}
+
+html:not(.concept-root) .portal-overlay {
+  --portal-scale: calc(1 / 0.92);
+}
+
+.portal-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: calc(clamp(20px, 4vw, 56px) * var(--portal-scale));
+}
+
+.portal-meta {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: calc(12px * var(--portal-scale));
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.portal-title {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.25em;
+  font-size: calc(clamp(2.75rem, 10vw, 10rem) * var(--portal-scale));
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.portal-word {
+  display: inline-flex;
+  white-space: nowrap;
+}
+
+/* Each letter rises out of its own mask. */
+.portal-mask {
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.portal-mask > span {
+  display: inline-block;
+}

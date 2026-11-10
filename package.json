@@ -6,14 +6,25 @@
   "homepage": "https://The-Code-Consortium.github.io/landing-page",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && vite build --ssr src/entry-server.jsx --outDir dist-ssr && node scripts/prerender.mjs",
+    "build:preview": "VITE_PREVIEW=1 npm run build",
+    "check:contrast": "node scripts/check-contrast.mjs",
     "lint": "eslint .",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource-variable/big-shoulders": "^5.3.0",
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/hanken-grotesk": "^5.3.0",
+    "@fontsource-variable/newsreader": "^5.3.0",
+    "@fontsource-variable/schibsted-grotesk": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/ibm-plex-sans": "^5.3.0",
+    "@gsap/react": "^2.1.2",
     "framer-motion": "^12.40.0",
+    "gsap": "^3.15.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.17.0"
@@ -31,6 +42,7 @@
     "gh-pages": "^6.3.0",
     "globals": "^17.6.0",
     "postcss": "^8.5.15",
+    "sharp": "^0.35.5",
     "tailwindcss": "^3.4.19",
     "vite": "^8.0.12"
   }

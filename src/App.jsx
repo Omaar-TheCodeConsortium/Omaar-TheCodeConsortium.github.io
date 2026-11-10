@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import BakeryDashboard from './pages/BakeryDashboard';
 import HrisDashboard from './pages/HrisDashboard';
 import BespokeSalon from './pages/BespokeSalon';
@@ -10,6 +10,13 @@ import ShowcaseArchive from './pages/ShowcaseArchive';
 import SpearDashboard from './pages/SpearDashboard';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import PortalProvider from './concepts/portal/PortalProvider.jsx';
+import { CONCEPTS, LIBRARY_PATH } from './concepts/registry.js';
+import { useSeo } from './seo/useSeo.js';
+
+// The concept section is loaded on demand so the main site's bundle does not grow with it.
+const ConceptLibrary = lazy(() => import('./pages/ConceptLibrary.jsx'));
+const conceptRoutes = CONCEPTS.map((concept) => ({ path: concept.path, Page: lazy(concept.load) }));
 
 const MotionLink = motion(Link);
 
@@ -634,19 +641,29 @@ function LandingPage() {
   );
 }
 
+// The router itself is supplied by the caller: BrowserRouter in src/main.jsx,
+// StaticRouter in src/entry-server.jsx when pages are pre-rendered at build time.
 export default function App() {
+  useSeo();
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/project/bakery-os" element={<BakeryDashboard />} />
-        <Route path="/project/hris-command-center" element={<HrisDashboard />} />
-        <Route path="/project/bespoke-salon" element={<BespokeSalon />} />
-        <Route path="/project/spear" element={<SpearDashboard />} />
-        <Route path="/showcase" element={<ShowcaseArchive />} />
-        <Route path="/terms" element={<TermsOfService />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-      </Routes>
-    </Router>
+    <PortalProvider>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/project/bakery-os" element={<BakeryDashboard />} />
+          <Route path="/project/hris-command-center" element={<HrisDashboard />} />
+          <Route path="/project/bespoke-salon" element={<BespokeSalon />} />
+          <Route path="/project/spear" element={<SpearDashboard />} />
+          <Route path="/showcase" element={<ShowcaseArchive />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path={LIBRARY_PATH} element={<ConceptLibrary />} />
+          {conceptRoutes.map(({ path, Page }) => (
+            <Route key={path} path={`${path}*`} element={<Page />} />
+          ))}
+        </Routes>
+      </Suspense>
+    </PortalProvider>
   );
 }

@@ -21,3 +21,16 @@ html {
 ::-webkit-scrollbar-thumb {
   background: #000000;
 }
+
+/* Concept sites are designed at full size, so the main site's page zoom is switched off for them.
+   ConceptShell adds this class on the client; scripts/prerender.mjs adds it to pre-rendered pages. */
+html.concept-root {
+  zoom: 1;
+}
+html.concept-root::-webkit-scrollbar-track {
+  background: transparent;
+  border-left: 0;
+}
+html.concept-root::-webkit-scrollbar-thumb {
+  background: #6b7280;
+}

@@ -1,0 +1,1401 @@
+/* Sunloom International. Everything runs edge to edge: fabric fields the full width of the
+   screen, type sized to the viewport, no centred column, no top bar, no ruled tables. */
+
+@property --dye {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #23408f;
+}
+
+@property --on-dye {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f4efe4;
+}
+
+.sl {
+  --oat: #ede6d8;
+  --oat-deep: #e2d8c5;
+  --ink: #2b2622;
+  --ink-soft: #5f564d;
+  --pad: clamp(18px, 2.6vw, 48px);
+  --serif: 'Newsreader Variable', 'Iowan Old Style', Georgia, serif;
+  --sans: 'Hanken Grotesk Variable', 'Helvetica Neue', Arial, sans-serif;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  background: var(--oat);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: clamp(16px, 1.05vw, 19px);
+  line-height: 1.5;
+  /* Re-dyeing the site is a slow soak, not a switch. */
+  transition:
+    --dye 900ms var(--ease),
+    --on-dye 900ms var(--ease);
+  overflow-x: clip;
+}
+
+.sl ::selection {
+  background: var(--dye);
+  color: var(--on-dye);
+}
+
+.sl :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* Type */
+.sl-display {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-variation-settings: 'opsz' 72;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+  text-wrap: balance;
+}
+
+.sl-display em {
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+}
+
+.sl-serif {
+  font-family: var(--serif);
+  font-variation-settings: 'opsz' 36;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+
+.sl-small {
+  font-size: 0.84rem;
+  letter-spacing: 0.01em;
+}
+
+.sl-soft {
+  color: var(--ink-soft);
+}
+
+.sl-link {
+  display: inline-block;
+  padding-block: 6px;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+  transition: background-size 400ms var(--ease);
+}
+
+.sl-link:hover {
+  background-size: 0 1px;
+  background-position: 100% 100%;
+}
+
+/* Buttons: soft pills, the opposite of a square tab. */
+.sl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  min-height: 54px;
+  padding: 0 30px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 300ms var(--ease),
+    color 300ms var(--ease),
+    transform 120ms cubic-bezier(0, 0, 0.58, 1);
+}
+
+.sl-btn:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--oat);
+}
+
+.sl-btn:active {
+  transform: scale(0.97);
+}
+
+.sl-btn--dye {
+  background: var(--dye);
+  border-color: var(--dye);
+  color: var(--on-dye);
+}
+
+.sl-btn--dye:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--oat);
+}
+
+.sl-btn--on-dye {
+  border-color: var(--on-dye);
+  color: var(--on-dye);
+}
+
+.sl-btn--on-dye:hover {
+  background: var(--on-dye);
+  border-color: var(--on-dye);
+  color: var(--dye);
+}
+
+.sl-btn--ink {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--oat);
+}
+
+.sl-btn--ink:hover {
+  background: var(--dye);
+  border-color: var(--dye);
+  color: var(--on-dye);
+}
+
+.sl-btn--wide {
+  width: 100%;
+}
+
+/* Fabric: a dye colour with threads, grain and folds laid over it. */
+.sl-fabric {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--dye);
+  color: var(--on-dye);
+}
+
+.sl-fabric::before,
+.sl-fabric::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.sl-fabric::before {
+  background-image: var(--sl-slub), var(--sl-warp), var(--sl-weft), var(--sl-grain);
+  background-size:
+    620px 620px,
+    420px 420px,
+    420px 420px,
+    300px 300px;
+  opacity: 0.5;
+}
+
+/* Folds: broad bands of shadow and light, plus a sheen that follows the pointer. */
+.sl-fabric--drape::after {
+  background:
+    radial-gradient(90% 70% at var(--mx, 72%) var(--my, 18%), rgb(255 255 255 / 0.2), transparent 62%),
+    linear-gradient(
+      102deg,
+      rgb(0 0 0 / 0.3) 0%,
+      rgb(0 0 0 / 0) 16%,
+      rgb(255 255 255 / 0.1) 27%,
+      rgb(0 0 0 / 0.02) 39%,
+      rgb(0 0 0 / 0.2) 55%,
+      rgb(0 0 0 / 0) 68%,
+      rgb(255 255 255 / 0.09) 80%,
+      rgb(0 0 0 / 0.26) 100%
+    );
+}
+
+.sl-fabric--flat::after {
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.12), rgb(0 0 0 / 0) 40%, rgb(0 0 0 / 0.14));
+}
+
+.sl-fabric--deep::after {
+  background:
+    radial-gradient(70% 90% at var(--mx, 30%) var(--my, 30%), rgb(255 255 255 / 0.16), transparent 60%),
+    linear-gradient(
+      78deg,
+      rgb(0 0 0 / 0.34) 0%,
+      rgb(0 0 0 / 0.04) 22%,
+      rgb(255 255 255 / 0.12) 34%,
+      rgb(0 0 0 / 0.22) 50%,
+      rgb(0 0 0 / 0.02) 63%,
+      rgb(255 255 255 / 0.1) 74%,
+      rgb(0 0 0 / 0.3) 100%
+    );
+}
+
+/* Picture slots */
+.sl-photo {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--dye);
+}
+
+.sl-photo picture {
+  display: contents;
+}
+
+.sl-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* An off-white product photograph takes the colour of the dye behind it: the first copy
+   multiplies the shadows into the dye, the second lifts the highlights back out. */
+.sl-photo--tint img {
+  filter: grayscale(1) contrast(1.3) brightness(1.1);
+  mix-blend-mode: multiply;
+}
+
+.sl-photo--tint .sl-photo-lift {
+  position: absolute;
+  inset: 0;
+  filter: grayscale(1) contrast(1.2);
+  mix-blend-mode: soft-light;
+  opacity: 0.55;
+}
+
+/* Keeps a caption readable where it sits over a photograph. */
+.sl-panel .sl-photo:has(img)::after,
+.sl-tile .sl-photo:has(img)::after {
+  content: '';
+  position: absolute;
+  inset: 55% 0 0 0;
+  background: linear-gradient(to top, color-mix(in srgb, var(--dye) 55%, rgb(0 0 0 / 0.5)), transparent);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.sl-photo--drawn {
+  display: grid;
+  place-items: center;
+}
+
+/* Folded stack */
+.sl-stack {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  width: min(62%, 440px);
+  filter: drop-shadow(0 26px 30px rgb(0 0 0 / 0.28));
+}
+
+.sl-fold {
+  display: block;
+  width: calc(100% - (var(--i) * 2.5%) + (mod(var(--i), 2) * 4%));
+  aspect-ratio: 5.2 / 1;
+  margin-top: -1%;
+  /* A folded sheet seen from the side: rolled at the fold, square at the open edges. */
+  border-radius: 999px 9px 9px 999px;
+  transform: translateX(calc((mod(var(--i), 3) - 1) * 1.6%));
+  box-shadow:
+    inset 0 -10px 14px rgb(0 0 0 / 0.22),
+    inset 0 8px 10px rgb(255 255 255 / 0.14);
+}
+
+/* The folded edges show as two fine lines along each piece. */
+.sl-fold.sl-fabric--flat::after {
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 0.22), rgb(0 0 0 / 0) 14%),
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.14) 0,
+      rgb(0 0 0 / 0) 30%,
+      rgb(0 0 0 / 0.26) 33%,
+      rgb(0 0 0 / 0) 36%,
+      rgb(0 0 0 / 0) 63%,
+      rgb(0 0 0 / 0.26) 66%,
+      rgb(0 0 0 / 0.1) 69%,
+      rgb(0 0 0 / 0.2) 100%
+    );
+}
+
+/* Swatches */
+.sl-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sl-swatch {
+  --ring: currentColor;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+}
+
+.sl-swatch::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border-radius: 50%;
+  background: var(--swatch);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.14);
+  transition: inset 250ms var(--ease);
+}
+
+.sl-swatch::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 50%;
+  border: 1px solid var(--ring);
+  opacity: 0;
+  transform: scale(0.8);
+  transition:
+    opacity 250ms var(--ease),
+    transform 250ms var(--ease);
+}
+
+.sl-swatch:hover::before {
+  inset: 5px;
+}
+
+.sl-swatch[aria-pressed='true']::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.sl-swatches--lg .sl-swatch {
+  width: 56px;
+  height: 56px;
+}
+
+.sl-swatches--rail {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 4px;
+}
+
+/* Header: no bar. It lies over the page and scrolls away with it. */
+.sl-head {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
+  gap: 20px;
+  padding: calc(var(--pad) * 0.7) var(--pad);
+  color: var(--ink);
+}
+
+/* Where the page opens on fabric, the header takes the dye's text colour: across the whole
+   width, or only over the left-hand picture on a product page. */
+.sl-head[data-over='all'],
+.sl-head[data-over='start'] {
+  color: var(--on-dye);
+}
+
+.sl-head[data-over='start'] .sl-head-end {
+  color: var(--ink);
+}
+
+.sl-head[data-tone='ink'] {
+  color: var(--ink);
+}
+
+@media (max-width: 900px) {
+  .sl-head[data-over='start'] .sl-head-end {
+    color: var(--on-dye);
+  }
+}
+
+.sl-head nav {
+  display: flex;
+  gap: clamp(16px, 2vw, 34px);
+}
+
+.sl-head a,
+.sl-head button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.sl-wordmark {
+  font-family: var(--serif);
+  font-variation-settings: 'opsz' 72;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.7rem, 2.3vw, 2.6rem);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.sl-head-end {
+  justify-self: end;
+  display: flex;
+  gap: clamp(16px, 2vw, 34px);
+}
+
+.sl-head .sl-menu-open {
+  display: none;
+}
+
+@media (max-width: 820px) {
+  .sl-head nav {
+    display: none;
+  }
+
+  .sl-head .sl-menu-open {
+    display: inline-flex;
+  }
+}
+
+/* Once the header has scrolled away, a small dock keeps the menu and the bag in reach. */
+.sl-dock {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--oat);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.22);
+  transform: translateY(-90px);
+  transition: transform 500ms var(--ease);
+}
+
+.sl-dock[data-shown='true'] {
+  transform: none;
+}
+
+.sl-dock a,
+.sl-dock button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.92rem;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 250ms var(--ease);
+}
+
+.sl-dock a:hover,
+.sl-dock button:hover {
+  background: rgb(255 255 255 / 0.14);
+}
+
+.sl-dock .sl-dock-mark {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.25rem;
+  letter-spacing: -0.03em;
+}
+
+/* Full-screen menu */
+.sl-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: calc(var(--pad) * 0.7) var(--pad) var(--pad);
+  overflow-y: auto;
+}
+
+.sl-menu-links {
+  align-self: center;
+  display: grid;
+  gap: 0.05em;
+  font-size: clamp(3.2rem, 11vw, 10.5rem);
+}
+
+.sl-menu-links a {
+  display: block;
+  width: fit-content;
+  transition:
+    transform 500ms var(--ease),
+    opacity 300ms var(--ease);
+}
+
+.sl-menu-links:hover a:not(:hover) {
+  opacity: 0.45;
+}
+
+.sl-menu-links a:hover {
+  transform: translateX(0.12em);
+  font-style: italic;
+}
+
+/* Sections */
+.sl-hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-items: end;
+  color: var(--on-dye);
+}
+
+.sl-hero-media {
+  position: absolute;
+  inset: 0;
+}
+
+.sl-hero-media .sl-photo {
+  width: 100%;
+  height: 100%;
+}
+
+/* The home photograph has a pale wall on the left: the headline sits on it in ink, and the
+   picture is drawn wider than the screen so the bed stays clear of the words. */
+.sl-hero:not(.sl-hero--field):has(.sl-hero-media img) {
+  color: var(--ink);
+}
+
+.sl-hero:not(.sl-hero--field):has(.sl-hero-media img) .sl-rail {
+  color: #f6f1e7;
+}
+
+/* The cloth of the photograph, re-dyed. It is sized and placed exactly as the picture is. */
+.sl-redye {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--dye);
+  background-image: var(--cloth-tall);
+  background-blend-mode: multiply;
+  background-size: cover;
+  background-position: center;
+  -webkit-mask: var(--cloth-tall) center / cover no-repeat;
+  mask: var(--cloth-tall) center / cover no-repeat;
+  opacity: 0;
+  transition:
+    opacity 700ms var(--ease),
+    background-color 900ms var(--ease);
+}
+
+.sl-redye[data-on='true'] {
+  opacity: 1;
+}
+
+@media (min-width: 701px) {
+  .sl-hero:not(.sl-hero--field) .sl-hero-media img {
+    width: 116%;
+    max-width: none;
+    object-position: left 58%;
+  }
+
+  .sl-redye {
+    width: 116%;
+    background-image: var(--cloth);
+    background-position: left 58%;
+    -webkit-mask: var(--cloth) left 58% / cover no-repeat;
+    mask: var(--cloth) left 58% / cover no-repeat;
+  }
+}
+
+.sl-hero:not(.sl-hero--field) .sl-hero-media:has(img)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(240 236 226 / 0.5) 0%, rgb(240 236 226 / 0) 52%);
+}
+
+/* The mill opens on the flax field: words in pale linen over the crop, under an open sky. */
+.sl-hero.sl-hero--field {
+  color: #f6f1e7;
+}
+
+.sl-hero--field .sl-hero-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgb(22 30 20 / 0.72) 0%, rgb(22 30 20 / 0.3) 42%, rgb(22 30 20 / 0) 64%);
+}
+
+.sl-hero.sl-hero--field h1 {
+  font-size: clamp(3.2rem, 10.4vw, 12.5rem);
+  max-width: none;
+}
+
+.sl-hero-body {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: var(--pad);
+  padding: clamp(96px, 9vw, 150px) var(--pad) max(calc(var(--pad) * 1.1), 84px);
+}
+
+.sl-hero h1 {
+  font-size: clamp(3.4rem, min(9.4vw, 20svh), 12rem);
+  max-width: 11ch;
+}
+
+/* Each line is a window its words rise through. The padding gives ascenders, dots and the
+   overhang of italic letters room inside the window; the negative margins take it back. */
+.sl-line {
+  display: block;
+  overflow: hidden;
+  padding: 0.2em 0.12em 0.14em;
+  margin: -0.2em -0.12em -0.14em;
+}
+
+.sl-line > span {
+  display: block;
+}
+
+.sl-rail {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding-bottom: 6px;
+}
+
+.sl-rail-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+.sl-statement {
+  padding: clamp(80px, 13vw, 230px) var(--pad);
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 1.4fr);
+  gap: var(--pad);
+  align-items: end;
+}
+
+.sl-statement p.sl-display {
+  font-size: clamp(2rem, 5.3vw, 6.4rem);
+  line-height: 1;
+  text-wrap: pretty;
+}
+
+/* Lookbook: panels laid end to end, wider than the screen. */
+.sl-look {
+  position: relative;
+  overflow: hidden;
+}
+
+.sl-look-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--pad);
+  padding: clamp(22px, 2.4vw, 40px) var(--pad) clamp(16px, 1.8vw, 28px);
+}
+
+/* Leaves room for the dock, which sits top right while this section is pinned. */
+@media (min-width: 821px) {
+  .sl-look-head {
+    padding-right: 330px;
+  }
+}
+
+.sl-look-head h2 {
+  font-size: clamp(2.2rem, 5.6vw, 6.4rem);
+}
+
+.sl-look-track {
+  display: flex;
+  gap: 6px;
+  padding-inline: var(--pad);
+  width: max-content;
+}
+
+.sl-look[data-native='true'] .sl-look-scroller {
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+
+.sl-look[data-native='true'] .sl-look-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.sl-panel {
+  position: relative;
+  flex: none;
+  width: var(--w, 36vw);
+  height: clamp(380px, calc(100svh - 190px), 900px);
+  scroll-snap-align: start;
+  color: var(--on-dye);
+  overflow: hidden;
+}
+
+.sl-panel .sl-photo {
+  position: absolute;
+  inset: 0;
+  transition: transform 1200ms var(--ease);
+}
+
+.sl-panel:hover .sl-photo {
+  transform: scale(1.035);
+}
+
+.sl-panel-cap {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: clamp(14px, 1.6vw, 26px);
+}
+
+.sl-panel-cap h3 {
+  font-size: clamp(1.5rem, 2.5vw, 2.9rem);
+}
+
+.sl-panel-no {
+  position: absolute;
+  top: clamp(14px, 1.6vw, 26px);
+  left: clamp(14px, 1.6vw, 26px);
+  font-size: 0.84rem;
+}
+
+.sl-panel > a {
+  position: absolute;
+  inset: 0;
+}
+
+@media (max-width: 820px) {
+  .sl-panel {
+    width: 78vw;
+    height: 66vh;
+  }
+}
+
+/* Split screens */
+.sl-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100svh;
+}
+
+.sl-split > * {
+  min-width: 0;
+}
+
+.sl-figures {
+  display: grid;
+  align-content: center;
+  padding: clamp(40px, 6vw, 110px) var(--pad);
+}
+
+.sl-figure {
+  display: grid;
+  grid-template-columns: minmax(0, auto) 1fr;
+  align-items: baseline;
+  column-gap: clamp(14px, 2vw, 34px);
+  padding-block: clamp(6px, 0.8vw, 14px);
+}
+
+.sl-figure dd {
+  font-family: var(--serif);
+  font-variation-settings: 'opsz' 72;
+  font-weight: 300;
+  font-size: clamp(4rem, 10.5vw, 12rem);
+  letter-spacing: -0.05em;
+  line-height: 0.86;
+}
+
+.sl-figure dt {
+  order: 2;
+  max-width: 18ch;
+}
+
+@media (max-width: 820px) {
+  .sl-split {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .sl-split > .sl-photo,
+  .sl-split > .sl-fabric:empty {
+    min-height: 60vh;
+  }
+
+  .sl-statement {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Two rooms side by side, of unequal width */
+.sl-rooms {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 6px;
+  padding-block: 6px;
+}
+
+.sl-room {
+  position: relative;
+  height: clamp(420px, 86svh, 980px);
+  margin: 0;
+  color: #f6f1e7;
+}
+
+.sl-room .sl-photo {
+  position: absolute;
+  inset: 0;
+}
+
+.sl-room .sl-photo::after {
+  content: '';
+  position: absolute;
+  inset: 60% 0 0 0;
+  background: linear-gradient(to top, rgb(20 16 12 / 0.6), transparent);
+}
+
+.sl-room figcaption {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding: clamp(16px, 2vw, 34px) var(--pad);
+}
+
+.sl-room figcaption span {
+  font-size: clamp(1.5rem, 2.6vw, 3rem);
+}
+
+.sl-room figcaption button {
+  min-height: 44px;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 820px) {
+  .sl-rooms {
+    grid-template-columns: 1fr;
+  }
+
+  .sl-room {
+    height: 70svh;
+  }
+}
+
+/* On a phone the home picture is the tall crop: wall above, bed below. The headline takes the
+   wall, the rest sits on the bed. */
+@media (max-width: 700px) {
+  .sl-hero:not(.sl-hero--field) .sl-hero-body {
+    align-self: stretch;
+    align-items: stretch;
+    grid-template-rows: 1fr;
+    min-height: 100svh;
+  }
+
+  .sl-hero:not(.sl-hero--field) .sl-hero-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .sl-hero:not(.sl-hero--field) .sl-rail {
+    align-self: end;
+  }
+
+  .sl-hero:not(.sl-hero--field) .sl-rail-label {
+    display: none;
+  }
+
+  .sl-hero:not(.sl-hero--field) .sl-hero-copy > div {
+    color: #f6f1e7;
+  }
+
+  .sl-hero:not(.sl-hero--field) .sl-hero-media:has(img)::after {
+    background: linear-gradient(to top, rgb(16 22 34 / 0.78) 0%, rgb(16 22 34 / 0.5) 30%, rgb(16 22 34 / 0) 56%);
+  }
+}
+
+/* Wholesale tiers and other giant rows */
+.sl-rows {
+  display: grid;
+}
+
+.sl-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1.3fr);
+  align-items: baseline;
+  gap: var(--pad);
+  padding: clamp(14px, 1.8vw, 30px) var(--pad);
+  transition:
+    background-color 500ms var(--ease),
+    color 500ms var(--ease);
+}
+
+.sl-row:hover {
+  background: var(--dye);
+  color: var(--on-dye);
+}
+
+.sl-row-big {
+  font-size: clamp(3rem, 9vw, 10.5rem);
+}
+
+.sl-row-mid {
+  font-size: clamp(1.5rem, 3.4vw, 4rem);
+}
+
+@media (max-width: 820px) {
+  .sl-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sl-row > :last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Collection grid: tiles of unequal width, flush to the screen edges. */
+.sl-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-rows: min(72vh, 820px);
+  gap: 6px;
+}
+
+.sl-tile {
+  position: relative;
+  grid-column: span var(--span, 6);
+  color: var(--on-dye);
+  overflow: hidden;
+}
+
+.sl-tile .sl-photo {
+  position: absolute;
+  inset: 0;
+  transition: transform 1200ms var(--ease);
+}
+
+.sl-tile:hover .sl-photo {
+  transform: scale(1.035);
+}
+
+.sl-tile > a {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.sl-tile-cap {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 1;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: clamp(14px, 1.6vw, 26px);
+}
+
+.sl-tile-cap h2 {
+  font-size: clamp(1.6rem, 2.9vw, 3.4rem);
+}
+
+.sl-dots {
+  position: absolute;
+  top: clamp(14px, 1.6vw, 26px);
+  right: clamp(14px, 1.6vw, 26px);
+  z-index: 1;
+  display: flex;
+  gap: 5px;
+}
+
+.sl-dots i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.5);
+}
+
+@media (max-width: 820px) {
+  .sl-grid {
+    grid-auto-rows: 64vh;
+  }
+
+  .sl-tile {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Product */
+.sl-product {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  background: color-mix(in srgb, var(--dye) 5%, var(--oat));
+  transition: background-color 900ms var(--ease);
+}
+
+.sl-product-media {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+}
+
+.sl-product-media .sl-photo {
+  width: 100%;
+  height: 100%;
+}
+
+.sl-product-body {
+  padding: clamp(96px, 9vw, 150px) var(--pad) var(--pad);
+  display: grid;
+  gap: clamp(22px, 2.4vw, 38px);
+  align-content: start;
+}
+
+.sl-product-body h1 {
+  font-size: clamp(2.5rem, 4.9vw, 5.8rem);
+}
+
+.sl-choice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  min-height: 54px;
+  padding: 10px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sl-choice input {
+  position: absolute;
+  opacity: 0;
+}
+
+.sl-choice-mark {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  transition: box-shadow 250ms var(--ease);
+}
+
+.sl-choice:has(input:checked) .sl-choice-mark {
+  box-shadow: inset 0 0 0 4px var(--oat), inset 0 0 0 18px var(--dye);
+}
+
+.sl-choice:has(input:focus-visible) {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.sl-qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+}
+
+.sl-qty button {
+  width: 52px;
+  height: 52px;
+  font-size: 1.3rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 120ms cubic-bezier(0, 0, 0.58, 1);
+}
+
+.sl-qty button:active {
+  transform: scale(0.9);
+}
+
+.sl-qty output {
+  min-width: 2.2ch;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.sl-details details {
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+}
+
+.sl-details summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 56px;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 500;
+}
+
+.sl-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.sl-details summary::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(45deg) translate(-3px, -3px);
+  transition: transform 300ms var(--ease);
+}
+
+.sl-details details[open] summary::after {
+  transform: rotate(-135deg) translate(-3px, -3px);
+}
+
+.sl-details details > div {
+  padding-bottom: 20px;
+  color: var(--ink-soft);
+  max-width: 52ch;
+}
+
+.sl-stars {
+  display: inline-flex;
+  gap: 3px;
+  vertical-align: middle;
+}
+
+.sl-stars i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--ink);
+}
+
+.sl-stars i[data-on='true'] {
+  background: var(--ink);
+}
+
+.sl-review {
+  padding-block: 18px;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+@media (max-width: 900px) {
+  .sl-product {
+    grid-template-columns: 1fr;
+  }
+
+  .sl-product-media {
+    position: relative;
+    height: 74svh;
+  }
+
+  .sl-product-body {
+    padding-top: var(--pad);
+  }
+}
+
+/* Mill chapters */
+.sl-chapter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: 92svh;
+}
+
+.sl-chapter:nth-of-type(even) > :first-child {
+  order: 2;
+}
+
+.sl-chapter-body {
+  display: grid;
+  align-content: space-between;
+  gap: var(--pad);
+  padding: clamp(40px, 5vw, 90px) var(--pad);
+}
+
+.sl-chapter-figure {
+  font-size: clamp(6rem, 21vw, 24rem);
+  line-height: 0.78;
+  letter-spacing: -0.06em;
+}
+
+.sl-chapter-media {
+  position: relative;
+  min-height: 56vh;
+}
+
+.sl-chapter-media .sl-photo,
+.sl-chapter-media .sl-fabric {
+  position: absolute;
+  inset: 0;
+}
+
+/* Patterns drawn over the fabric where a chapter has no photograph. */
+.sl-pattern::after {
+  mix-blend-mode: soft-light;
+}
+
+.sl-pattern--stalks::after {
+  background: repeating-linear-gradient(88deg, rgb(255 255 255 / 0.5) 0 2px, transparent 2px 46px),
+    repeating-linear-gradient(93deg, rgb(0 0 0 / 0.35) 0 1px, transparent 1px 71px);
+}
+
+.sl-pattern--yarn::after {
+  background: repeating-linear-gradient(118deg, rgb(255 255 255 / 0.45) 0 3px, transparent 3px 16px);
+}
+
+.sl-pattern--weave::after {
+  background:
+    repeating-linear-gradient(0deg, rgb(0 0 0 / 0.4) 0 2px, transparent 2px 22px),
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.45) 0 2px, transparent 2px 22px);
+}
+
+.sl-pattern--dye::after {
+  background: radial-gradient(60% 60% at 30% 35%, rgb(255 255 255 / 0.55), transparent 70%),
+    radial-gradient(50% 50% at 75% 70%, rgb(0 0 0 / 0.5), transparent 70%);
+}
+
+.sl-pattern--wash::after {
+  background: repeating-radial-gradient(circle at 20% 110%, rgb(255 255 255 / 0.4) 0 2px, transparent 2px 38px);
+}
+
+.sl-pattern--stitch::after {
+  background: repeating-linear-gradient(90deg, rgb(255 255 255 / 0.7) 0 14px, transparent 14px 24px) 0 34% / 100% 2px no-repeat,
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.7) 0 14px, transparent 14px 24px) 0 38% / 100% 2px no-repeat,
+    linear-gradient(180deg, rgb(0 0 0 / 0.3), transparent 36%, rgb(0 0 0 / 0.25) 36.5%, transparent 60%);
+}
+
+@media (max-width: 820px) {
+  .sl-chapter {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .sl-chapter:nth-of-type(even) > :first-child {
+    order: 0;
+  }
+}
+
+/* Forms */
+.sl-field {
+  display: grid;
+  gap: 6px;
+}
+
+.sl-input {
+  width: 100%;
+  min-height: 54px;
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 2vw, 2rem);
+  letter-spacing: -0.02em;
+}
+
+.sl-input::placeholder {
+  color: currentColor;
+  opacity: 0.4;
+}
+
+.sl-input:focus-visible {
+  outline: none;
+  border-bottom-width: 3px;
+}
+
+select.sl-input {
+  appearance: none;
+  cursor: pointer;
+}
+
+/* Bag */
+.sl-bag {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  min-height: 100svh;
+}
+
+.sl-bag-lines {
+  padding: clamp(110px, 10vw, 170px) var(--pad) var(--pad);
+}
+
+.sl-bag-line {
+  display: grid;
+  grid-template-columns: clamp(84px, 11vw, 170px) minmax(0, 1fr) auto;
+  gap: clamp(14px, 2vw, 32px);
+  align-items: center;
+  padding-block: clamp(14px, 1.6vw, 24px);
+  border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.sl-bag-line .sl-fabric {
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+
+.sl-bag-sum {
+  display: grid;
+  align-content: end;
+  gap: 18px;
+  padding: clamp(110px, 10vw, 170px) var(--pad) calc(var(--pad) + 70px);
+}
+
+@media (max-width: 900px) {
+  .sl-bag {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .sl-bag-sum {
+    padding-top: var(--pad);
+  }
+}
+
+/* Footer: the wordmark, as wide as the screen. */
+.sl-foot {
+  padding: clamp(40px, 5vw, 90px) var(--pad) 110px;
+}
+
+.sl-foot-top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 28px var(--pad);
+}
+
+.sl-foot-mark {
+  display: block;
+  margin: clamp(30px, 5vw, 90px) 0 clamp(20px, 2vw, 40px) -0.06em;
+  font-family: var(--serif);
+  font-variation-settings: 'opsz' 72;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 31.5vw;
+  letter-spacing: -0.065em;
+  line-height: 0.74;
+  white-space: nowrap;
+}
+
+.sl-foot-legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px var(--pad);
+  max-width: none;
+  opacity: 0.86;
+}

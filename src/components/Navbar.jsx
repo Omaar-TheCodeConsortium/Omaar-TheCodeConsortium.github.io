@@ -191,6 +191,14 @@ export default function Navbar({ isDarkTheme = false, hideOnScroll = false, them
             Showcase
           </ScrambleLink>
           <ScrambleLink
+            to="/concepts/"
+            isDarkTheme={isDarkTheme}
+            theme={theme}
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            Concepts
+          </ScrambleLink>
+          <ScrambleLink
             to={isHomePage ? "#contact" : "/#contact"}
             onClick={(e) => handleLinkClick(e, 'contact')}
             isDarkTheme={isDarkTheme}
@@ -271,6 +279,18 @@ export default function Navbar({ isDarkTheme = false, hideOnScroll = false, them
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Showcase
+          </Link>
+          <Link
+            className={`font-mono uppercase text-sm transition-colors duration-200 ${isLightFintech
+              ? 'text-slate-600 hover:text-orange-600'
+              : isSalon
+                ? 'text-slate-400 hover:text-white'
+                : isDarkTheme ? 'text-slate-400 hover:text-white' : 'text-gray-500 hover:text-black'
+              }`}
+            to="/concepts/"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            Concepts
           </Link>
           <Link
             className={`font-mono uppercase text-sm transition-colors duration-200 ${isLightFintech

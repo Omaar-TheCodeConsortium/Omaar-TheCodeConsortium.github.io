@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Full-size photo originals; web-ready copies are in src/concepts/*/photos
+photo-originals

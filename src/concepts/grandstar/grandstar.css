@@ -1,0 +1,705 @@
+/* Grandstar Precision. The site borrows its language from engineering drawings:
+   grey drafting paper, navy ink, one red for anything that needs attention. */
+
+.gs {
+  --gs-paper: #e8ebee;
+  --gs-sheet: #f5f6f7;
+  --gs-ink: #101b2d;
+  --gs-ink-2: #3d4a5f;
+  --gs-line: rgb(16 27 45 / 0.22);
+  --gs-line-strong: rgb(16 27 45 / 0.55);
+  --gs-red: #d62b1f;
+  --gs-red-dark: #b32218;
+  --gs-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --gs-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--gs-ink);
+}
+
+.gs-wrap {
+  width: 100%;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+@media (min-width: 768px) {
+  .gs-wrap {
+    padding-inline: 40px;
+  }
+}
+
+/* Type */
+.gs h1,
+.gs h2,
+.gs h3 {
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.gs-h1 {
+  font-size: clamp(2.4rem, 5.6vw, 4.6rem);
+}
+
+.gs-h2 {
+  font-size: clamp(1.7rem, 3.2vw, 2.6rem);
+}
+
+.gs-h3 {
+  font-size: 1.2rem;
+  letter-spacing: -0.005em;
+  line-height: 1.25;
+}
+
+.gs-lede {
+  font-size: clamp(1.1rem, 1.6vw, 1.3rem);
+  line-height: 1.45;
+  color: var(--gs-ink-2);
+  max-width: 56ch;
+}
+
+.gs-muted {
+  color: var(--gs-ink-2);
+}
+
+/* Mono is reserved for data: figures, units, table headings, drawing annotations. */
+.gs-data {
+  font-family: var(--gs-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+.gs-label {
+  font-family: var(--gs-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gs-ink-2);
+}
+
+.gs a.gs-link {
+  text-decoration: underline;
+  text-decoration-color: var(--gs-red);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 200ms var(--gs-ease), color 200ms var(--gs-ease);
+}
+
+.gs a.gs-link:hover {
+  color: var(--gs-red-dark);
+}
+
+/* Buttons: square-shouldered, 44px tall, with press feedback. */
+.gs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1.5px solid var(--gs-ink);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--gs-ink);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 200ms var(--gs-ease),
+    color 200ms var(--gs-ease),
+    border-color 200ms var(--gs-ease),
+    transform 100ms cubic-bezier(0, 0, 0.58, 1);
+}
+
+.gs-btn:hover {
+  background: var(--gs-ink);
+  color: #fff;
+}
+
+.gs-btn:active {
+  transform: scale(0.97);
+}
+
+.gs-btn--primary {
+  background: var(--gs-red);
+  border-color: var(--gs-red);
+  color: #fff;
+}
+
+.gs-btn--primary:hover {
+  background: var(--gs-red-dark);
+  border-color: var(--gs-red-dark);
+}
+
+.gs-btn--light {
+  border-color: #fff;
+  color: #fff;
+}
+
+.gs-btn--light:hover {
+  background: #fff;
+  color: var(--gs-ink);
+}
+
+.gs-btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Header */
+.gs-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgb(232 235 238 / 0.94);
+  border-bottom: 1px solid var(--gs-line-strong);
+  backdrop-filter: saturate(140%) blur(6px);
+}
+
+.gs-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 2px;
+  font-size: 0.95rem;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: border-color 200ms var(--gs-ease);
+}
+
+.gs-nav a:hover {
+  border-bottom-color: var(--gs-line-strong);
+}
+
+.gs-nav a[aria-current='page'] {
+  border-bottom-color: var(--gs-red);
+  font-weight: 500;
+}
+
+.gs-nav-scroll {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.gs-nav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Sheets and tables */
+.gs-sheet {
+  background: var(--gs-sheet);
+  border: 1px solid var(--gs-line-strong);
+}
+
+.gs-rule {
+  border-top: 1px solid var(--gs-line);
+}
+
+.gs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.gs-table caption {
+  text-align: left;
+  padding-bottom: 10px;
+}
+
+.gs-table th,
+.gs-table td {
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--gs-line);
+}
+
+.gs-table thead th {
+  font-family: var(--gs-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gs-ink-2);
+  border-bottom: 1px solid var(--gs-line-strong);
+  white-space: nowrap;
+}
+
+.gs-table tbody th {
+  font-weight: 500;
+}
+
+.gs-table td.gs-num,
+.gs-table th.gs-num {
+  text-align: right;
+  font-family: var(--gs-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.gs-table-scroll {
+  /* Positioned so that visually hidden labels inside the table scroll with it
+     instead of widening the page. */
+  position: relative;
+  overflow-x: auto;
+}
+
+/* Grid items default to min-width: auto, which lets a wide table push the page sideways on phones. */
+.gs .grid > * {
+  min-width: 0;
+}
+
+.gs-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.gs-sort[aria-pressed='true'] {
+  color: var(--gs-ink);
+}
+
+/* Segmented choices and chips */
+.gs-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--gs-line-strong);
+  border-radius: 2px;
+  background: transparent;
+  font: inherit;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition:
+    background-color 200ms var(--gs-ease),
+    color 200ms var(--gs-ease),
+    transform 100ms cubic-bezier(0, 0, 0.58, 1);
+}
+
+.gs-chip:hover {
+  background: rgb(16 27 45 / 0.06);
+}
+
+.gs-chip:active {
+  transform: scale(0.97);
+}
+
+.gs-chip[aria-pressed='true'],
+.gs-chip[aria-checked='true'] {
+  background: var(--gs-ink);
+  border-color: var(--gs-ink);
+  color: #fff;
+}
+
+/* Form controls */
+.gs-field {
+  display: grid;
+  gap: 6px;
+}
+
+.gs-input,
+.gs-select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--gs-line-strong);
+  border-radius: 2px;
+  background: #fff;
+  color: var(--gs-ink);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.gs-input {
+  font-family: var(--gs-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.gs-input:focus-visible,
+.gs-select:focus-visible {
+  outline: 2px solid var(--gs-ink);
+  outline-offset: 1px;
+}
+
+.gs-option {
+  display: grid;
+  gap: 2px;
+  min-height: 44px;
+  padding: 12px 14px;
+  border: 1px solid var(--gs-line-strong);
+  border-radius: 2px;
+  background: #fff;
+  cursor: pointer;
+  transition:
+    border-color 200ms var(--gs-ease),
+    box-shadow 200ms var(--gs-ease),
+    transform 100ms cubic-bezier(0, 0, 0.58, 1);
+}
+
+.gs-option:hover {
+  border-color: var(--gs-ink);
+}
+
+.gs-option:active {
+  transform: scale(0.985);
+}
+
+.gs-option:has(input:checked) {
+  border-color: var(--gs-ink);
+  box-shadow: inset 4px 0 0 var(--gs-red);
+}
+
+.gs-option:has(input:focus-visible) {
+  outline: 2px solid var(--gs-ink);
+  outline-offset: 2px;
+}
+
+.gs-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gs-range {
+  width: 100%;
+  height: 44px;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.gs-range::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--gs-line-strong);
+}
+
+.gs-range::-moz-range-track {
+  height: 2px;
+  background: var(--gs-line-strong);
+}
+
+.gs-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  margin-top: -10px;
+  border: 2px solid var(--gs-ink);
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 100ms cubic-bezier(0, 0, 0.58, 1);
+}
+
+.gs-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--gs-ink);
+  border-radius: 50%;
+  background: #fff;
+}
+
+.gs-range:active::-webkit-slider-thumb {
+  transform: scale(1.15);
+  background: var(--gs-red);
+  border-color: var(--gs-red);
+}
+
+/* Drawings */
+.gs-drawing {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: var(--gs-mono);
+}
+
+.gs-drawing .outline {
+  fill: none;
+  stroke: var(--gs-ink);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+
+.gs-drawing .thin {
+  fill: none;
+  stroke: var(--gs-ink);
+  stroke-width: 0.8;
+}
+
+.gs-drawing .hidden-line {
+  fill: none;
+  stroke: var(--gs-ink);
+  stroke-width: 0.8;
+  stroke-dasharray: 5 3;
+}
+
+.gs-drawing .centre {
+  fill: none;
+  stroke: var(--gs-ink-2);
+  stroke-width: 0.6;
+  stroke-dasharray: 14 3 2 3;
+}
+
+.gs-drawing .dim {
+  fill: none;
+  stroke: var(--gs-red);
+  stroke-width: 0.8;
+}
+
+.gs-drawing .dim-text {
+  fill: var(--gs-red);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.gs-drawing .note {
+  fill: var(--gs-ink-2);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+}
+
+.gs-drawing .arrow {
+  fill: var(--gs-red);
+}
+
+/* Mould section: each region can be highlighted from the legend. */
+.gs-mould .part {
+  transition: opacity 200ms var(--gs-ease);
+}
+
+.gs-mould[data-active] .part {
+  opacity: 0.25;
+}
+
+.gs-mould[data-active='fixed'] .part[data-part='fixed'],
+.gs-mould[data-active='moving'] .part[data-part='moving'],
+.gs-mould[data-active='cavity'] .part[data-part='cavity'],
+.gs-mould[data-active='sprue'] .part[data-part='sprue'],
+.gs-mould[data-active='cooling'] .part[data-part='cooling'],
+.gs-mould[data-active='ejector'] .part[data-part='ejector'],
+.gs-mould[data-active='guide'] .part[data-part='guide'] {
+  opacity: 1;
+}
+
+.gs-legend button {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 4px 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 0;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  border-bottom: 1px solid var(--gs-line);
+  transition: background-color 200ms var(--gs-ease);
+}
+
+.gs-legend button:hover,
+.gs-legend button[aria-pressed='true'] {
+  background: rgb(16 27 45 / 0.05);
+}
+
+.gs-legend button[aria-pressed='true'] .gs-legend-no {
+  background: var(--gs-red);
+  border-color: var(--gs-red);
+  color: #fff;
+}
+
+.gs-legend-no {
+  display: inline-grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border: 1px solid var(--gs-ink);
+  border-radius: 50%;
+  font-family: var(--gs-mono);
+  font-size: 0.75rem;
+}
+
+/* Programme (Gantt) */
+.gs-gantt-row {
+  display: grid;
+  grid-template-columns: minmax(8.5rem, 12rem) 1fr;
+  align-items: center;
+  gap: 16px;
+  min-height: 40px;
+  border-bottom: 1px solid var(--gs-line);
+}
+
+.gs-gantt-track {
+  position: relative;
+  height: 14px;
+  background-image: linear-gradient(to right, var(--gs-line) 1px, transparent 1px);
+  background-size: calc(100% / 6) 100%;
+}
+
+.gs-gantt-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--gs-ink);
+  transform-origin: left center;
+}
+
+.gs-gantt-bar--customer {
+  background: repeating-linear-gradient(135deg, var(--gs-ink-2) 0 2px, transparent 2px 6px);
+  outline: 1px solid var(--gs-ink-2);
+  outline-offset: -1px;
+}
+
+/* Title block: the footer of every page is the drawing's title block. */
+.gs-titleblock {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  border: 1px solid rgb(255 255 255 / 0.35);
+}
+
+.gs-titleblock > div {
+  padding: 10px 14px;
+  border-right: 1px solid rgb(255 255 255 / 0.2);
+  border-bottom: 1px solid rgb(255 255 255 / 0.2);
+  min-width: 0;
+}
+
+.gs-titleblock dt {
+  font-family: var(--gs-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.62);
+}
+
+.gs-titleblock dd {
+  margin-top: 2px;
+  font-family: var(--gs-mono);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 900px) {
+  .gs-titleblock {
+    grid-template-columns: 2.2fr 1.2fr 1fr 1fr 0.8fr 0.8fr;
+  }
+}
+
+/* Details / FAQ */
+.gs-faq details {
+  border-bottom: 1px solid var(--gs-line);
+}
+
+.gs-faq summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 56px;
+  padding: 14px 0;
+  font-weight: 500;
+  font-size: 1.1rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.gs-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.gs-faq summary::after {
+  content: '+';
+  flex: none;
+  font-family: var(--gs-mono);
+  font-size: 1.3rem;
+  line-height: 1;
+  transition: transform 200ms var(--gs-ease);
+}
+
+.gs-faq details[open] summary::after {
+  transform: rotate(45deg);
+  color: var(--gs-red);
+}
+
+.gs-faq details p {
+  max-width: 68ch;
+  padding-bottom: 18px;
+  color: var(--gs-ink-2);
+}
+
+/* Chart */
+.gs-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: var(--gs-mono);
+  overflow: visible;
+}
+
+.gs-chart .grid {
+  stroke: var(--gs-line);
+  stroke-width: 1;
+}
+
+.gs-chart .axis-text {
+  fill: var(--gs-ink-2);
+  font-size: 10px;
+}
+
+.gs-chart .curve-moulding {
+  fill: none;
+  stroke: var(--gs-ink);
+  stroke-width: 2.2;
+}
+
+.gs-chart .curve-printing {
+  fill: none;
+  stroke: var(--gs-ink);
+  stroke-width: 1.6;
+  stroke-dasharray: 5 4;
+}
+
+.gs-chart .marker-line {
+  stroke: var(--gs-red);
+  stroke-width: 1;
+}
+
+.gs-chart .marker-dot {
+  fill: var(--gs-red);
+  stroke: var(--gs-sheet);
+  stroke-width: 2;
+}
+
+.gs-chart .cross-text {
+  fill: var(--gs-ink);
+  font-size: 10.5px;
+}
+
+.gs-note {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  padding: 12px 14px;
+  border-left: 3px solid var(--gs-line-strong);
+  background: rgb(16 27 45 / 0.04);
+  font-size: 0.95rem;
+}
+
+.gs-note--warn,
+.gs-note--stop {
+  border-left-color: var(--gs-red);
+}
+
+.gs-note--stop {
+  background: rgb(214 43 31 / 0.08);
+}

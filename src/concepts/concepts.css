@@ -1,0 +1,81 @@
+/* Base layer shared by every concept site. Each site sets the --c-* variables on its root
+   and adds its own styles on top; nothing here should carry a brand's look. */
+
+.concept {
+  --c-rule: color-mix(in srgb, var(--c-ink) 22%, transparent);
+  --c-muted: color-mix(in srgb, var(--c-ink) 72%, var(--c-paper));
+
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--c-paper);
+  color: var(--c-ink);
+  font-family: var(--c-display);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.concept ::selection {
+  background: var(--c-loud);
+  color: var(--c-on-loud);
+}
+
+.concept :focus-visible {
+  outline: 2px solid var(--c-ink);
+  outline-offset: 3px;
+}
+
+.concept #concept-main:focus {
+  outline: none;
+}
+
+/* The way back to the library. Deliberately in The Code Consortium's voice, not the brand's,
+   so it also works as the visible "this is a concept build" label. */
+.concept-return {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 16px;
+  background: #000;
+  color: #fff;
+  border: 1px solid rgb(255 255 255 / 0.3);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    transform 100ms cubic-bezier(0, 0, 0.58, 1),
+    background-color 200ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    color 200ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.concept-return:hover {
+  background: #fff;
+  color: #000;
+  border-color: #000;
+}
+
+.concept-return:active {
+  transform: scale(0.97);
+}
+
+.concept .concept-return:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px #000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .concept *,
+  .concept *::before,
+  .concept *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
