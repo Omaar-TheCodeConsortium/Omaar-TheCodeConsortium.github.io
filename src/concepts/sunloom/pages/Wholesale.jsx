@@ -15,6 +15,24 @@ const TERMS = [
 const SHOP_TYPES = ['Independent shop', 'Online store', 'Hotel or rental', 'Interior designer', 'Department store or chain'];
 const VOLUMES = ['40 to 199 pieces', '200 to 999 pieces', '1,000 pieces or more', 'Not sure yet'];
 
+// One answer from a short list, shown as a row of pills rather than a drop-down: every option
+// is visible, and the browser's own menu never appears over the fabric.
+function Choices({ legend, name, options }) {
+  return (
+    <fieldset className="sl-choices">
+      <legend>{legend}</legend>
+      <div>
+        {options.map((option, index) => (
+          <label key={option}>
+            <input type="radio" name={name} value={option} defaultChecked={index === 0} />
+            <span>{option}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
 export default function Wholesale() {
   const [sent, setSent] = useState(false);
 
@@ -100,22 +118,8 @@ export default function Wholesale() {
                 <span>Business name</span>
                 <input className="sl-input" name="business" autoComplete="organization" placeholder="Your shop or company" required />
               </label>
-              <label className="sl-field">
-                <span>What kind of business?</span>
-                <select className="sl-input" name="type" defaultValue={SHOP_TYPES[0]}>
-                  {SHOP_TYPES.map((type) => (
-                    <option key={type}>{type}</option>
-                  ))}
-                </select>
-              </label>
-              <label className="sl-field">
-                <span>How much per order?</span>
-                <select className="sl-input" name="volume" defaultValue={VOLUMES[0]}>
-                  {VOLUMES.map((volume) => (
-                    <option key={volume}>{volume}</option>
-                  ))}
-                </select>
-              </label>
+              <Choices legend="What kind of business?" name="type" options={SHOP_TYPES} />
+              <Choices legend="How much per order?" name="volume" options={VOLUMES} />
               <label className="sl-field">
                 <span>Where do you sell?</span>
                 <input className="sl-input" name="country" autoComplete="country-name" placeholder="Country" required />

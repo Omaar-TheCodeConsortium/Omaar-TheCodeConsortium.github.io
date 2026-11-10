@@ -1318,9 +1318,67 @@
   border-bottom-width: 3px;
 }
 
-select.sl-input {
-  appearance: none;
+.sl-choices {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.sl-choices legend {
+  padding: 0;
+  margin-bottom: 12px;
+}
+
+.sl-choices > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sl-choices label {
+  position: relative;
   cursor: pointer;
+}
+
+.sl-choices input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.sl-choices span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 20px;
+  border: 1px solid color-mix(in srgb, currentColor 55%, transparent);
+  border-radius: 999px;
+  transition:
+    background-color 250ms var(--ease),
+    color 250ms var(--ease),
+    border-color 250ms var(--ease),
+    transform 120ms cubic-bezier(0, 0, 0.58, 1);
+}
+
+.sl-choices label:hover span {
+  border-color: currentColor;
+}
+
+.sl-choices label:active span {
+  transform: scale(0.97);
+}
+
+.sl-choices input:checked + span {
+  background: var(--on-dye);
+  border-color: var(--on-dye);
+  color: var(--dye);
+}
+
+.sl-choices input:focus-visible + span {
+  outline: 2px solid var(--on-dye);
+  outline-offset: 3px;
 }
 
 /* Bag */
