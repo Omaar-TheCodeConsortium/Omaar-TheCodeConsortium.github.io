@@ -49,8 +49,8 @@ async function writeCloth(input, output) {
     mask[i] = Math.round(t * t * (3 - 2 * t) * 255);
     grey[i] = Math.min(255, Math.round((0.299 * r + 0.587 * g + 0.114 * b) * 1.6));
   }
-  // Close holes: a short unmasked run with cloth above and below it in the same column is cloth
-  // too (deep shadow in a fold, where the colour test fails).
+  // Close holes: a short, dark, unmasked run with cloth above and below it in the same column is
+  // cloth too (deep shadow in a fold, where the colour test fails).
   const maxGap = Math.round(info.height * 0.14);
   for (let x = 0; x < info.width; x += 1) {
     let lastCloth = -1;
@@ -58,7 +58,11 @@ async function writeCloth(input, output) {
       if (mask[y * info.width + x] < 128) continue;
       const gap = y - lastCloth - 1;
       if (lastCloth >= 0 && gap > 0 && gap <= maxGap) {
-        for (let fill = lastCloth + 1; fill < y; fill += 1) mask[fill * info.width + x] = 255;
+        for (let fill = lastCloth + 1; fill < y; fill += 1) {
+          const at = (fill * info.width + x) * 3;
+          // Only shadow is filled. A bright gap is the wall showing between two folds.
+          if (data[at] + data[at + 1] + data[at + 2] < 300) mask[fill * info.width + x] = 255;
+        }
       }
       lastCloth = y;
     }
