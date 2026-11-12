@@ -20,6 +20,7 @@ const CROPS = {
     'bed-sage': { left: 224, right: 224 },
     'mill-wash': { top: 80, bottom: 80 },
   },
+  grandstar: {},
 };
 
 // Photographs whose blue cloth the site re-dyes. For each, a second file is written with the

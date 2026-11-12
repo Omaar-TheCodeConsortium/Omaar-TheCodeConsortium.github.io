@@ -2,7 +2,7 @@
 
 Last updated 10 November 2026.
 
-**Status:** foundations are built on the `feature/concept-showcase` branch (not merged, not live). Grandstar Precision is built: six pages, a live quote builder and drawings made in code. Sunloom International is built with its 17 photographs in place and is marked live (indexable once deployed). The other four concepts each show a holding page.
+**Status:** foundations are built on the `feature/concept-showcase` branch (not merged, not live). Grandstar Precision is built and was redesigned on 12 November: six pages, full-screen plant photographs with numbered callouts, a rail navigation and a live quote console (photo prompts in `docs/grandstar-shot-list.md`). Sunloom International is built with its 17 photographs in place and is marked live (indexable once deployed). The other four concepts each show a holding page.
 
 ## 1. What we are building
 
@@ -70,7 +70,7 @@ No purple anywhere. Each palette will be tested for text contrast before use; ex
 
 Each site gets its own typefaces, none of them Inter (the main site uses it). Proposals, all free to use:
 
-- **Grandstar Precision:** IBM Plex Sans and Plex Mono
+- **Grandstar Precision:** Mona Sans, set wide and heavy for headings
 - **Sunloom International:** Newsreader with Switzer
 - **Hoxen:** Schibsted Grotesk with Martian Mono
 - **Topforce Sports:** Big Shoulders Display with Archivo

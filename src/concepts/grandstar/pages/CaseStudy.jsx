@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Shot } from '../Shot.jsx';
 import { BASE } from '../site.js';
 
 const FACTS = [
@@ -66,17 +67,13 @@ function FlatnessChart({ view }) {
         <g key={station}>
           {/* Bars are full height and scaled, so the change between views can be animated. */}
           <rect
+            className="bar"
+            data-over={values[index] > SPEC ? '' : undefined}
             x={left + band * index + band * 0.2}
             y={top}
             width={band * 0.6}
             height={plotH}
-            fill={values[index] > SPEC ? '#d62b1f' : '#101b2d'}
-            style={{
-              transformBox: 'fill-box',
-              transformOrigin: 'bottom',
-              transform: `scaleY(${Math.max(values[index] / max, 0.004)})`,
-              transition: 'transform 500ms cubic-bezier(0.25, 0.1, 0.25, 1), fill 300ms linear',
-            }}
+            style={{ transform: `scaleY(${Math.max(values[index] / max, 0.004)})` }}
           />
           <text className="axis-text" x={left + band * index + band / 2} y={height - bottom + 16} textAnchor="middle">
             {station}
@@ -84,7 +81,7 @@ function FlatnessChart({ view }) {
         </g>
       ))}
 
-      <line x1={left} x2={width - right} y1={y(SPEC)} y2={y(SPEC)} stroke="#101b2d" strokeWidth="1.2" strokeDasharray="6 4" />
+      <line x1={left} x2={width - right} y1={y(SPEC)} y2={y(SPEC)} stroke="currentColor" strokeWidth="1.5" strokeDasharray="6 4" />
       <text className="cross-text" x={width - right} y={y(SPEC) - 6} textAnchor="end">
         LIMIT 0.25
       </text>
@@ -103,35 +100,50 @@ export default function CaseStudy() {
 
   return (
     <>
-      <section className="gs-wrap py-12 md:py-20">
-        <p className="gs-label">Case study · E-mobility · 2025</p>
-        <h1 className="gs-h1 mt-4 max-w-[20ch]">A glass-filled lid that would not lie flat.</h1>
-        <p className="gs-lede mt-6">
-          A controller lid has to seal to IP67. This one bowed by 0.61 mm across its seal face, and one part in sixteen
-          failed the leak test. Six weeks after the tool reached us it measured 0.18 mm.
-        </p>
+      <section className="gs-hero gs-on-deep !content-start lg:!content-center">
+        <Shot
+          fill
+          eager
+          name="case-lid"
+          anchor={[0.85, 0.5]}
+          alt="A black glass-filled controller lid lying on a granite surface plate with a steel straight edge across its rim"
+          pins={[{ x: 63, y: 55.5, dir: 'down', len: 7, value: '0.61 mm', text: 'Bow across the seal face, as the tool arrived' }]}
+        />
+        <div className="gs-hero-copy">
+          <p className="gs-k !text-[0.95rem] !text-[color:var(--accent)]">Case study · E-mobility · 2025</p>
+          <h1 className="gs-h1 mt-4 max-w-[13ch]">A glass-filled lid that would not lie flat.</h1>
+          <p className="gs-lede max-w-[44ch]">
+            A controller lid has to seal to IP67. This one bowed by 0.61 mm across its seal face, and one part in sixteen
+            failed the leak test. Six weeks after the tool reached us it measured 0.18 mm.
+          </p>
+        </div>
+      </section>
 
-        <dl className="mt-10 grid grid-cols-2 border-t border-[color:var(--gs-line-strong)] md:grid-cols-3 lg:grid-cols-6">
+      <section aria-labelledby="gs-facts" className="gs-band gs-band--tight">
+        <h2 id="gs-facts" className="sr-only">
+          The job
+        </h2>
+        <dl className="gs-figs gs-figs--6 gs-figs--small">
           {FACTS.map((fact) => (
-            <div key={fact.label} className="border-b border-[color:var(--gs-line)] py-4 pr-4">
-              <dt className="gs-label">{fact.label}</dt>
-              <dd className="mt-1 text-[0.98rem] font-medium leading-snug">{fact.value}</dd>
+            <div key={fact.label} className="border-t-[3px] border-[color:var(--gs-ink)] pt-3">
+              <dt className="gs-k">{fact.label}</dt>
+              <dd className="gs-bar-title mt-1">{fact.value}</dd>
             </div>
           ))}
         </dl>
       </section>
 
-      <section aria-labelledby="gs-flatness" className="border-y border-[color:var(--gs-line-strong)] bg-[var(--gs-sheet)]">
-        <div className="gs-wrap grid items-start gap-10 py-16 md:py-24 lg:grid-cols-[1fr_1.5fr] lg:gap-16">
+      <section aria-labelledby="gs-flatness" className="gs-band gs-on-navy">
+        <div className="grid items-start gap-10 lg:grid-cols-[1fr_1.5fr] lg:gap-16">
           <div>
             <h2 id="gs-flatness" className="gs-h2">
               The bow, measured
             </h2>
-            <p className="gs-muted mt-5 max-w-[44ch]">
+            <p className="gs-lede mt-6 max-w-[44ch]">
               Each bar is the height of the seal face above its datum plane at one of nine stations along the lid.
               Anything above the dashed line leaks.
             </p>
-            <div role="group" aria-label="Choose measurement set" className="mt-7 flex gap-2">
+            <div role="group" aria-label="Choose measurement set" className="mt-8 flex flex-wrap gap-2">
               <button type="button" className="gs-chip" aria-pressed={view === 'before'} onClick={() => setView('before')}>
                 As received
               </button>
@@ -139,122 +151,119 @@ export default function CaseStudy() {
                 After rework
               </button>
             </div>
-            <p className="gs-data mt-6 text-[0.9rem]" aria-live="polite">
-              Peak deviation {Math.max(...PROFILE[view]).toFixed(2)} mm ·{' '}
-              {PROFILE[view].filter((value) => value > SPEC).length} of 9 stations over the limit
-            </p>
+            <dl className="gs-readout mt-8 max-w-[26rem]" aria-live="polite">
+              <div className="!bg-[var(--bar)] !p-[16px_18px_18px]">
+                <dt className="gs-k">Peak deviation</dt>
+                <dd className="!text-[clamp(2.6rem,4.6vw,4.4rem)]">{Math.max(...PROFILE[view]).toFixed(2)} mm</dd>
+              </div>
+              <div className="col-span-2">
+                <dt className="gs-k">Stations over the limit</dt>
+                <dd>{PROFILE[view].filter((value) => value > SPEC).length} of 9</dd>
+              </div>
+            </dl>
           </div>
 
-          <figure className="gs-sheet !bg-white p-4 md:p-6">
+          <figure>
             <FlatnessChart view={view} />
-            <figcaption className="gs-label mt-3 border-t border-[color:var(--gs-line)] pt-3">
-              Fig. 4 · Seal-face deviation, mean of 30 parts, blue-light scan
-            </figcaption>
+            <figcaption className="gs-k mt-4">Seal-face deviation, mean of 30 parts, blue-light scan</figcaption>
           </figure>
         </div>
       </section>
 
-      <section aria-labelledby="gs-what-we-did" className="gs-wrap grid gap-10 py-16 md:py-24 lg:grid-cols-[1fr_1.6fr] lg:gap-16">
-        <div>
+      <section aria-labelledby="gs-what-we-did" className="gs-band">
+        <div className="gs-band-head">
           <h2 id="gs-what-we-did" className="gs-h2">
             Six weeks, two trials
           </h2>
-          <p className="gs-muted mt-5 max-w-[42ch]">
+          <p className="gs-lede">
             The first rework fixed the flatness and created a cosmetic fault. We include it because that is how tool
             development usually goes.
           </p>
         </div>
-        <ol className="border-t border-[color:var(--gs-line-strong)]">
-          {TIMELINE.map((step) => (
-            <li
-              key={step.date}
-              className="grid gap-x-8 gap-y-1 border-b border-[color:var(--gs-line)] py-5 sm:grid-cols-[9.5rem_1fr]"
-            >
-              <p className="gs-data pt-0.5 text-[0.88rem] text-[color:var(--gs-ink-2)]">{step.date}</p>
+        <ol className="gs-bars">
+          {TIMELINE.map((step, index) => (
+            <li key={step.date} className="gs-bar !items-start md:grid-cols-[4.5rem_11rem_1fr]">
+              <p className="gs-bar-fig" aria-hidden="true">
+                {index + 1}
+              </p>
+              <p className="gs-bar-title gs-num md:pt-1">{step.date}</p>
               <div>
                 <h3 className="gs-h3">{step.title}</h3>
-                <p className="gs-muted mt-1 max-w-[62ch]">{step.text}</p>
+                <p className="gs-muted mt-2 max-w-[66ch]">{step.text}</p>
               </div>
             </li>
           ))}
         </ol>
       </section>
 
-      <section aria-labelledby="gs-results" className="border-y border-[color:var(--gs-line-strong)] bg-[var(--gs-sheet)]">
-        <div className="gs-wrap py-16 md:py-24">
+      <section aria-labelledby="gs-results" className="gs-band gs-on-deep">
+        <div className="gs-band-head">
           <h2 id="gs-results" className="gs-h2">
             Results
           </h2>
-          <div className="gs-table-scroll mt-8">
-            <table className="gs-table min-w-[640px]">
-              <caption className="gs-label">Before and after, against the customer’s targets</caption>
-              <thead>
-                <tr>
-                  <th scope="col">Measure</th>
-                  <th scope="col" className="gs-num">
-                    As received
-                  </th>
-                  <th scope="col" className="gs-num">
-                    After rework
-                  </th>
-                  <th scope="col" className="gs-num">
-                    Target
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {RESULTS.map((row) => (
-                  <tr key={row.measure}>
-                    <th scope="row">{row.measure}</th>
-                    <td className="gs-num">{row.before}</td>
-                    <td className="gs-num font-medium">{row.after}</td>
-                    <td className="gs-num text-[color:var(--gs-ink-2)]">{row.target}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <p className="gs-lede">Before and after, against the customer’s targets.</p>
+        </div>
+        <ul className="gs-bars">
+          {RESULTS.map((row) => (
+            <li key={row.measure} className="gs-bar md:grid-cols-[1.5fr_1fr_1.2fr_1fr]">
+              <p className="gs-bar-title">{row.measure}</p>
+              <p className="gs-num text-[color:var(--fg2)]">
+                <span className="gs-k">As received</span>
+                {row.before}
+              </p>
+              <p>
+                <span className="gs-k !text-[color:var(--accent)]">After rework</span>
+                <span className="gs-bar-fig">{row.after}</span>
+              </p>
+              <p className="gs-num">
+                <span className="gs-k">Target</span>
+                {row.target}
+              </p>
+            </li>
+          ))}
+        </ul>
 
-          <div className="mt-12 grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
-            <figure>
-              <blockquote className="text-[clamp(1.25rem,2.2vw,1.7rem)] font-medium leading-[1.3] tracking-[-0.01em]">
-                “We expected to be told the tool was scrap and to pay for a new one. They sent us the scan data, three
-                options with prices, and said which one they would choose. The sink marks on the first trial were
-                annoying, but they told us before we saw the parts.”
-              </blockquote>
-              <figcaption className="gs-muted mt-5">
-                Head of purchasing at the customer, quoted with permission. The company is not named under our NDA.
-              </figcaption>
-            </figure>
-            <dl className="border-t border-[color:var(--gs-line-strong)]">
-              <div className="border-b border-[color:var(--gs-line)] py-4">
-                <dt className="gs-label">Cost of the rework</dt>
-                <dd className="gs-data mt-1 text-2xl font-medium">$4,850</dd>
-              </div>
-              <div className="border-b border-[color:var(--gs-line)] py-4">
-                <dt className="gs-label">Scrap saved each month</dt>
-                <dd className="gs-data mt-1 text-2xl font-medium">468 parts</dd>
-              </div>
-              <div className="border-b border-[color:var(--gs-line)] py-4">
-                <dt className="gs-label">Paid back in</dt>
-                <dd className="gs-data mt-1 text-2xl font-medium">Under 4 months</dd>
-              </div>
-            </dl>
-          </div>
+        <div className="mt-[clamp(48px,6vw,96px)] grid gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-16">
+          <figure>
+            <blockquote className="gs-display !text-[clamp(1.35rem,2.3vw,2.1rem)] !leading-[1.22] !tracking-[-0.015em]" style={{ fontStretch: '110%', fontWeight: 600 }}>
+              “We expected to be told the tool was scrap and to pay for a new one. They sent us the scan data, three
+              options with prices, and said which one they would choose. The sink marks on the first trial were
+              annoying, but they told us before we saw the parts.”
+            </blockquote>
+            <figcaption className="gs-muted mt-6">
+              Head of purchasing at the customer, quoted with permission. The company is not named under our NDA.
+            </figcaption>
+          </figure>
+          <dl className="grid content-start gap-[5px]">
+            <div className="gs-bar">
+              <dt className="gs-k">Cost of the rework</dt>
+              <dd className="gs-bar-fig">$4,850</dd>
+            </div>
+            <div className="gs-bar">
+              <dt className="gs-k">Scrap saved each month</dt>
+              <dd className="gs-bar-fig">468 parts</dd>
+            </div>
+            <div className="gs-bar">
+              <dt className="gs-k">Paid back in</dt>
+              <dd className="gs-bar-fig">Under 4 months</dd>
+            </div>
+          </dl>
         </div>
       </section>
 
-      <section aria-labelledby="gs-next" className="gs-wrap flex flex-col justify-between gap-8 py-16 md:flex-row md:items-end md:py-20">
-        <h2 id="gs-next" className="gs-h2 max-w-[22ch]">
-          Have a tool that is giving you trouble, or a part that needs one?
-        </h2>
-        <div className="flex flex-wrap gap-3">
-          <Link to={`${BASE}quote/`} className="gs-btn gs-btn--primary">
-            Price a part
-          </Link>
-          <Link to={`${BASE}quality/`} className="gs-btn">
-            How we inspect
-          </Link>
+      <section aria-labelledby="gs-next" className="gs-band gs-band--tight gs-on-red">
+        <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+          <h2 id="gs-next" className="gs-h2 max-w-[20ch]">
+            Have a tool that is giving you trouble, or a part that needs one?
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            <Link to={`${BASE}quote/`} className="gs-btn">
+              Price a part
+            </Link>
+            <Link to={`${BASE}quality/`} className="gs-btn">
+              How we inspect
+            </Link>
+          </div>
         </div>
       </section>
     </>

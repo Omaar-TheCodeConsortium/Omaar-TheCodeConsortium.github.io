@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Shot } from '../Shot.jsx';
 import { CERTIFICATIONS, DOCUMENTS, INSPECTION_GATES, QUALITY_FIGURES, TEAM } from '../data.js';
 import { FAQ } from '../faq.js';
 import { BASE } from '../site.js';
@@ -6,52 +7,74 @@ import { BASE } from '../site.js';
 export default function Quality() {
   return (
     <>
-      <section className="gs-wrap py-12 md:py-20">
-        <h1 className="gs-h1 max-w-[18ch]">Checked at four gates. Reported in full.</h1>
-        <p className="gs-lede mt-6">
-          You are buying from the other side of the world and cannot walk the shop floor. So every shipment arrives with
-          the measurements that show it is right, and every problem gets a written answer within a working day.
-        </p>
-      </section>
-
-      <section aria-labelledby="gs-figures-2025" className="border-y border-[color:var(--gs-line-strong)] bg-[var(--gs-sheet)]">
-        <div className="gs-wrap py-14 md:py-20">
-          <h2 id="gs-figures-2025" className="gs-h2">
-            2025 in numbers
-          </h2>
-          <dl className="mt-8 grid border-t border-[color:var(--gs-line-strong)] sm:grid-cols-2">
-            {QUALITY_FIGURES.map((figure) => (
-              <div key={figure.label} className="flex flex-col border-b border-[color:var(--gs-line)] py-6 sm:pr-10">
-                <dt className="gs-label order-1">{figure.label}</dt>
-                <dd className="gs-data order-2 mt-2 text-[clamp(2rem,4vw,3rem)] font-medium leading-none">{figure.value}</dd>
-                <dd className="gs-muted order-3 mt-3 max-w-[44ch] text-[0.95rem]">{figure.note}</dd>
-              </div>
-            ))}
-          </dl>
-          <p className="gs-muted mt-5 text-[0.92rem]">
-            We publish the T1 figure because nobody gets every new tool right first time, and a supplier who claims to is
-            not measuring.
+      <section className="gs-hero gs-hero--right gs-on-navy">
+        <Shot
+          fill
+          eager
+          name="cmm"
+          anchor={[0, 0.6]}
+          alt="The ruby-tipped probe of a coordinate measuring machine touching the rim of a black controller lid held in an aluminium fixture"
+          pins={[
+            { x: 34.5, y: 24, dir: 'left', len: 4, value: '1.5 + L/350 µm', text: 'Zeiss Contura bridge CMM' },
+            { x: 24, y: 64, dir: 'down', len: 6, value: 'Five shots per cavity', text: 'Every drawing dimension, at first article' },
+          ]}
+        />
+        <div className="gs-hero-copy">
+          <h1 className="gs-h1">Checked at four gates. Reported in full.</h1>
+          <p className="gs-lede">
+            You are buying from the other side of the world and cannot walk the shop floor. So every shipment arrives
+            with the measurements that show it is right, and every problem gets a written answer within a working day.
           </p>
         </div>
       </section>
 
-      <section aria-labelledby="gs-gates" className="gs-wrap py-16 md:py-24">
-        <h2 id="gs-gates" className="gs-h2">
-          The four gates
-        </h2>
-        <ol className="mt-10 grid border-t border-[color:var(--gs-line-strong)] md:grid-cols-2 xl:grid-cols-4">
+      <section aria-labelledby="gs-figures-2025" className="gs-band">
+        <div className="gs-band-head">
+          <h2 id="gs-figures-2025" className="gs-h2">
+            2025 in numbers
+          </h2>
+          <p className="gs-lede">
+            We publish the T1 figure because nobody gets every new tool right first time, and a supplier who claims to
+            is not measuring.
+          </p>
+        </div>
+        <dl className="gs-figs gs-figs--4">
+          {QUALITY_FIGURES.map((figure) => {
+            const [value, unit] = figure.value.split(' ');
+            return (
+              <div key={figure.label} className="flex flex-col">
+                <dt className="gs-bar-title order-2 mt-4">{figure.label}</dt>
+                <dd className="gs-fig-value order-1 !text-[clamp(2.4rem,5.2vw,5.4rem)]">
+                  {value}
+                  {unit && <small>{unit}</small>}
+                </dd>
+                <dd className="gs-fig-note order-3 !mt-2">{figure.note}</dd>
+              </div>
+            );
+          })}
+        </dl>
+      </section>
+
+      <section aria-labelledby="gs-gates" className="gs-band gs-on-navy">
+        <div className="gs-band-head">
+          <h2 id="gs-gates" className="gs-h2">
+            The four gates
+          </h2>
+        </div>
+        <ol className="grid gap-[5px] md:grid-cols-2 xl:grid-cols-4">
           {INSPECTION_GATES.map((gate, index) => (
-            <li
-              key={gate.code}
-              className="border-b border-[color:var(--gs-line)] py-7 md:pr-8 xl:border-b-0 xl:border-r xl:pl-8 xl:first:pl-0 xl:last:border-r-0"
-            >
-              <p className="gs-data text-[0.85rem] text-[color:var(--gs-ink-2)]">
-                Gate {index + 1} · {gate.code}
+            <li key={gate.code} className="flex flex-col bg-[var(--bar)] p-[clamp(18px,2vw,30px)]">
+              <p className="gs-days !text-[clamp(3.4rem,5.4vw,5.6rem)]" aria-hidden="true">
+                {index + 1}
               </p>
-              <h3 className="gs-h3 mt-2 text-[1.45rem]">{gate.name}</h3>
-              <ul className="mt-4 grid gap-3 text-[0.97rem]">
+              <h3 className="gs-h3 mt-6 !text-[1.6rem]">
+                <span className="sr-only">Gate {index + 1}: </span>
+                {gate.name}
+              </h3>
+              <p className="gs-k mt-1 !text-[color:var(--accent)]">{gate.code}</p>
+              <ul className="mt-5 grid gap-3 text-[0.97rem] text-[#d5dbe3]">
                 {gate.checks.map((check) => (
-                  <li key={check} className="gs-muted border-t border-[color:var(--gs-line)] pt-3">
+                  <li key={check} className="border-t-2 border-white/20 pt-3">
                     {check}
                   </li>
                 ))}
@@ -61,98 +84,98 @@ export default function Quality() {
         </ol>
       </section>
 
-      <section aria-labelledby="gs-certs" className="border-y border-[color:var(--gs-line-strong)] bg-[var(--gs-sheet)]">
-        <div className="gs-wrap grid gap-12 py-16 md:py-24 lg:grid-cols-[1.7fr_1fr] lg:gap-16">
-          <div>
-            <h2 id="gs-certs" className="gs-h2">
-              Certifications
-            </h2>
-            <div className="gs-table-scroll mt-8">
-              <table className="gs-table min-w-[620px]">
-                <thead>
-                  <tr>
-                    <th scope="col">Standard</th>
-                    <th scope="col">Scope</th>
-                    <th scope="col" className="gs-num">
-                      Held since
-                    </th>
-                    <th scope="col">Valid to</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {CERTIFICATIONS.map((cert) => (
-                    <tr key={cert.standard}>
-                      <th scope="row" className="gs-data whitespace-nowrap">
-                        {cert.standard}
-                      </th>
-                      <td>{cert.scope}</td>
-                      <td className="gs-num">{cert.since}</td>
-                      <td className="gs-data whitespace-nowrap">{cert.valid}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <p className="gs-muted mt-4 text-[0.95rem]">
-              Copies of all four certificates are sent with our first quotation, and you are welcome to audit us in
-              person or by video.
-            </p>
-          </div>
-
-          <div>
-            <h2 className="gs-h3 text-[1.45rem]">What ships with your parts</h2>
-            <ul className="mt-5 border-t border-[color:var(--gs-line-strong)]">
-              {DOCUMENTS.map((doc) => (
-                <li key={doc} className="border-b border-[color:var(--gs-line)] py-3 text-[0.97rem]">
-                  {doc}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section aria-labelledby="gs-people" className="gs-wrap grid gap-10 py-16 md:py-24 lg:grid-cols-[1fr_1.6fr] lg:gap-16">
-        <div>
-          <h2 id="gs-people" className="gs-h2">
-            Who you will deal with
+      <section aria-labelledby="gs-certs" className="gs-band gs-on-sheet">
+        <div className="gs-band-head">
+          <h2 id="gs-certs" className="gs-h2">
+            Certifications
           </h2>
-          <p className="gs-muted mt-5 max-w-[40ch]">
-            Three people answer for your project. You will have their direct lines from the first quotation.
+          <p className="gs-lede">
+            Copies of all four certificates are sent with our first quotation, and you are welcome to audit us in person
+            or by video.
           </p>
         </div>
-        <ul className="border-t border-[color:var(--gs-line-strong)]">
-          {TEAM.map((person) => (
-            <li
-              key={person.name}
-              className="grid gap-x-8 gap-y-1 border-b border-[color:var(--gs-line)] py-4 sm:grid-cols-[12rem_1fr_auto]"
-            >
-              <span className="font-medium">{person.name}</span>
-              <span>{person.role}</span>
-              <span className="gs-muted">{person.note}</span>
+        <ul className="gs-bars">
+          {CERTIFICATIONS.map((cert) => (
+            <li key={cert.standard} className="gs-bar md:grid-cols-[15rem_1fr_8rem_9rem]">
+              <p className="gs-bar-fig gs-num !text-[1.5rem]">{cert.standard}</p>
+              <p>{cert.scope}</p>
+              <p className="gs-num">
+                <span className="gs-k">Held since</span>
+                {cert.since}
+              </p>
+              <p className="gs-num">
+                <span className="gs-k">Valid to</span>
+                {cert.valid}
+              </p>
             </li>
           ))}
         </ul>
       </section>
 
-      <section aria-labelledby="gs-terms" className="border-t border-[color:var(--gs-line-strong)] bg-[var(--gs-sheet)]">
-        <div className="gs-wrap grid gap-10 py-16 md:py-24 lg:grid-cols-[1fr_1.6fr] lg:gap-16">
+      <section aria-labelledby="gs-documents" className="gs-on-deep grid lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+        <div className="lg:relative lg:min-h-[80svh]">
+          <Shot
+            name="lab-bench"
+            className="lg:!absolute lg:inset-0 lg:[&_.gs-shot]:!absolute lg:[&_.gs-shot]:inset-0 lg:[&_.gs-shot]:!aspect-auto"
+            alt="An inspection bench with a digital height gauge, a wooden case of pin gauges, a micrometer and three light-grey controller housings in a row"
+            pins={[
+              { x: 50.5, y: 13, dir: 'right', len: 6, value: 'Height gauge', text: 'Calibrated yearly, checked daily' },
+              { x: 45, y: 76, dir: 'down', len: 4, value: 'Boundary samples', text: 'Kept at the press for cosmetic checks' },
+            ]}
+          />
+        </div>
+        <div className="gs-band !py-[clamp(48px,6vw,96px)] lg:!pl-[clamp(32px,4vw,76px)]">
+          <h2 id="gs-documents" className="gs-h2">
+            What ships with your parts
+          </h2>
+          <ul className="gs-bars mt-10">
+            {DOCUMENTS.map((doc) => (
+              <li key={doc} className="gs-bar">
+                {doc}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section aria-labelledby="gs-people" className="gs-band">
+        <div className="gs-band-head">
+          <h2 id="gs-people" className="gs-h2">
+            Who you will deal with
+          </h2>
+          <p className="gs-lede">
+            Three people answer for your project. You will have their direct lines from the first quotation.
+          </p>
+        </div>
+        <ul className="gs-list-xl gs-list-xl--3">
+          {TEAM.map((person) => (
+            <li key={person.name}>
+              <p className="gs-display !text-[clamp(1.5rem,2.3vw,2.2rem)]">{person.name}</p>
+              <p className="mt-3 font-semibold">{person.role}</p>
+              <p className="gs-muted">{person.note}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section aria-labelledby="gs-terms" className="gs-band gs-on-navy">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.5fr] lg:gap-16">
           <div>
             <h2 id="gs-terms" className="gs-h2">
               Ownership, payment and shipping
             </h2>
-            <p className="gs-muted mt-5 max-w-[40ch]">
+            <p className="gs-lede mt-6 max-w-[40ch]">
               The questions buyers ask before placing a first order with a supplier they have not met.
             </p>
             <Link to={`${BASE}quote/`} className="gs-btn gs-btn--primary mt-8">
               Price a part
             </Link>
           </div>
-          <div className="gs-faq border-t border-[color:var(--gs-line-strong)]">
+          <div className="gs-faq">
             {FAQ.map((item) => (
               <details key={item.question}>
                 <summary>
-                  <h3 className="text-[1.1rem] font-medium tracking-normal">{item.question}</h3>
+                  <h3 className="gs-h3 !text-[1.12rem]">{item.question}</h3>
                 </summary>
                 <p>{item.answer}</p>
               </details>
