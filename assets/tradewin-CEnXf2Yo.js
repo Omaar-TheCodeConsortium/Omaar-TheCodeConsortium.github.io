@@ -1,0 +1,1 @@
+import{L as e,M as t,r as n,t as r}from"./index-CSYP54EZ.js";import{t as i}from"./ConceptShell-D2XpGg29.js";import{t as a}from"./HoldingPage-B28TWSnq.js";var o=t(),s=r.find(e=>e.slug===`tradewin-direct`);function c(){let{pathname:t}=e(),r=n(t)??s;return(0,o.jsx)(i,{concept:r,children:(0,o.jsx)(a,{concept:r})})}export{c as default};

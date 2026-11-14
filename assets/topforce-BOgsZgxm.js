@@ -1,0 +1,1 @@
+import{M as e,t}from"./index-CSYP54EZ.js";import{t as n}from"./ConceptShell-D2XpGg29.js";import{t as r}from"./HoldingPage-B28TWSnq.js";var i=e(),a=t.find(e=>e.slug===`topforce`);function o(){return(0,i.jsx)(n,{concept:a,children:(0,i.jsx)(r,{concept:a})})}export{o as default};
