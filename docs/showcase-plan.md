@@ -2,7 +2,7 @@
 
 Last updated 10 November 2026.
 
-**Status:** foundations are built on the `feature/concept-showcase` branch (not merged, not live). Grandstar Precision is built and was redesigned on 12 November: six pages, full-screen plant photographs with numbered callouts, a rail navigation and a live quote console (photo prompts in `docs/grandstar-shot-list.md`). Sunloom International is built with its 17 photographs in place and is marked live (indexable once deployed). The other four concepts each show a holding page.
+**Status:** foundations are built on the `feature/concept-showcase` branch (not merged, not live). Grandstar Precision is built and was redesigned on 12 November: six pages, full-screen plant photographs with numbered callouts, a rail navigation and a live quote console (photo prompts in `docs/grandstar-shot-list.md`). Sunloom International is built with its 17 photographs in place and is marked live (indexable once deployed). Hoxen is built and marked live: five pages, product cut-outs made by `scripts/cutout-photos.mjs`, a scroll-driven teardown, a configurator and a compatibility checker (photo prompts in `docs/hoxen-shot-list.md`). The other three concepts each show a holding page.
 
 ## 1. What we are building
 

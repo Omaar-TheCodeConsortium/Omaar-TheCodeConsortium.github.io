@@ -21,6 +21,7 @@ const CROPS = {
     'mill-wash': { top: 80, bottom: 80 },
   },
   grandstar: {},
+  hoxen: {},
 };
 
 // Photographs whose blue cloth the site re-dyes. For each, a second file is written with the

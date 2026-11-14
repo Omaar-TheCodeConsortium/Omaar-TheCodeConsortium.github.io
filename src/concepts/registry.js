@@ -12,6 +12,7 @@
 
 import { PAGES as GRANDSTAR_PAGES } from './grandstar/site.js';
 import { PAGES as SUNLOOM_PAGES } from './sunloom/site.js';
+import { PAGES as HOXEN_PAGES } from './hoxen/site.js';
 
 export const LIBRARY_PATH = '/concepts/';
 
@@ -69,13 +70,14 @@ export const CONCEPTS = [
     city: 'Shenzhen, Guangdong',
     coords: '22.54° N, 114.06° E',
     summary:
-      'Phone cases, chargers and cables. Scrolling takes a charger apart layer by layer, with the spec attached to each part.',
+      'Chargers, cables and phone cases. Scrolling takes a charger apart part by part, with the spec attached to each, and a checker picks the right one for your devices.',
     signature: 'Scroll-driven exploded view',
     pages: ['Home', 'Product configurator', 'Compare', 'Compatibility checker', 'Cart'],
     palette: { paper: '#D9DCDF', ink: '#16181C', loud: '#FF5A00', onLoud: '#16181C' },
     display: "'Schibsted Grotesk Variable', 'Helvetica Neue', Arial, sans-serif",
     displayWeight: 700,
-    status: 'planned',
+    status: 'live',
+    routes: HOXEN_PAGES,
     load: () => import('./hoxen/index.jsx'),
   },
   {
