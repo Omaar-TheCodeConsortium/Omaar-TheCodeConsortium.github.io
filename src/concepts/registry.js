@@ -13,6 +13,7 @@
 import { PAGES as GRANDSTAR_PAGES } from './grandstar/site.js';
 import { PAGES as SUNLOOM_PAGES } from './sunloom/site.js';
 import { PAGES as HOXEN_PAGES } from './hoxen/site.js';
+import { PAGES as TOPFORCE_PAGES } from './topforce/site.js';
 
 export const LIBRARY_PATH = '/concepts/';
 
@@ -91,13 +92,14 @@ export const CONCEPTS = [
     city: 'Nantong, Jiangsu',
     coords: '31.98° N, 120.89° E',
     summary:
-      'Dumbbells, plates, racks and kits. Load plates onto a barbell and the total weight and price update as you go.',
+      'Barbells, plates, dumbbells and racks, priced by the kilo. Load plates onto a barbell and the total weight and price update as you go.',
     signature: 'Barbell loader',
-    pages: ['Home', 'Category', 'Product', 'Bundle builder', 'Cart'],
+    pages: ['Home', 'Shop', 'Product', 'Set builder', 'Cart'],
     palette: { paper: '#F1EFE9', ink: '#121212', loud: '#D4F000', onLoud: '#121212' },
     display: "'Big Shoulders Variable', 'Arial Narrow', Impact, sans-serif",
     displayWeight: 800,
     status: 'planned',
+    routes: TOPFORCE_PAGES,
     load: () => import('./topforce/index.jsx'),
   },
   {
