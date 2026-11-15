@@ -570,7 +570,7 @@
   position: absolute;
   inset: auto 0 0;
   display: grid;
-  gap: 6px;
+  justify-items: start;
   max-width: 34rem;
   opacity: 0;
   transform: translateY(10px);
@@ -586,13 +586,33 @@
   pointer-events: auto;
 }
 
-.hx-tear-notes .hx-fig small {
-  margin-left: 0.5em;
-  font-family: 'Schibsted Grotesk Variable', sans-serif;
+/* The figure on one line, what it measures on its own line beneath, then the part's name and text
+   at fixed steps. */
+.hx-tear-figure {
+  display: grid;
+  gap: 10px;
+}
+
+.hx-tear-figure .hx-fig {
+  font-size: clamp(2.6rem, 4.2vw, 4.2rem);
+  white-space: nowrap;
+  /* A monospaced space is as wide as a digit; between a number and its unit that reads as a gap. */
+  word-spacing: -0.28em;
+}
+
+.hx-tear-unit {
   font-size: 0.95rem;
   font-weight: 600;
-  letter-spacing: 0;
+  line-height: 1.3;
   color: var(--hx-ink-2);
+}
+
+.hx-tear-notes .hx-h3 {
+  margin-top: 22px;
+}
+
+.hx-tear-notes .hx-muted {
+  margin-top: 8px;
 }
 
 @media (min-width: 860px) {
@@ -625,12 +645,15 @@
     max-width: 9ch;
   }
 
+  /* Tall enough for the longest note. Each note hangs from the top, so the figure stays in one
+     place from step to step and only the length of the text below it changes. */
   .hx-tear-notes {
     align-self: end;
-    min-height: 13rem;
+    min-height: 15.5rem;
   }
 
   .hx-tear-notes > li {
+    inset: 0 0 auto;
     max-width: 23rem;
   }
 }

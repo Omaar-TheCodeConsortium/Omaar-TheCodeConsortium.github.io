@@ -121,9 +121,8 @@ function Teardown() {
         <ol className="hx-tear-notes">
           {PARTS.map((part, index) => (
             <li key={part.id} data-on={step === index + 1 ? '' : undefined}>
-              <p className="hx-fig">
-                {part.figure}
-                <small>{part.unit}</small>
+              <p className="hx-tear-figure">
+                <span className="hx-fig">{part.figure}</span> <span className="hx-tear-unit">{part.unit}</span>
               </p>
               <h3 className="hx-h3">{part.title}</h3>
               <p className="hx-muted">{part.text}</p>
