@@ -180,7 +180,8 @@ export default function Home() {
       <section className="tf-drop" aria-labelledby="tf-drop-title">
         <Shot
           name="drop"
-          alt="A loaded barbell with black bumper plates bouncing a hand's width off a rubber platform, chalk dust hanging in the air"
+          position="74% 50%"
+          alt="A barbell loaded with black bumper plates, just dropped on a dark platform, in a cloud of white chalk dust"
         />
         <div className="tf-drop-text">
           <h2 id="tf-drop-title" className="tf-h2">
@@ -246,7 +247,7 @@ export default function Home() {
       <section className="tf-origin" aria-labelledby="tf-origin-title">
         <Shot
           name="foundry"
-          alt="Molten iron pouring from a ladle into a row of sand moulds on a foundry floor, throwing sparks"
+          alt="Molten iron pouring from a ladle into a row of moulds on a dark foundry floor, throwing sparks, with a worker in protective clothing standing by"
         />
         <div className="tf-origin-text">
           <h2 id="tf-origin-title" className="tf-h2">

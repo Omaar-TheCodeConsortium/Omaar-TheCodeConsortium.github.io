@@ -6,7 +6,11 @@ import { productPath } from './site.js';
 const files = import.meta.glob('./photos/*.{jpg,webp}', { eager: true, query: '?url', import: 'default' });
 const URLS = Object.fromEntries(Object.entries(files).map(([path, url]) => [path.replace('./photos/', '').replace(/\.[a-z]+$/, ''), url]));
 
-const SIZES = { wide: [2400, 1340], standard: [2400, 1792], square: [1600, 1600], tall: [1200, 1600] };
+// The shape a photograph is asked for in, used for its placeholder until it has been supplied.
+const SIZES = { wide: [2400, 1350], standard: [2368, 1776], tall: [1200, 1600] };
+
+// The real size of each processed photograph, written by scripts/process-photos.mjs.
+const MEASURED = Object.values(import.meta.glob('./photos/sizes.json', { eager: true, import: 'default' }))[0] ?? {};
 
 // Shot number and shape of every photograph, as in the shot list.
 const SHOTS = {
@@ -29,7 +33,7 @@ const SHOTS = {
 // block of the same shape holds its place.
 export function Shot({ name, alt, cut = false, eager = false, className = '', position }) {
   const [number, shape] = SHOTS[name];
-  const [width, height] = SIZES[shape];
+  const [width, height] = MEASURED[name] ?? SIZES[shape];
   const classes = `tf-photo ${cut ? 'tf-photo--cut' : ''} ${className}`;
 
   if (!URLS[name]) {

@@ -6,13 +6,15 @@ Topforce sells barbells, plates, dumbbells, kettlebells, a rack and a bench. The
 
 **The hero needs no photograph.** The first screen is one end of a loaded barbell, drawn in code at the size of the screen, and you load it by tapping plates. Nothing here replaces it. The photographs are for everything below it and for the shop.
 
-Until a photograph is supplied, the site shows a striped block in its place, labelled with the shot number and file name below.
+**Status, 16 November 2026: all 12 are in place.** They were generated with Seedream 5.0 Flash through Higgsfield at 2K, one attempt each, from the prompts below (with the style block or scene line in front, and the product's description from the table written into the prompt). The originals are in `photo-originals/topforce/` and are not committed. To replace one, generate it again, save it under the same name and run the processing step.
+
+If a photograph is missing, the site shows a striped block in its place, labelled with the shot number and file name below.
 
 ## Where each photograph is used
 
 | Shot | Used on | How it is shown |
 |---|---|---|
-| 1 to 8, the products | Shop list, each product's own page, the cart | Whole product, never cropped. Where the frame is a different shape from the picture, the page's black fills the rest, so the picture's background must be truly black |
+| 1 to 8, the products | Shop list, each product's own page, the cart | Whole product, never cropped. The processing step trims each picture to the product, sets its darkest tones to true black and fades its edges, so the backdrop disappears into the page. The cleaner the black in the original, the better this works |
 | 1, 2, 4, 5, 6 | Home page, the five lanes under "Eight products" | A tall slice through the **middle** of the picture, about a third of its width, widening when pointed at. The middle of the frame has to be recognisable on its own |
 | 9, drop | Home page, full screen | Headline and three figures set over the lower left |
 | 10, knurl | Home page, tall panel on the left | Cropped a little at the sides on wide screens |
@@ -27,7 +29,7 @@ The plates drawn in the hero have their weight moulded into the rim. The photogr
 2. Paste the **style block** below at the start of every product prompt (shots 1 to 8), then add the shot's own prompt. The four scenes (shots 9 to 12) have their own short style line.
 3. Generate at the highest resolution Flow offers. The long edge should be at least 2,400 pixels.
 4. Shapes are the ones Flow produces natively: 16:9, 4:3 and 3:4. Do not crop anything.
-5. Save each file with the exact name given, as JPG or PNG, into `photo-originals/topforce/` (not committed), then run `node scripts/process-photos.mjs topforce`. It compresses them into `src/concepts/topforce/photos/`, and the site picks them up by name.
+5. Save each file with the exact name given, as JPG or PNG, into `photo-originals/topforce/` (not committed), then run `node scripts/process-photos.mjs topforce`. It trims and compresses them into `src/concepts/topforce/photos/`, and the site picks them up by name.
 6. Pick the result with the blackest, plainest background. A grey haze, a visible floor line or a pool of light on the floor will show on the page as a pale rectangle round the product.
 
 ## Style block (start every product prompt with this)
@@ -42,7 +44,7 @@ Describe them the same way each time. The yellow-green accent is the brand's one
 |---|---|---|
 | Olympic bar | A straight steel barbell: a black shaft with fine diamond knurling, and a thicker bright chrome sleeve at each end | A thin ring round the bar where the sleeve meets the shaft |
 | Bumper plate | A thick black rubber disc, 45 cm across, with a plain face, one shallow raised band and a bright steel ring at the centre hole | One thin painted ring near the rim, on the face |
-| Change plate | A small, thin steel disc with a centre hole, in a dark black-oxide finish. Three sizes, from a saucer to a side plate | One thin painted ring near the rim |
+| Change plate | A small, thin disc of bright machined steel with a centre hole. Three sizes, from a saucer to a side plate | One thin painted ring near the rim |
 | Hex dumbbell | A short chrome handle with diamond knurling and a six-sided black rubber head at each end | A thin ring where the handle meets each head |
 | Kettlebell | A matte black cast-iron ball with a flat base and a wide loop handle, in a fine powder-coat texture | A band painted round the foot of the handle on each side |
 | Half rack | Four tall black steel uprights with rows of holes, joined at the top, with a pull-up bar across the front and two horizontal safety arms | The two bar hooks |
@@ -75,7 +77,7 @@ All landscape 4:3 except the rack. Start each with the style block.
 ### 3. Steel change plates
 - **File:** `change-plates.jpg`
 - **Shape:** landscape, 4:3
-- **Prompt:** Three small dark steel weight plates of three different sizes lying on the black floor, fanned out and overlapping like a hand of cards, seen from above at an angle. Each has a centre hole and one thin yellow-green ring near its rim. The machining marks on the steel catch the light.
+- **Prompt:** Three small bright machined steel weight plates of three different sizes lying on the black floor, fanned out and overlapping like a hand of cards, seen from above at an angle. Each has a centre hole and one thin yellow-green ring near its rim. The machining marks on the steel catch the light.
 
 ### 4. Hex dumbbells
 - **File:** `dumbbells.jpg`

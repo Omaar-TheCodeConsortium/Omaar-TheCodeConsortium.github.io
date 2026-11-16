@@ -369,9 +369,19 @@
   mix-blend-mode: lighten;
 }
 
-/* The lanes on the home page are the exception: a tall slice through the middle of each. */
-.tf-lane .tf-photo--cut {
-  object-fit: cover;
+/* The lanes on a wide home page are the exception: a tall slice through the middle of each. */
+@media (min-width: 960px) {
+  .tf-lane .tf-photo--cut {
+    object-fit: cover;
+  }
+}
+
+/* Each frame that holds one needs the page's colour behind it, for the picture to be laid on. */
+.tf-lane,
+.tf-shelf-art,
+.tf-prod-stage,
+.tf-cart-art {
+  background: var(--tf-iron);
 }
 
 .tf-photo--todo {

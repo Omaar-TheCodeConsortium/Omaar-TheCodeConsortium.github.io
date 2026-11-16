@@ -98,7 +98,7 @@ export const CONCEPTS = [
     palette: { paper: '#F1EFE9', ink: '#121212', loud: '#D4F000', onLoud: '#121212' },
     display: "'Big Shoulders Variable', 'Arial Narrow', Impact, sans-serif",
     displayWeight: 800,
-    status: 'planned',
+    status: 'live',
     routes: TOPFORCE_PAGES,
     load: () => import('./topforce/index.jsx'),
   },
