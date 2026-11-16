@@ -18,7 +18,67 @@ export const POSTAGE = 3.9;
 export const FREE_POSTAGE_FROM = 35;
 export const DELIVERY_DAYS = [7, 12];
 
-const product = (entry) => ({ ...entry, photo: entry.slug });
+// Buying two or three of one thing takes a share off each of them.
+export const MULTI = [
+  { qty: 2, off: 0.1 },
+  { qty: 3, off: 0.15 },
+];
+
+// A line is running low when the warehouse holds less than this many days of sales.
+export const LOW_DAYS = 14;
+
+// Average rating and how many buyers gave one. The two reviews printed on a product page are a sample.
+const RATED = {
+  'stretch-lids': [4.6, 2318],
+  'bag-clips': [4.7, 3104],
+  'measuring-spoons': [4.8, 1022],
+  'cable-clips': [4.5, 3876],
+  'tech-pouch': [4.7, 811],
+  'phone-stand': [4.6, 1740],
+  'travel-bottles': [4.4, 1493],
+  'packing-cubes': [4.8, 702],
+  'luggage-tags': [4.5, 1911],
+  'night-light': [4.7, 1288],
+  'door-hooks': [4.3, 544],
+  'fabric-shaver': [4.6, 867],
+};
+
+// A pale ground for each product, picked to set off its own colours.
+const TINT = {
+  'stretch-lids': '#d3e9fb',
+  'bag-clips': '#ffeaa8',
+  'measuring-spoons': '#dde6ec',
+  'cable-clips': '#cdf0e7',
+  'tech-pouch': '#d9e3f6',
+  'phone-stand': '#ffe2cf',
+  'travel-bottles': '#ffdbe2',
+  'packing-cubes': '#ffdfc6',
+  'luggage-tags': '#d6f0db',
+  'night-light': '#ffe8c6',
+  'door-hooks': '#ece4d6',
+  'fabric-shaver': '#ffdacd',
+};
+
+// What the in-use photographs show, for the products that have one.
+const USE_ALT = {
+  'stretch-lids': 'The coloured lids stretched over a glass salad bowl, two ceramic bowls, a steel mixing bowl and a jar on a kitchen worktop',
+  'cable-clips': 'The coloured cable clips stuck along the edge of a desk, holding charging cables beside a laptop',
+  'bag-clips': 'The coloured clips sealing open bags of coffee, pasta and crisps on a pantry shelf',
+  'night-light': 'The dome night light glowing on a bedside table in a dark bedroom',
+  'packing-cubes': 'The three blue packing cubes filled with folded clothes in an open suitcase',
+  'travel-bottles': 'The four coloured travel bottles in a clear wash bag on a bathroom shelf',
+};
+
+// `photo` is the studio picture; `use` is the same product in someone's home, where one has been shot.
+const product = (entry) => ({
+  ...entry,
+  photo: entry.slug,
+  use: `${entry.slug}-use`,
+  useAlt: USE_ALT[entry.slug] ?? '',
+  tint: TINT[entry.slug],
+  rating: RATED[entry.slug][0],
+  ratings: RATED[entry.slug][1],
+});
 
 export const PRODUCTS = [
   product({
@@ -27,7 +87,7 @@ export const PRODUCTS = [
     category: 'kitchen',
     name: 'Stretch lids',
     pack: 'Set of 5',
-    alt: 'Five round bottle-green silicone lids in graduated sizes, overlapping in a fan',
+    alt: 'Five round silicone lids in graduated sizes, in sky blue, yellow, coral, mint and orange, overlapping in a fan',
     blurb: 'Five silicone lids that stretch over bowls, tins and half a melon, from 9 to 21 cm.',
     retail: 6.9,
     trade: [2.38, 2.12, 1.89],
@@ -52,9 +112,9 @@ export const PRODUCTS = [
     sku: 'TW-K-1077',
     category: 'kitchen',
     name: 'Bag clips',
-    pack: '11 clips: 5 green, 6 coral',
-    alt: 'Eleven plastic bag sealing clips in a row, alternating bottle green and coral',
-    blurb: 'Eleven 11 cm clips that shut a bag of rice, coffee or frozen peas with one squeeze.',
+    pack: 'Mixed pack, six colours',
+    alt: 'A fan of plastic bag sealing clips in red, pink, green, yellow, blue and orange, in three lengths',
+    blurb: 'Clips in three lengths that shut a bag of rice, coffee or frozen peas with one squeeze.',
     retail: 4.9,
     trade: [1.42, 1.26, 1.12],
     carton: 96,
@@ -63,12 +123,12 @@ export const PRODUCTS = [
     sold: 5108,
     made: 'ABS plastic, steel spring',
     specs: [
-      ['Length', '11 cm'],
+      ['Lengths', '11, 15 and 19 cm'],
       ['Grips', 'Bags up to 10 cm wide'],
       ['Freezer safe', 'Yes, to -20 °C'],
     ],
     reviews: [
-      { name: 'Ingrid Solberg', place: 'Bergen', stars: 4, text: 'Strong spring. I would have liked two long ones for cereal bags.' },
+      { name: 'Ingrid Solberg', place: 'Bergen', stars: 4, text: 'Strong spring. The short ones are no use on a cereal bag, the long ones are perfect.' },
       { name: 'Paul Emmerson', place: 'Leeds', stars: 5, text: 'Bought to reach free postage. Now the most used thing in the kitchen.' },
     ],
   }),
@@ -77,24 +137,24 @@ export const PRODUCTS = [
     sku: 'TW-K-1113',
     category: 'kitchen',
     name: 'Measuring spoons',
-    pack: 'Set of 4',
-    alt: 'Four bottle-green measuring spoons with cream handles, fanned out',
-    blurb: 'Four deep spoons, from a quarter teaspoon to a tablespoon, that nest into one.',
+    pack: 'Set of 3',
+    alt: 'Three polished stainless steel measuring spoons on a ring, fanned out',
+    blurb: 'Three deep steel spoons on a ring: a teaspoon, a half tablespoon and a tablespoon.',
     retail: 8.4,
     trade: [2.95, 2.66, 2.38],
     carton: 60,
     grams: 96,
     stock: 9360,
     sold: 1844,
-    made: 'Polypropylene, BPA free',
+    made: 'Stainless steel, grade 304',
     specs: [
-      ['Sizes', '1.25, 5, 7.5 and 15 ml'],
-      ['Handle', '11 cm, hanging hole'],
+      ['Sizes', '5, 7.5 and 15 ml'],
+      ['Handle', '11 cm, on a split ring'],
       ['Wash', 'Dishwasher safe'],
     ],
     reviews: [
       { name: 'Aoife Brennan', place: 'Cork', stars: 5, text: 'Deep enough that vanilla does not spill on the way to the bowl.' },
-      { name: 'Jonas Richter', place: 'Leipzig', stars: 4, text: 'Good. The sizes are moulded in, not printed, so they will not wash off.' },
+      { name: 'Jonas Richter', place: 'Leipzig', stars: 4, text: 'Good. The sizes are stamped in, not printed, so they will not wash off.' },
     ],
   }),
   product({
@@ -103,7 +163,7 @@ export const PRODUCTS = [
     category: 'desk',
     name: 'Cable clips',
     pack: 'Pack of 6',
-    alt: 'Six round coral silicone cable clips in two rows of three',
+    alt: 'Six silicone cable clips in a row, in yellow, teal, coral, navy, orange and grey, with a black cable running through them',
     blurb: 'Six stick-on clips that hold a charging cable at the edge of the desk, not under it.',
     retail: 5.6,
     trade: [1.48, 1.31, 1.17],
@@ -128,7 +188,7 @@ export const PRODUCTS = [
     category: 'desk',
     name: 'Cable pouch',
     pack: 'One pouch',
-    alt: 'A flat bottle-green zipped fabric pouch with a coral zip pull',
+    alt: 'A mustard-yellow zipped pouch lying open, with a white cable, a black charger and earbuds held in its elastic loops',
     blurb: 'A 22 cm zipped pouch with five elastic loops, for the chargers that live in your bag.',
     retail: 11.9,
     trade: [4.36, 3.92, 3.51],
@@ -153,7 +213,7 @@ export const PRODUCTS = [
     category: 'desk',
     name: 'Folding phone stand',
     pack: 'One stand',
-    alt: 'A small bottle-green folding phone stand, opened',
+    alt: 'A sky-blue aluminium folding phone stand with black pads, opened',
     blurb: 'Folds to 9 cm, opens to any angle and holds a phone or a small tablet at eye height.',
     retail: 7.8,
     trade: [2.54, 2.27, 2.03],
@@ -161,7 +221,7 @@ export const PRODUCTS = [
     grams: 92,
     stock: 14720,
     sold: 2981,
-    made: 'ABS plastic, silicone pads, steel hinges',
+    made: 'Anodised aluminium, silicone pads',
     specs: [
       ['Folded', '9 × 7 × 2 cm'],
       ['Holds', 'Devices 4 to 11 inches'],
@@ -178,7 +238,7 @@ export const PRODUCTS = [
     category: 'travel',
     name: 'Travel bottles',
     pack: 'Set of 4',
-    alt: 'Four small silicone travel bottles with flip caps, two green and two coral',
+    alt: 'Four squeezable travel bottles with white flip caps, in pink, turquoise, green and orange, standing in a row',
     blurb: 'Four squeezable 89 ml bottles, under the cabin limit, with caps that do not leak.',
     retail: 9.2,
     trade: [3.12, 2.8, 2.49],
@@ -203,7 +263,7 @@ export const PRODUCTS = [
     category: 'travel',
     name: 'Packing cubes',
     pack: 'Set of 3',
-    alt: 'Three bottle-green zipped packing cubes in three sizes, side by side',
+    alt: 'Three cobalt-blue zipped packing cubes with mesh tops and orange zip pulls, stacked from large to small',
     blurb: 'Three zipped cubes that turn a suitcase into drawers: shirts, underwear, everything else.',
     retail: 13.5,
     trade: [5.08, 4.55, 4.07],
@@ -227,7 +287,7 @@ export const PRODUCTS = [
     category: 'travel',
     name: 'Luggage tags',
     pack: 'Pair',
-    alt: 'Two silicone luggage tags with loops, one coral and one bottle green',
+    alt: 'Two silicone luggage tags with steel loops, one red and one yellow',
     blurb: 'Two bright silicone tags with a covered address card and a loop that will not snap.',
     retail: 5.2,
     trade: [1.38, 1.22, 1.09],
@@ -252,7 +312,7 @@ export const PRODUCTS = [
     category: 'home',
     name: 'Motion night light',
     pack: 'One light',
-    alt: 'A small round cream night light with a bottle-green rim',
+    alt: 'A small dome-shaped night light glowing warm amber on a round beech base',
     blurb: 'Lights the way to the bathroom when you walk past, then switches itself off after 20 seconds.',
     retail: 12.4,
     trade: [4.62, 4.15, 3.71],
@@ -260,7 +320,7 @@ export const PRODUCTS = [
     grams: 74,
     stock: 8256,
     sold: 2076,
-    made: 'ABS plastic, CE and RoHS marked',
+    made: 'Silicone dome, beech base, CE and RoHS marked',
     specs: [
       ['Senses movement at', 'Up to 3 m, 120 degrees'],
       ['Battery', '600 mAh, about 45 days a charge'],
@@ -278,15 +338,15 @@ export const PRODUCTS = [
     category: 'home',
     name: 'Over-door hook rail',
     pack: 'One rail, 5 hooks',
-    alt: 'A bottle-green steel over-door rail with five hooks',
+    alt: 'A matte black steel over-door rail with five hooks tipped with beech balls',
     blurb: 'Hangs over any door up to 4.5 cm thick with no screws, and carries 20 kg of coats.',
     retail: 10.8,
     trade: [4.05, 3.63, 3.25],
     carton: 24,
     grams: 312,
-    stock: 4104,
+    stock: 312,
     sold: 918,
-    made: 'Powder-coated steel, felt-backed',
+    made: 'Powder-coated steel, beech tips, felt-backed',
     specs: [
       ['Width', '40 cm'],
       ['Fits doors', 'Up to 4.5 cm thick'],
@@ -303,13 +363,13 @@ export const PRODUCTS = [
     category: 'home',
     name: 'Fabric shaver',
     pack: 'One shaver',
-    alt: 'A hand-held bottle-green fabric shaver with a round steel head',
+    alt: 'A hand-held white fabric shaver with an orange base, a round steel head and a clear lint cup',
     blurb: 'Takes the bobbles off a jumper in about two minutes. Three blades, one charge a month.',
     retail: 14.9,
     trade: [5.72, 5.13, 4.59],
     carton: 36,
     grams: 188,
-    stock: 3852,
+    stock: 540,
     sold: 1391,
     made: 'ABS plastic, stainless steel blades, CE marked',
     specs: [
@@ -357,12 +417,37 @@ export const tradeLine = (entry, cartons) => {
 // Direct basket: lines are { slug, qty }.
 export const validLine = (line) => Boolean(line) && Boolean(productBySlug(line.slug)) && Number.isInteger(line.qty) && line.qty > 0;
 
+const round2 = (value) => Math.round(value * 100) / 100;
+
+// The price of one when `qty` of the same thing are bought together.
+export const unitPrice = (entry, qty = 1) => {
+  const step = MULTI.reduce((found, offer) => (qty >= offer.qty ? offer : found), null);
+  return step ? round2(entry.retail * (1 - step.off)) : entry.retail;
+};
+export const linePrice = (entry, qty) => round2(unitPrice(entry, qty) * qty);
+export const lineSaving = (entry, qty) => round2(entry.retail * qty - linePrice(entry, qty));
+
+// How long the stock in Yiwu lasts at the last 30 days' rate of sale.
+export const daysOfStock = (entry) => Math.round(entry.stock / (entry.sold / 30));
+export const isLow = (entry) => daysOfStock(entry) < LOW_DAYS;
+
+// The three that sold most in the last 30 days.
+const BEST = [...PRODUCTS].sort((a, b) => b.sold - a.sold).slice(0, 3).map((entry) => entry.slug);
+export const isBestSeller = (entry) => BEST.includes(entry.slug);
+
 export function basketTotals(lines) {
   const count = lines.reduce((sum, line) => sum + line.qty, 0);
-  const goods = lines.reduce((sum, line) => sum + productBySlug(line.slug).retail * line.qty, 0);
+  const goods = round2(lines.reduce((sum, line) => sum + linePrice(productBySlug(line.slug), line.qty), 0));
+  const saved = round2(lines.reduce((sum, line) => sum + lineSaving(productBySlug(line.slug), line.qty), 0));
   const postage = count === 0 || goods >= FREE_POSTAGE_FROM ? 0 : POSTAGE;
-  return { count, goods, postage, total: goods + postage };
+  return { count, goods, saved, postage, total: round2(goods + postage), toFree: round2(Math.max(0, FREE_POSTAGE_FROM - goods)) };
 }
+
+// Trade freight, charged by the kilo. Days are door to door.
+export const FREIGHT = [
+  { id: 'air', name: 'Air', days: [6, 9], perKg: 4.8 },
+  { id: 'sea', name: 'Sea', days: [32, 38], perKg: 0.9 },
+];
 
 // Trade order: { slug: cartons }.
 export function orderTotals(order) {

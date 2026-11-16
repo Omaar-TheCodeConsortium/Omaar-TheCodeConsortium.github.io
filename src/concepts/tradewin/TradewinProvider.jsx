@@ -31,6 +31,8 @@ function reducer(state, action) {
       if (!order[action.slug]) delete order[action.slug];
       return { ...state, order };
     }
+    case 'empty':
+      return action.which === 'order' ? { ...state, order: {} } : { ...state, lines: [] };
     default:
       return state;
   }
@@ -101,10 +103,11 @@ export default function TradewinProvider({ children }) {
   const add = useCallback((slug, qty = 1) => dispatch({ type: 'add', slug, qty }), []);
   const setQty = useCallback((slug, qty) => dispatch({ type: 'qty', slug, qty }), []);
   const setCartons = useCallback((slug, cartons) => dispatch({ type: 'cartons', slug, cartons }), []);
+  const empty = useCallback((which) => dispatch({ type: 'empty', which }), []);
 
   const value = useMemo(
-    () => ({ side, flip, landed, lines, add, setQty, basket: basketTotals(lines), order, setCartons, trade: orderTotals(order) }),
-    [side, flip, landed, lines, add, setQty, order, setCartons],
+    () => ({ side, flip, landed, lines, add, setQty, basket: basketTotals(lines), order, setCartons, trade: orderTotals(order), empty }),
+    [side, flip, landed, lines, add, setQty, order, setCartons, empty],
   );
 
   return <TradewinContext.Provider value={value}>{children}</TradewinContext.Provider>;

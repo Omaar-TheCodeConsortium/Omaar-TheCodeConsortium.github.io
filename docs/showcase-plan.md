@@ -2,7 +2,7 @@
 
 Last updated 10 November 2026.
 
-**Status:** foundations are built on the `feature/concept-showcase` branch (not merged, not live). Grandstar Precision is built and was redesigned on 12 November: six pages, full-screen plant photographs with numbered callouts, a rail navigation and a live quote console (photo prompts in `docs/grandstar-shot-list.md`). Sunloom International is built with its 17 photographs in place and is marked live (indexable once deployed). Hoxen is built and marked live: five pages, product cut-outs made by `scripts/cutout-photos.mjs`, a scroll-driven teardown, a configurator and a compatibility checker (photo prompts in `docs/hoxen-shot-list.md`). Topforce Sports is built and marked live: twelve pages (home, shop, eight products, set builder, cart), one end of a barbell drawn in code at the size of the screen that you load plate by plate, prices by the kilo and freight by weight, and 12 photographs shot on black (prompts in `docs/topforce-shot-list.md`). The two Tradewin concepts each show a holding page.
+**Status:** foundations are built on the `feature/concept-showcase` branch (not merged, not live). Grandstar Precision is built and was redesigned on 12 November: six pages, full-screen plant photographs with numbered callouts, a rail navigation and a live quote console (photo prompts in `docs/grandstar-shot-list.md`). Sunloom International is built with its 17 photographs in place and is marked live (indexable once deployed). Hoxen is built and marked live: five pages, product cut-outs made by `scripts/cutout-photos.mjs`, a scroll-driven teardown, a configurator and a compatibility checker (photo prompts in `docs/hoxen-shot-list.md`). Topforce Sports is built and marked live: twelve pages (home, shop, eight products, set builder, cart), one end of a barbell drawn in code at the size of the screen that you load plate by plate, prices by the kilo and freight by weight, and 12 photographs shot on black (prompts in `docs/topforce-shot-list.md`). Tradewin is built and marked live as one store with two sets of prices, listed once in the library: Tradewin Direct is a white, full-colour shop built on honest buying cues (ranked best sellers, ratings and units sold, a live packing cut-off, real stock levels, multi-buy prices and a free-postage bar), and Tradewin Wholesale is the same shelf on bottle green, priced by the carton. 40 pages; a switch in the header flips any page to its twin on the other side. 18 photographs (prompts in `docs/tradewin-shot-list.md`).
 
 ## 1. What we are building
 
@@ -24,7 +24,7 @@ A web search on 10 November found no existing company using any of them in the s
 | 2 | **Sunloom International** | Lifestyle | Sun plus loom | Washed-linen bedding and homeware. Editorial, slow, photographic. |
 | 3 | **Hoxen** | Tech hardware | Coined, in the style of Anker or Ugreen | Phone cases, chargers and cables from Shenzhen. Spec-driven and precise. |
 | 4 | **Topforce Sports** | Fitness | Top plus force | Dumbbells, plates, racks, kits. Loud, kinetic, heavy type. |
-| 5 | **Tradewin Direct** | Drop shipping, consumer side | Trade plus win; "Direct" marks the consumer shop | A shop of small useful goods shipped direct. Playful. |
+| 5 | **Tradewin Direct** | Drop shipping, consumer side | Trade plus win; "Direct" marks the consumer shop | A shop of small useful goods shipped direct. Bright, dense and built to sell. |
 | 6 | **Tradewin Wholesale** | Drop shipping, business side | Same company, trade arm | The same catalogue for resellers: tiered pricing, minimum quantities, margins. |
 
 Each site's footer carries a full registered-style company name, such as "Dongguan Grandstar Precision Technology Co., Ltd.", the way real exporters' sites do.
@@ -37,8 +37,8 @@ Each site's footer carries a full registered-style company name, such as "Donggu
 | Sunloom International | Home · Collection · Product · Our mill (story) · Wholesale enquiry · Cart |
 | Hoxen | Home · Product with configurator · Compare · Compatibility checker · Cart |
 | Topforce Sports | Home · Shop · Product (eight) · Set builder · Cart |
-| Tradewin Direct | Home · Category · Product · Cart · Order tracking |
-| Tradewin Wholesale | Dashboard-style home · Catalogue with tier pricing · Product (trade view) · Margin calculator · Supplier terms |
+| Tradewin Direct | Home · Category (four) · Product (twelve) · Basket · Order tracking · Delivery and returns |
+| Tradewin Wholesale | Catalogue with tier pricing · Category (four) · Product, trade view (twelve) · Order sheet with margin calculator · Account dashboard · Supplier terms |
 
 That is about 32 pages in total.
 
@@ -50,7 +50,7 @@ Each site gets one memorable moment, not a pile of effects.
 - **Sunloom International:** choosing a colour swatch re-tints the whole product page. Scrolling moves through a horizontal lookbook.
 - **Hoxen:** scrolling pulls a charger apart into its layers, with specs attached to each part.
 - **Topforce Sports:** load plates onto a barbell. The total weight and price update as you add them.
-- **Tradewin Direct and Tradewin Wholesale:** a Direct / Wholesale switch. The same product flips from a retail price to a bulk price table with minimum quantities.
+- **Tradewin Direct and Tradewin Wholesale:** an "I'm buying: for myself / to resell" switch in the header. Every page has a twin on the other side, so the same product flips from one item at a retail price to a carton laid out unit by unit with three tier prices and what the reseller keeps. The two are one site and one library card. The products are photographed in their own colours, not the brand's: a dropshipper sells other workshops' goods, and a matched range read as a boutique label.
 
 ## 3. Design direction
 
@@ -64,7 +64,8 @@ No purple anywhere. Each palette will be tested for text contrast before use; ex
 | Sunloom International | Undyed oat | Soot brown | Indigo dye blue |
 | Hoxen | Graphite | Fog grey | Safety orange |
 | Topforce Sports | Iron black | Chalk white | Volt yellow-green |
-| Tradewin Direct / Wholesale | Warm cream | Bottle green | Hot coral |
+| Tradewin Direct | White | Near black | Hot coral |
+| Tradewin Wholesale | Bottle green | Cream | Hot coral |
 
 ### Type
 

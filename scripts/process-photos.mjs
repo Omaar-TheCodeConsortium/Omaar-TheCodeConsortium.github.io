@@ -150,13 +150,7 @@ async function writeCloth(input, output) {
 // frame (top left, top right, bottom left, bottom right). Each product is cut out into its own
 // square picture on white, which the site multiplies onto its page: the paper disappears and the
 // product keeps its shadow.
-const SHEETS = {
-  tradewin: {
-    'sheet-1': ['stretch-lids', 'bag-clips', 'measuring-spoons', 'cable-clips'],
-    'sheet-2': ['tech-pouch', 'phone-stand', 'travel-bottles', 'packing-cubes'],
-    'sheet-3': ['luggage-tags', 'night-light', 'door-hooks', 'fabric-shaver'],
-  },
-};
+const SHEETS = {};
 const SHEET_OUT = 1000;
 const SHEET_MARGIN = 0.09; // paper kept round the product, as a share of the square
 const SHEET_FADE = 0.07; // width of the fade to white at the square's edge
@@ -299,6 +293,69 @@ async function splitSheet(input, names, to) {
   }
 }
 
+// Studio product shots on white. The site multiplies them into coloured tiles, so the paper has
+// to be white all over and the picture must not end in a visible edge.
+const STUDIO = { tradewin: { size: 1200, skip: /-use$/ } };
+const STUDIO_FADE = 0.09;
+// The longest side of a concept's other photographs, where the usual limits are more than its layout shows.
+const LIMIT = { tradewin: 1600 };
+
+async function writeStudio(input, output, size) {
+  // 1. Map the paper. On a small copy, anything bright and colourless is paper; the product's
+  //    own area is filled in from the paper round it, and the whole map is then smoothed.
+  const P = 160;
+  const small = await sharp(input).removeAlpha().resize(P, P, { fit: 'fill' }).raw().toBuffer();
+  const paper = new Float32Array(P * P).fill(-1);
+  for (let i = 0; i < P * P; i += 1) {
+    const [r, g, b] = [small[i * 3], small[i * 3 + 1], small[i * 3 + 2]];
+    if (Math.max(r, g, b) - Math.min(r, g, b) < 16 && (r + g + b) / 3 > 188) paper[i] = (r + g + b) / 3;
+  }
+  for (let pass = 0; pass < P; pass += 1) {
+    const next = paper.slice();
+    let open = 0;
+    for (let y = 0; y < P; y += 1) {
+      for (let x = 0; x < P; x += 1) {
+        if (paper[y * P + x] >= 0) continue;
+        let sum = 0;
+        let n = 0;
+        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          const xx = x + dx;
+          const yy = y + dy;
+          if (xx < 0 || yy < 0 || xx >= P || yy >= P || paper[yy * P + xx] < 0) continue;
+          sum += paper[yy * P + xx];
+          n += 1;
+        }
+        if (n) next[y * P + x] = sum / n;
+        else open += 1;
+      }
+    }
+    paper.set(next);
+    if (!open) break;
+  }
+  const map8 = Buffer.from(paper.map((value) => Math.max(188, Math.min(255, value < 0 ? 250 : value))));
+  const map = await sharp(map8, { raw: { width: P, height: P, channels: 1 } }).blur(5).resize(size, size, { kernel: 'cubic' }).raw().toBuffer();
+
+  // 2. Divide the picture by its paper, so the paper comes out white wherever it is, and fade
+  //    the rim to pure white.
+  const { data } = await sharp(input).removeAlpha().resize(size, size, { fit: 'cover' }).raw().toBuffer({ resolveWithObject: true });
+  const band = size * STUDIO_FADE;
+  for (let y = 0; y < size; y += 1) {
+    for (let x = 0; x < size; x += 1) {
+      const i = y * size + x;
+      const gain = 255 / (map[i] * 0.975);
+      const near = Math.min(x, y, size - 1 - x, size - 1 - y);
+      const t = Math.max(0, 1 - near / band);
+      const fade = t * t * (3 - 2 * t);
+      for (let c = 0; c < 3; c += 1) {
+        const lit = Math.min(255, data[i * 3 + c] * gain);
+        data[i * 3 + c] = Math.round(lit + (255 - lit) * fade);
+      }
+    }
+  }
+  await sharp(data, { raw: { width: size, height: size, channels: 3 } }).jpeg({ quality: 84, mozjpeg: true }).toFile(output);
+  console.log(`${path.basename(output).padEnd(26)} studio ${size}px  ${Math.round((await stat(output)).size / 1024)} KB`);
+}
+
 const concept = process.argv[2];
 if (!CROPS[concept]) {
   console.error(`Usage: node scripts/process-photos.mjs <${Object.keys(CROPS).join('|')}>`);
@@ -318,10 +375,14 @@ for (const file of (await readdir(from)).filter((name) => /\.(jpe?g|png)$/i.test
     await splitSheet(input, SHEETS[concept][name], to);
     continue;
   }
+  if (STUDIO[concept] && !STUDIO[concept].skip.test(name)) {
+    await writeStudio(input, path.join(to, `${name}.jpg`), STUDIO[concept].size);
+    continue;
+  }
   const { width, height } = await sharp(input).metadata();
   const { top = 0, bottom = 0, left = 0, right = 0 } = CROPS[concept][name] ?? {};
   const box = { left, top, width: width - left - right, height: height - top - bottom };
-  const limit = box.width > box.height ? MAX_LANDSCAPE : MAX_PORTRAIT;
+  const limit = LIMIT[concept] ?? (box.width > box.height ? MAX_LANDSCAPE : MAX_PORTRAIT);
   const output = path.join(to, `${name}.jpg`);
 
   const resized = sharp(input)

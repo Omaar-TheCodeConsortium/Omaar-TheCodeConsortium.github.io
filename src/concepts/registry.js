@@ -114,9 +114,9 @@ export const CONCEPTS = [
     city: 'Yiwu, Zhejiang',
     coords: '29.31° N, 120.08° E',
     summary:
-      'A shop of small useful goods shipped straight from the source, with order tracking from warehouse to door.',
+      'A shop of small useful goods posted straight from Yiwu: ranked best sellers, a live packing cut-off, multi-buy prices and tracking from warehouse to door.',
     signature: 'Direct / Wholesale switch',
-    pages: ['Home', 'Category', 'Product', 'Cart', 'Order tracking'],
+    pages: ['Home', 'Category', 'Product', 'Basket', 'Order tracking', 'Delivery and returns'],
     routes: TRADEWIN_DIRECT_PAGES,
     // How the library lists it: one card for the company, which opens on the shop and holds the trade side too.
     listing: {
@@ -124,12 +124,12 @@ export const CONCEPTS = [
       category: 'Drop shipping, shop and trade counter',
       audience: 'B2C + B2B',
       summary:
-        'One catalogue with two sides. Tradewin Direct sells a single item to a shopper; Tradewin Wholesale sells the same item by the carton to a reseller. Any page flips between them.',
+        'A full-colour store with two sets of prices. Tradewin Direct sells one item to a shopper; Tradewin Wholesale sells the same item by the carton to a reseller. A switch in the header flips any page between them.',
     },
-    palette: { paper: '#F6EFE2', ink: '#0F3B2E', loud: '#FF4F5E', onLoud: '#0E1F18' },
+    palette: { paper: '#FFFFFF', ink: '#15171A', loud: '#FF4F5E', onLoud: '#0E1F18' },
     display: "'Bricolage Grotesque Variable', 'Helvetica Neue', Arial, sans-serif",
-    displayWeight: 700,
-    status: 'planned',
+    displayWeight: 800,
+    status: 'live',
     load: () => import('./tradewin/index.jsx'),
   },
   {
@@ -143,16 +143,16 @@ export const CONCEPTS = [
     city: 'Yiwu, Zhejiang',
     coords: '29.31° N, 120.08° E',
     summary:
-      'The same catalogue for resellers: tiered pricing, minimum quantities and a margin calculator.',
+      'The same catalogue for resellers, priced by the carton: tier prices at 1, 5 and 25 cartons, an order sheet that works out the margin, and an account dashboard.',
     signature: 'Direct / Wholesale switch',
-    pages: ['Dashboard', 'Catalogue with tier pricing', 'Product, trade view', 'Margin calculator', 'Supplier terms'],
+    pages: ['Catalogue with tier pricing', 'Category', 'Product, trade view', 'Order sheet and margin calculator', 'Account', 'Supplier terms'],
     routes: TRADEWIN_TRADE_PAGES,
     // Served by the Tradewin Direct module, whose address this one sits under, so the two share one mounted tree.
     within: 'tradewin-direct',
-    palette: { paper: '#0F3B2E', ink: '#F6EFE2', loud: '#FF4F5E', onLoud: '#0E1F18' },
+    palette: { paper: '#0D2A22', ink: '#F4F1E8', loud: '#FF4F5E', onLoud: '#0E1F18' },
     display: "'Bricolage Grotesque Variable', 'Helvetica Neue', Arial, sans-serif",
-    displayWeight: 700,
-    status: 'planned',
+    displayWeight: 800,
+    status: 'live',
     load: () => import('./tradewin/index.jsx'),
   },
 ];

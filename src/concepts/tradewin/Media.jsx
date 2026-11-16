@@ -1,13 +1,12 @@
-// Photographs are picked up by file name from ./photos: one square picture per product, named by
-// its slug, on a white ground that the page multiplies away. See docs/tradewin-shot-list.md.
-const files = import.meta.glob('./photos/*.{jpg,webp}', { eager: true, query: '?url', import: 'default' });
-const URLS = Object.fromEntries(Object.entries(files).map(([path, url]) => [path.replace('./photos/', '').replace(/\.[a-z]+$/, ''), url]));
+import { PHOTOS } from './photos.js';
+import { formatCount } from './catalog.js';
 
-const SIZE = 1000;
+// Studio pictures are square; pictures of a product in use are 4 by 3.
+const sizeOf = (name) => (name.endsWith('-use') ? [1600, 1200] : [1200, 1200]);
 
-// A product photograph. Until one has been supplied, a labelled block holds its place.
+// A photograph. Until one has been supplied, a labelled block holds its place.
 export function Shot({ name, alt, eager = false, className = '' }) {
-  if (!URLS[name]) {
+  if (!PHOTOS[name]) {
     return (
       <span className={`tw-photo tw-photo--todo ${className}`} role="img" aria-label={alt}>
         <span aria-hidden="true">{name}.jpg</span>
@@ -17,10 +16,10 @@ export function Shot({ name, alt, eager = false, className = '' }) {
   return (
     <img
       className={`tw-photo ${className}`}
-      src={URLS[name]}
+      src={PHOTOS[name]}
       alt={alt}
-      width={SIZE}
-      height={SIZE}
+      width={sizeOf(name)[0]}
+      height={sizeOf(name)[1]}
       loading={eager ? 'eager' : 'lazy'}
       fetchPriority={eager ? 'high' : undefined}
       decoding="async"
@@ -38,7 +37,7 @@ function gridFor(count) {
 // One carton, laid out flat: the product's photograph repeated once for every unit in it.
 export function Carton({ product, className = '' }) {
   const [cols, rows] = gridFor(product.carton);
-  const url = URLS[product.photo];
+  const url = PHOTOS[product.photo];
   return (
     <span
       className={`tw-carton ${className}`}
@@ -49,29 +48,46 @@ export function Carton({ product, className = '' }) {
         aspectRatio: `${cols} / ${rows}`,
         backgroundImage: url ? `url(${url})` : undefined,
         backgroundSize: `${100 / cols}% ${100 / rows}%`,
-        '--cols': cols,
-        '--rows': rows,
       }}
     />
   );
 }
 
-// The mark is two sheets, one behind the other: the shop and the trade counter.
-export function Wordmark() {
+// The mark is one square behind another: the single item and the carton.
+export function Wordmark({ side }) {
   return (
     <span className="tw-wordmark">
       <svg viewBox="0 0 30 30" aria-hidden="true" focusable="false">
         <rect x="9" y="1" width="20" height="20" rx="4" fill="none" stroke="currentColor" strokeWidth="2.6" />
         <rect x="1" y="9" width="20" height="20" rx="4" fill="#ff4f5e" />
       </svg>
-      Tradewin
+      <span>
+        Tradewin <em>{side === 'trade' ? 'Wholesale' : 'Direct'}</em>
+      </span>
     </span>
   );
 }
 
-// A price on a round sticker, as on a market stall.
-export function Sticker({ children, className = '' }) {
-  return <span className={`tw-sticker ${className}`}>{children}</span>;
+// Five stars filled to the average, then the average and how many buyers it comes from.
+export function Rating({ product, full = false }) {
+  return (
+    <span className="tw-rating">
+      <span className="tw-stars" role="img" aria-label={`Rated ${product.rating} out of 5`} style={{ '--tw-rate': product.rating / 5 }}>
+        ★★★★★
+      </span>
+      <strong>{product.rating.toFixed(1)}</strong>
+      <span>{full ? `${formatCount(product.ratings)} ratings` : `(${formatCount(product.ratings)})`}</span>
+    </span>
+  );
+}
+
+// How much of something is left, or how far along something is, as a bar.
+export function Meter({ share, label, className = '' }) {
+  return (
+    <span className={`tw-meter ${className}`} role="img" aria-label={label}>
+      <span style={{ width: `${Math.max(0, Math.min(1, share)) * 100}%` }} />
+    </span>
+  );
 }
 
 const BARS = '31121322113123112213311221132112312213112231121332112213';

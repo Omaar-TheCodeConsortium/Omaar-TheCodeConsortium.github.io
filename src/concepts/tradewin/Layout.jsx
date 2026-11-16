@@ -1,23 +1,48 @@
 import { useEffect, useLayoutEffect } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Barcode, Wordmark } from './Media.jsx';
+import FlipLink from './FlipLink.jsx';
 import { FREE_POSTAGE_FROM, POSTAGE, formatPrice } from './catalog.js';
+import { formatLeft, packingRun, useNow } from './clock.js';
 import { useTradewin } from './tradewinContext.js';
-import { COMPANY, DIRECT, DIRECT_PAGES, TRADE, TRADE_PAGES, baseOf, pageByKey, twinOf } from './site.js';
+import { COMPANY, baseOf, pagesOf, pathOf } from './site.js';
 
-const TABS = [
-  { side: 'direct', label: 'Direct', note: 'One at a time' },
-  { side: 'trade', label: 'Wholesale', note: 'By the carton' },
+const MODES = [
+  { side: 'direct', label: 'For myself', note: 'One at a time' },
+  { side: 'trade', label: 'To resell', note: 'By the carton' },
 ];
 
-const plain = (event) => event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
+// The thin strip above the header: three facts that are true today.
+function Strip({ side }) {
+  const now = useNow();
+  if (side === 'trade') {
+    return (
+      <p className="tw-strip">
+        <span>One carton is the minimum</span>
+        <span>The price a unit drops at 5 and at 25 cartons</span>
+        <span>Air in 6 to 9 days, sea in 32 to 38</span>
+      </p>
+    );
+  }
+  return (
+    <p className="tw-strip">
+      <span>{now ? <>Today&rsquo;s packing run closes in <strong>{formatLeft(packingRun(now))}</strong></> : 'In by 4 pm Yiwu time, packed the same day'}</span>
+      <span>Free postage over ${FREE_POSTAGE_FROM}</span>
+      <span>Duties paid before it leaves</span>
+    </p>
+  );
+}
 
 export default function Layout({ children }) {
   const { pathname, state } = useLocation();
-  const { side, flip, landed, basket, trade } = useTradewin();
-  const pages = (side === 'trade' ? TRADE_PAGES : DIRECT_PAGES).filter((page) => page.nav);
-  const basketPage = pageByKey(side, side === 'trade' ? 'order' : 'basket');
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const { side, landed, basket, trade } = useTradewin();
+  const pages = pagesOf(side);
+  const shop = pages.filter((page) => page.nav === 'shop');
+  const help = pages.filter((page) => page.nav === 'help');
   const flipped = Boolean(state?.flipped);
+  const query = params.get('q') ?? '';
 
   // A flip between Direct and Wholesale holds its transition open until the new page is in place.
   useLayoutEffect(() => landed(), [pathname, landed]);
@@ -30,17 +55,14 @@ export default function Layout({ children }) {
     document.getElementById('concept-main')?.focus({ preventScroll: true });
   }, [pathname, flipped]);
 
-  const onFlip = (event) => {
-    if (!plain(event)) return;
+  const onSearch = (event) => {
     event.preventDefault();
-    flip();
+    const words = new FormData(event.currentTarget).get('q').trim();
+    navigate(words ? `${baseOf(side)}?q=${encodeURIComponent(words)}` : baseOf(side));
   };
 
-  const summary =
-    side === 'trade'
-      ? `Order: ${trade.cartons} ${trade.cartons === 1 ? 'carton' : 'cartons'}`
-      : `Basket: ${basket.count}${basket.count ? `, ${formatPrice(basket.goods)}` : ''}`;
-  const full = side === 'trade' ? trade.cartons > 0 : basket.count > 0;
+  const count = side === 'trade' ? trade.cartons : basket.count;
+  const sum = side === 'trade' ? trade.cost : basket.goods;
 
   return (
     <div className="tw" data-side={side}>
@@ -49,45 +71,68 @@ export default function Layout({ children }) {
       </a>
 
       <header className="tw-top">
-        <div className="tw-band">
-          <div className="tw-tabs" role="group" aria-label="Buying as">
-            {TABS.map((tab) =>
-              tab.side === side ? (
-                <Link key={tab.side} to={baseOf(tab.side)} className="tw-tab" aria-current="true">
-                  <strong>{tab.label}</strong>
-                  <span>{tab.note}</span>
-                </Link>
+        <Strip side={side} />
+
+        <div className="tw-head">
+          <Link to={baseOf(side)} className="tw-brand" aria-label={`${COMPANY.name} ${side === 'trade' ? 'Wholesale' : 'Direct'} home`}>
+            <Wordmark side={side} />
+          </Link>
+
+          <form className="tw-search" role="search" onSubmit={onSearch}>
+            <label htmlFor="tw-q" className="tw-hide">
+              Search the {side === 'trade' ? 'catalogue' : 'shop'}
+            </label>
+            <input id="tw-q" key={query} name="q" type="search" defaultValue={query} placeholder="Lids, clips, cubes…" autoComplete="off" enterKeyHint="search" />
+            <button type="submit">Search</button>
+          </form>
+
+          <div className="tw-mode" role="group" aria-label="I am buying">
+            <span className="tw-mode-ask" aria-hidden="true">
+              I&rsquo;m buying
+            </span>
+            {MODES.map((mode) =>
+              mode.side === side ? (
+                <span key={mode.side} className="tw-mode-opt" aria-current="true">
+                  <strong>{mode.label}</strong>
+                  <span>{mode.note}</span>
+                </span>
               ) : (
-                <Link key={tab.side} to={twinOf(pathname)} className="tw-tab" onClick={onFlip}>
-                  <strong>{tab.label}</strong>
-                  <span>{tab.note}</span>
-                </Link>
+                <FlipLink key={mode.side} className="tw-mode-opt">
+                  <strong>{mode.label}</strong>
+                  <span>{mode.note}</span>
+                </FlipLink>
               ),
             )}
           </div>
-          <Link to={baseOf(side)} className="tw-brand" aria-label={`${COMPANY.name} ${side === 'trade' ? 'Wholesale' : 'Direct'} home`}>
-            <Wordmark />
-          </Link>
+
+          <NavLink to={pathOf(side, 'basket')} className="tw-bag" data-full={count > 0 ? '' : undefined}>
+            <span className="tw-bag-count" aria-hidden="true">
+              {count}
+            </span>
+            <span>
+              <strong>{side === 'trade' ? 'Order sheet' : 'Basket'}</strong>
+              <span>
+                {side === 'trade'
+                  ? `${count} ${count === 1 ? 'carton' : 'cartons'}${count ? `, ${formatPrice(sum)}` : ''}`
+                  : `${count} ${count === 1 ? 'item' : 'items'}${count ? `, ${formatPrice(sum)}` : ''}`}
+              </span>
+            </span>
+          </NavLink>
         </div>
 
-        <div className="tw-bar">
-          <nav aria-label="Main" className="tw-nav">
-            {pages.map((page) => (
-              <NavLink key={page.key} to={page.path} end>
-                {page.nav}
-              </NavLink>
-            ))}
-          </nav>
-          {basketPage ? (
-            <NavLink to={basketPage.path} className="tw-count" data-full={full ? '' : undefined}>
-              {summary}
+        <nav aria-label="Main" className="tw-cats">
+          {shop.map((page) => (
+            <NavLink key={page.key} to={page.path} end>
+              {page.label}
             </NavLink>
-          ) : (
-            <span className="tw-count" data-full={full ? '' : undefined} role="status">
-              {summary}
-            </span>
-          )}
-        </div>
+          ))}
+          <span className="tw-cats-gap" aria-hidden="true" />
+          {help.map((page) => (
+            <NavLink key={page.key} to={page.path} end>
+              {page.label}
+            </NavLink>
+          ))}
+        </nav>
       </header>
 
       <main id="concept-main" tabIndex={-1}>
@@ -111,18 +156,18 @@ export default function Layout({ children }) {
             <p className="tw-label-you">{side === 'trade' ? 'Your stockroom' : 'Your front door'}</p>
             <p>
               {side === 'trade'
-                ? 'By air in 6 to 9 days or by sea in 32 to 38, to any of 41 countries.'
+                ? `By air in 6 to 9 days or by sea in 32 to 38, to any of ${COMPANY.countries} countries.`
                 : `In 7 to 12 days, tracked. Postage ${formatPrice(POSTAGE)}, free over $${FREE_POSTAGE_FROM}.`}
             </p>
           </div>
           <nav aria-label="Footer" className="tw-label-nav">
             <p className="tw-tag">Contents</p>
-            {pages.map((page) => (
+            {[...shop, ...help].map((page) => (
               <Link key={page.key} to={page.path}>
-                {page.nav}
+                {page.label}
               </Link>
             ))}
-            <Link to={side === 'trade' ? DIRECT : TRADE}>{side === 'trade' ? 'Tradewin Direct, the shop' : 'Tradewin Wholesale, for resellers'}</Link>
+            <FlipLink>{side === 'trade' ? 'This page on Tradewin Direct' : 'This page at carton prices'}</FlipLink>
           </nav>
           <div className="tw-label-code">
             <Barcode />
@@ -130,7 +175,7 @@ export default function Layout({ children }) {
           </div>
           <p className="tw-label-small">
             Tradewin is a fictional company, created by The Code Consortium as a concept build. Its products, prices,
-            stock figures, reseller account and reviews are invented, and nothing ordered here is charged or shipped.
+            stock figures, ratings, reseller account and reviews are invented, and nothing ordered here is charged or shipped.
           </p>
         </div>
       </footer>
