@@ -14,6 +14,7 @@ import { PAGES as GRANDSTAR_PAGES } from './grandstar/site.js';
 import { PAGES as SUNLOOM_PAGES } from './sunloom/site.js';
 import { PAGES as HOXEN_PAGES } from './hoxen/site.js';
 import { PAGES as TOPFORCE_PAGES } from './topforce/site.js';
+import { DIRECT_PAGES as TRADEWIN_DIRECT_PAGES, TRADE_PAGES as TRADEWIN_TRADE_PAGES } from './tradewin/site.js';
 
 export const LIBRARY_PATH = '/concepts/';
 
@@ -116,6 +117,7 @@ export const CONCEPTS = [
       'A shop of small useful goods shipped straight from the source, with order tracking from warehouse to door.',
     signature: 'Direct / Wholesale switch',
     pages: ['Home', 'Category', 'Product', 'Cart', 'Order tracking'],
+    routes: TRADEWIN_DIRECT_PAGES,
     palette: { paper: '#F6EFE2', ink: '#0F3B2E', loud: '#FF4F5E', onLoud: '#0E1F18' },
     display: "'Bricolage Grotesque Variable', 'Helvetica Neue', Arial, sans-serif",
     displayWeight: 700,
@@ -136,6 +138,9 @@ export const CONCEPTS = [
       'The same catalogue for resellers: tiered pricing, minimum quantities and a margin calculator.',
     signature: 'Direct / Wholesale switch',
     pages: ['Dashboard', 'Catalogue with tier pricing', 'Product, trade view', 'Margin calculator', 'Supplier terms'],
+    routes: TRADEWIN_TRADE_PAGES,
+    // Served by the Tradewin Direct module, whose address this one sits under, so the two share one mounted tree.
+    within: 'tradewin-direct',
     palette: { paper: '#0F3B2E', ink: '#F6EFE2', loud: '#FF4F5E', onLoud: '#0E1F18' },
     display: "'Bricolage Grotesque Variable', 'Helvetica Neue', Arial, sans-serif",
     displayWeight: 700,

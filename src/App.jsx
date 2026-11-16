@@ -16,7 +16,8 @@ import { useSeo } from './seo/useSeo.js';
 
 // The concept section is loaded on demand so the main site's bundle does not grow with it.
 const ConceptLibrary = lazy(() => import('./pages/ConceptLibrary.jsx'));
-const conceptRoutes = CONCEPTS.map((concept) => ({ path: concept.path, Page: lazy(concept.load) }));
+// A concept that sits `within` another is served by that concept's own routes.
+const conceptRoutes = CONCEPTS.filter((concept) => !concept.within).map((concept) => ({ path: concept.path, Page: lazy(concept.load) }));
 
 const MotionLink = motion(Link);
 
