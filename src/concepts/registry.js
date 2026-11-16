@@ -118,6 +118,14 @@ export const CONCEPTS = [
     signature: 'Direct / Wholesale switch',
     pages: ['Home', 'Category', 'Product', 'Cart', 'Order tracking'],
     routes: TRADEWIN_DIRECT_PAGES,
+    // How the library lists it: one card for the company, which opens on the shop and holds the trade side too.
+    listing: {
+      name: 'Tradewin',
+      category: 'Drop shipping, shop and trade counter',
+      audience: 'B2C + B2B',
+      summary:
+        'One catalogue with two sides. Tradewin Direct sells a single item to a shopper; Tradewin Wholesale sells the same item by the carton to a reseller. Any page flips between them.',
+    },
     palette: { paper: '#F6EFE2', ink: '#0F3B2E', loud: '#FF4F5E', onLoud: '#0E1F18' },
     display: "'Bricolage Grotesque Variable', 'Helvetica Neue', Arial, sans-serif",
     displayWeight: 700,
@@ -148,6 +156,9 @@ export const CONCEPTS = [
     load: () => import('./tradewin/index.jsx'),
   },
 ];
+
+// What the library shows: one card per company. A concept served `within` another shares that one's card.
+export const LISTED = CONCEPTS.filter((concept) => !concept.within).map((concept) => ({ ...concept, ...concept.listing }));
 
 const withSlash = (pathname) => (pathname.endsWith('/') ? pathname : `${pathname}/`);
 

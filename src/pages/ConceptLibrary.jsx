@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { CONCEPTS, pad2 } from '../concepts/registry.js';
+import { LISTED, pad2 } from '../concepts/registry.js';
 import { usePortal } from '../concepts/portal/portalContext.js';
 
 const STANDARD = [
@@ -28,7 +28,7 @@ const STANDARD = [
   },
 ];
 
-const liveCount = CONCEPTS.filter((concept) => concept.status === 'live').length;
+const liveCount = LISTED.filter((concept) => concept.status === 'live').length;
 
 export default function ConceptLibrary() {
   const { enter } = usePortal();
@@ -57,19 +57,19 @@ export default function ConceptLibrary() {
           <div className="p-6 md:p-16 lg:col-span-8 lg:border-r border-gray-300">
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-black">Concept Builds</h1>
             <p className="mt-6 max-w-2xl text-lg md:text-xl text-gray-500 leading-relaxed">
-              The six companies below do not exist. We invented them to show the range of sites we build for
+              The five companies below do not exist. We invented them to show the range of sites we build for
               manufacturers and sellers who export to Europe and North America. The names, products, prices and
               reviews are fictional. The engineering is real.
             </p>
           </div>
           <dl className="lg:col-span-4 grid grid-cols-[auto_1fr] content-center gap-x-8 gap-y-3 p-6 md:p-16 font-mono text-xs uppercase tracking-widest border-t lg:border-t-0 border-gray-300">
             <dt className="text-gray-500">Index</dt>
-            <dd>{pad2(CONCEPTS.length)} concepts</dd>
+            <dd>{pad2(LISTED.length)} concepts</dd>
             <dt className="text-gray-500">Scope</dt>
             <dd>Front end, mock data</dd>
             <dt className="text-gray-500">Status</dt>
             <dd>
-              {pad2(liveCount)} live / {pad2(CONCEPTS.length - liveCount)} in build
+              {pad2(liveCount)} live / {pad2(LISTED.length - liveCount)} in build
             </dd>
           </dl>
         </header>
@@ -79,7 +79,7 @@ export default function ConceptLibrary() {
             Concept index
           </h2>
           <ol>
-            {CONCEPTS.map((concept) => (
+            {LISTED.map((concept) => (
               <li key={concept.slug} className="border-b border-gray-300">
                 <Link
                   to={concept.path}

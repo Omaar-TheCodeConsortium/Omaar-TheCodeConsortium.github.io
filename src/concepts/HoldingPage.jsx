@@ -1,4 +1,4 @@
-import { CONCEPTS, pad2 } from './registry.js';
+import { LISTED, pad2 } from './registry.js';
 
 // Shown for a concept that is planned but not built. It is hidden from search engines
 // (see src/seo/meta.js) and is replaced by the real site when the concept goes live.
@@ -12,7 +12,7 @@ export default function HoldingPage({ concept }) {
       >
         <header className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1 border-b border-[color:var(--c-rule)] pb-4 text-sm">
           <span>
-            Concept {pad2(concept.order)} of {pad2(CONCEPTS.length)} · In build
+            Concept {pad2(concept.order)} of {pad2(LISTED.length)} · In build
           </span>
           <span>
             {concept.category} · {concept.audience}

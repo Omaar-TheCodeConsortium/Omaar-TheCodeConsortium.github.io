@@ -1,7 +1,7 @@
 // Head tags for the concept section. Used on the client (useSeo) and at build time (scripts/prerender.mjs),
 // so both produce the same title, description, canonical address, robots rule and structured data.
 
-import { CONCEPTS, LIBRARY_PATH, findConceptForPath } from '../concepts/registry.js';
+import { LISTED, LIBRARY_PATH, findConceptForPath } from '../concepts/registry.js';
 
 export const SITE_URL = 'https://www.thecodeconsortium.com';
 export const SITE_NAME = 'The Code Consortium';
@@ -19,7 +19,7 @@ function libraryMeta() {
   return {
     title: `Concept Builds | ${SITE_NAME}`,
     description:
-      'Six fictional export brands, designed and built end to end by The Code Consortium: industrial manufacturing, home textiles, tech hardware, fitness equipment and drop shipping.',
+      'Five fictional export companies, designed and built end to end by The Code Consortium: industrial manufacturing, home textiles, tech hardware, fitness equipment and drop shipping.',
     canonical: `${SITE_URL}${LIBRARY_PATH}`,
     robots: 'index,follow',
     ogType: 'website',
@@ -33,8 +33,8 @@ function libraryMeta() {
       publisher: ORGANISATION,
       mainEntity: {
         '@type': 'ItemList',
-        numberOfItems: CONCEPTS.length,
-        itemListElement: CONCEPTS.map((concept) => ({
+        numberOfItems: LISTED.length,
+        itemListElement: LISTED.map((concept) => ({
           '@type': 'ListItem',
           position: concept.order,
           name: concept.name,

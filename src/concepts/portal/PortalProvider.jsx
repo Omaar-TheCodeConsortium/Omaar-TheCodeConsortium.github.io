@@ -2,7 +2,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { PortalContext } from './portalContext.js';
-import { CONCEPTS, LIBRARY_PATH, pad2 } from '../registry.js';
+import { LISTED, LIBRARY_PATH, pad2 } from '../registry.js';
 import './portal.css';
 
 const frame = () => new Promise((resolve) => requestAnimationFrame(() => resolve()));
@@ -33,7 +33,7 @@ const HOME_SCENE = {
   color: '#ffffff',
   kicker: 'Returning to',
   title: 'The Code Consortium',
-  footer: `Concept Builds · ${pad2(CONCEPTS.length)} concepts`,
+  footer: `Concept Builds · ${pad2(LISTED.length)} concepts`,
   font: "Inter, 'Helvetica Neue', Arial, sans-serif",
   weight: 700,
 };
