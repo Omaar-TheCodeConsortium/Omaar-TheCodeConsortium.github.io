@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Barbell, Ends, Tray } from '../Loader.jsx';
+import { Barbell, Tray } from '../Loader.jsx';
 import { Shot } from '../Media.jsx';
 import { useCount } from '../useCount.js';
 import {
@@ -40,17 +40,18 @@ function Hero() {
 
   return (
     <section className="tf-hero" aria-labelledby="tf-hero-title">
-      <div className="tf-hero-head">
-        <h1 id="tf-hero-title" className="tf-mega">
-          Load the bar.
-        </h1>
-      </div>
+      <h1 id="tf-hero-title" className="tf-mega tf-hero-title">
+        Load <br />
+        the bar.
+      </h1>
 
-      <Barbell bar={load.bar} side={load.side} onUnload={change(unloadPlate)} />
+      <Barbell view="end" className="tf-hero-bar" bar={load.bar} side={load.side} onUnload={change(unloadPlate)} />
 
-      <div className="tf-hero-deck">
+      <div className="tf-hero-mid">
         <div className="tf-hero-read">
-          <p className="tf-label">On the bar</p>
+          <p className="tf-label">
+            On the bar, {toLb(kg)} lb
+          </p>
           <p className="tf-hero-kg" aria-hidden="true">
             {formatKg(Math.round(shown * 2) / 2)}
             <small>kg</small>
@@ -58,46 +59,51 @@ function Hero() {
           <p className="sr-only" role="status">
             {formatKg(kg)} kilograms on the bar, {toLb(kg)} pounds. This set costs {formatPrice(price)}.
           </p>
-          <p className="tf-hero-lb">
-            {toLb(kg)} lb, including the {load.bar} kg bar
-          </p>
-        </div>
-
-        <div className="tf-hero-load">
-          <p className="tf-lede">
-            Tap a plate and one goes on each end. Bumper plates are $3.18 a kilo, the bar is $189, and the set ships
-            from Los Angeles or Rotterdam.
-          </p>
-          <Tray bar={load.bar} side={load.side} onLoad={change(loadPlate)} quiet />
-          <Ends side={load.side} onUnload={change(unloadPlate)} onStrip={change(strip)} />
         </div>
 
         <div className="tf-hero-buy">
-          <p className="tf-label">{set.isSet ? 'Bar, plates and collars, 8% off the plates' : 'Bar, plates and collars'}</p>
-          <p className="tf-hero-price">{formatPrice(price)}</p>
-          <div className="tf-hero-actions">
-            {added ? (
-              <Link to={`${BASE}cart/`} className="tf-btn tf-btn--volt">
-                In the cart. Open it
-              </Link>
-            ) : (
-              <button
-                type="button"
-                className="tf-btn tf-btn--volt"
-                onClick={() => {
-                  add(...lines);
-                  setAdded(true);
-                }}
-              >
-                Add this set to the cart
-              </button>
-            )}
-            <Link to={`${BASE}build/`} className="tf-btn">
-              Type a target weight
-            </Link>
+          <div className="tf-hero-cost">
+            <p className="tf-label">{set.isSet ? 'Set price, plates 8% off' : 'Bar, plates and collars'}</p>
+            <p className="tf-hero-price">{formatPrice(price)}</p>
           </div>
+          {added ? (
+            <Link to={`${BASE}cart/`} className="tf-btn tf-btn--volt">
+              In the cart. Open it
+            </Link>
+          ) : (
+            <button
+              type="button"
+              className="tf-btn tf-btn--volt"
+              onClick={() => {
+                add(...lines);
+                setAdded(true);
+              }}
+            >
+              Add this set to the cart
+            </button>
+          )}
         </div>
       </div>
+
+      <div className="tf-hero-rack">
+        <Tray bar={load.bar} side={load.side} onLoad={change(loadPlate)} quiet />
+      </div>
+
+      <div className="tf-hero-hint">
+          <p>Tap a plate to load a pair. Tap one on the bar to take it off.</p>
+          <p>
+            <button type="button" className="tf-text-btn" onClick={() => change(strip)()}>
+              Strip the bar
+            </button>
+            <Link to={`${BASE}build/`} className="tf-text-btn">
+              Type a target weight
+            </Link>
+          </p>
+      </div>
+
+      <p className="tf-hero-caption tf-label" aria-hidden="true">
+        {load.side.length > 0 ? `Each end: ${load.side.map(formatKg).join(' + ')} kg` : `The ${load.bar} kg bar alone`}
+      </p>
     </section>
   );
 }

@@ -1,10 +1,25 @@
 # Topforce Sports: image shot list
 
-12 images for the Topforce Sports concept site. The eight product shots are essential; the four scenes make the home and shop pages, and the site holds together without them.
+12 images for the Topforce Sports concept site: eight product shots and four scenes. The product shots are essential. The site holds together without the scenes, but the home page is much weaker without them.
 
-Topforce sells barbells, plates, dumbbells, kettlebells, a rack and a bench. The site is black. The barbell in the hero is drawn in code, so no photograph is needed for it. Every product is photographed on black and the site drops that black, so the product appears to stand on the page itself.
+Topforce sells barbells, plates, dumbbells, kettlebells, a rack and a bench. The site is black. Every product is photographed on black and the site drops that black, so the product appears to stand on the page itself.
+
+**The hero needs no photograph.** The first screen is one end of a loaded barbell, drawn in code at the size of the screen, and you load it by tapping plates. Nothing here replaces it. The photographs are for everything below it and for the shop.
 
 Until a photograph is supplied, the site shows a striped block in its place, labelled with the shot number and file name below.
+
+## Where each photograph is used
+
+| Shot | Used on | How it is shown |
+|---|---|---|
+| 1 to 8, the products | Shop list, each product's own page, the cart | Whole product, never cropped. Where the frame is a different shape from the picture, the page's black fills the rest, so the picture's background must be truly black |
+| 1, 2, 4, 5, 6 | Home page, the five lanes under "Eight products" | A tall slice through the **middle** of the picture, about a third of its width, widening when pointed at. The middle of the frame has to be recognisable on its own |
+| 9, drop | Home page, full screen | Headline and three figures set over the lower left |
+| 10, knurl | Home page, tall panel on the left | Cropped a little at the sides on wide screens |
+| 11, foundry | Home page, full width | Shown whole |
+| 12, garage | Foot of the shop page, full screen | Headline and a button set over the lower left |
+
+The plates drawn in the hero have their weight moulded into the rim. The photographed plates must not: generated lettering comes out as nonsense, so every photographed product is plain and carries only its yellow-green detail.
 
 ## How to use this
 
@@ -49,7 +64,8 @@ All landscape 4:3 except the rack. Start each with the style block.
 ### 1. Olympic bar
 - **File:** `bar.jpg`
 - **Shape:** landscape, 4:3
-- **Prompt:** One end of the barbell lying on the black floor, running diagonally from the lower right corner towards the upper left. The bright chrome sleeve is nearest the camera and sharp; behind it the thin yellow-green ring, then the black knurled shaft running away and out of the frame. Only this one end of the bar is in the picture.
+- **Prompt:** One end of the barbell lying on the black floor, running diagonally from the lower right corner towards the upper left. The bright chrome sleeve is nearest the camera and sharp; behind it the thin yellow-green ring, then the black knurled shaft running away and out of the frame. Only this one end of the bar is in the picture. The yellow-green ring sits in the middle of the frame.
+- **Why the ring is in the middle:** the home page shows a tall slice through the centre of this picture, and the ring where chrome meets black is what makes it read as a barbell.
 
 ### 2. Bumper plates
 - **File:** `bumpers.jpg`
@@ -107,6 +123,7 @@ These do not use the style block. Start each with this line instead:
 - No text, logos or numbers anywhere. Generated bumper plates and dumbbells nearly always come with moulded lettering; regenerate until the faces are plain.
 - Each product has its one yellow-green detail, in the place the table gives, and nothing else is coloured.
 - The product's own blacks are visible: the rim light should draw a pale edge round it. A black product with no lit edge will vanish on the page.
+- Shots 1, 2, 4, 5 and 6: cover the left and right thirds of the picture with your hands. What is left in the middle should still be recognisable as the product.
 - Shot 2: plates are plain discs with a steel centre, not car tyres and not spoked wheels.
 - Shot 6: four uprights, the whole rack in frame, nothing loaded on it.
 - Shots 9 and 12: the lower left third is dark, with nothing important in it.

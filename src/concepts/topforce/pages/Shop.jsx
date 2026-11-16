@@ -31,6 +31,9 @@ export default function Shop() {
               {category.name}
             </h2>
             <p>{category.line}</p>
+            <span className="tf-label">
+              {productsIn(category.id).length} {productsIn(category.id).length === 1 ? 'product' : 'products'}
+            </span>
           </header>
           <ul>
             {productsIn(category.id).map((product) => (

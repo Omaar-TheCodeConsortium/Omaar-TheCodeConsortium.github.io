@@ -171,6 +171,8 @@
 }
 
 .tf-text-btn {
+  display: inline-flex;
+  align-items: center;
   min-height: 44px;
   padding: 0 4px;
   font-weight: 600;
@@ -360,9 +362,16 @@
 }
 
 /* Products are shot on black. Anything in the picture darker than the page takes the page's
-   colour, so the backdrop disappears and the product stands on the site itself. */
+   colour, so the backdrop disappears and the product stands on the site itself. The whole
+   product is always shown: where the frame is a different shape, the page fills the rest. */
 .tf-photo--cut {
+  object-fit: contain;
   mix-blend-mode: lighten;
+}
+
+/* The lanes on the home page are the exception: a tall slice through the middle of each. */
+.tf-lane .tf-photo--cut {
+  object-fit: cover;
 }
 
 .tf-photo--todo {
@@ -386,15 +395,21 @@
 .tf-barbell {
   display: block;
   width: 100%;
-  /* Never shorter than the full drawing needs, so the plates are not cut; on a narrow screen
-     the frame is taller than that and shows the right-hand end only. */
-  height: max(21.41vw, 250px);
   overflow: hidden;
 }
 
+/* Tip to tip. Never shorter than the full drawing needs, so the plates are not cut; on a narrow
+   screen the frame is taller than that and shows the right-hand end only. */
+.tf-barbell--whole {
+  height: max(21.41vw, 250px);
+}
+
+.tf-barbell--end {
+  height: clamp(300px, 94vw, 520px);
+}
+
 .tf-barbell-floor {
-  stroke: var(--tf-iron-3);
-  stroke-width: 3;
+  fill: #3a3a36;
 }
 
 .tf-plate-seat {
@@ -403,21 +418,42 @@
 
 .tf-plate {
   cursor: pointer;
-  animation: tf-plate-on 340ms cubic-bezier(0.55, 0, 0.9, 0.55) backwards;
+  outline: none;
+  animation: tf-plate-on 330ms cubic-bezier(0.6, 0, 0.92, 0.5) backwards;
+}
+
+.tf-plate-body {
+  stroke: rgb(241 239 233 / 0.1);
+  stroke-width: 1;
+  transition: stroke 140ms var(--tf-ease);
+}
+
+@media (hover: hover) {
+  .tf-plate[role='button']:hover .tf-plate-body {
+    stroke: var(--tf-chalk);
+    stroke-width: 2.5;
+  }
+}
+
+.tf-plate:focus-visible .tf-plate-body {
+  stroke: var(--tf-volt);
+  stroke-width: 4;
 }
 
 .tf-plate-no {
   font-family: var(--tf-display);
   font-weight: 800;
+  letter-spacing: 0.02em;
   user-select: none;
+  pointer-events: none;
 }
 
 @keyframes tf-plate-on {
   from {
     opacity: 0;
-    transform: translateX(calc(var(--dir) * 560px));
+    transform: translateX(calc(var(--dir) * 720px));
   }
-  25% {
+  12% {
     opacity: 1;
   }
   to {
@@ -432,56 +468,71 @@
   }
 }
 
+/* The plates you can load stand in a row, edge-on, the way they are drawn on the bar. */
 .tf-tray-plates {
   display: flex;
-  gap: 6px;
+  align-items: flex-end;
+  gap: 5px;
+  height: var(--rack, 88px);
 }
 
 .tf-tray-plate {
-  flex: 1 1 0;
-  min-width: 0;
-  min-height: 64px;
+  /* A thicker plate is a wider one, down to the width a finger needs. */
+  flex: calc(var(--thick, 40) + 30) 1 0;
+  min-width: 44px;
+  max-width: 84px;
+  height: calc(100% * var(--tall, 1));
+  min-height: 44px;
   padding: 0;
-  border: 2px solid var(--tf-iron-3);
-  background: var(--tf-iron-2);
+  border-radius: 5px 5px 2px 2px;
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 0.5), rgb(0 0 0 / 0) 14%, rgb(0 0 0 / 0) 86%, rgb(0 0 0 / 0.5)),
+    linear-gradient(#34342f, #63635a 7%, #474740 22%, #33332f 60%, #232321);
+  color: var(--tf-volt);
   font-family: var(--tf-display);
-  font-size: clamp(1.2rem, 2.1vw, 2rem);
+  font-size: clamp(1.2rem, 1.9vw, 1.9rem);
   font-weight: 800;
   line-height: 1;
   cursor: pointer;
   transition:
-    border-color 160ms var(--tf-ease),
-    background-color 160ms var(--tf-ease),
-    color 160ms var(--tf-ease),
-    transform 90ms cubic-bezier(0, 0, 0.58, 1);
+    transform 160ms cubic-bezier(0.2, 0, 0.2, 1),
+    filter 160ms var(--tf-ease);
 }
 
-.tf-tray-plate:hover {
-  border-color: var(--tf-volt);
-  color: var(--tf-volt);
-}
-
-.tf-tray-plate:active {
-  transform: translateY(4px);
-  background: var(--tf-volt);
+.tf-tray-plate[data-steel] {
+  border-radius: 3px 3px 2px 2px;
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 0.34), rgb(0 0 0 / 0) 14%, rgb(0 0 0 / 0) 86%, rgb(0 0 0 / 0.34)),
+    linear-gradient(#9b9b94, #dcdcd5 12%, #b4b4ac 50%, #74746d);
   color: var(--tf-iron);
 }
 
-.tf-tray-plate[aria-disabled='true'] {
-  border-color: var(--tf-iron-2);
-  color: #6f6d66;
+@media (hover: hover) {
+  .tf-tray-plate:hover {
+    transform: translateY(-7px);
+    filter: brightness(1.25);
+  }
 }
 
-.tf-tray-plate[aria-disabled='true']:active {
+.tf-tray-plate:active {
+  transform: translateY(2px);
+  transition-duration: 60ms;
+}
+
+.tf-tray-plate[aria-disabled='true'] {
+  opacity: 0.28;
   transform: none;
-  background: var(--tf-iron-2);
-  color: #6f6d66;
+  filter: none;
 }
 
 .tf-tray-note {
   margin-top: 10px;
   font-size: 0.9rem;
   color: var(--tf-dust);
+}
+
+.tf-tray-note:empty {
+  display: none;
 }
 
 .tf-ends {
@@ -505,67 +556,109 @@
 
 /* ---------- Home: the hero is the loader ---------- */
 
+/* Stacked, for phones and upright screens: headline, the end of the bar, the weight and price
+   side by side, the rack, then the button. */
 .tf-hero {
   display: grid;
-  grid-template-rows: auto auto 1fr;
-  min-height: calc(100svh - var(--tf-top));
-  padding-top: clamp(14px, 1.6vw, 26px);
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: 'title title' 'bar bar' 'read cost' 'rack rack' 'hint hint' 'buy buy';
+  align-items: end;
+  gap: 16px 20px;
+  padding: 14px 0 40px;
 }
 
-.tf-hero-head {
+.tf-hero-title {
+  grid-area: title;
   padding: 0 var(--tf-pad);
-}
-
-.tf-hero .tf-mega {
   /* The line is 5.26 em long: this sets it from one margin to the other. */
-  font-size: min(calc((100vw - 2 * var(--tf-pad)) / 5.36), 30svh);
+  font-size: calc((100vw - 2 * var(--tf-pad)) / 5.36);
   white-space: nowrap;
 }
 
-.tf-hero-deck {
-  display: grid;
-  gap: 22px;
-  align-content: start;
-  padding: 20px var(--tf-pad) 36px;
+.tf-hero-title br {
+  display: none;
 }
 
-.tf-hero-load {
+.tf-hero-bar {
+  grid-area: bar;
+}
+
+.tf-hero-mid,
+.tf-hero-buy {
+  display: contents;
+}
+
+.tf-hero-read,
+.tf-hero-cost {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 12px;
+  gap: 8px;
+}
+
+.tf-hero-read {
+  grid-area: read;
+  padding-left: var(--tf-pad);
+}
+
+.tf-hero-cost {
+  grid-area: cost;
+  justify-items: end;
+  padding-right: var(--tf-pad);
+  text-align: right;
+}
+
+.tf-hero-buy > .tf-btn {
+  grid-area: buy;
+  margin: 0 var(--tf-pad);
 }
 
 .tf-hero-kg {
   font-family: var(--tf-display);
-  font-size: clamp(5rem, 9.4vw, 10rem);
+  font-size: clamp(5rem, 25vw, 10rem);
   font-weight: 900;
-  line-height: 0.8;
+  line-height: 0.78;
   color: var(--tf-volt);
   font-variant-numeric: tabular-nums;
-}
-
-.tf-hero-read {
-  display: grid;
-  gap: 8px;
-}
-
-.tf-hero-lb {
-  font-size: 0.95rem;
-  color: var(--tf-dust);
-}
-
-.tf-hero-buy {
-  display: grid;
-  gap: 8px;
-  align-content: start;
+  white-space: nowrap;
 }
 
 .tf-hero-price {
   font-family: var(--tf-display);
-  font-size: clamp(2.6rem, 4.2vw, 4.2rem);
+  font-size: clamp(2.3rem, 10vw, 4.2rem);
   font-weight: 900;
   line-height: 0.85;
   font-variant-numeric: tabular-nums;
+}
+
+.tf-hero-rack {
+  grid-area: rack;
+  display: grid;
+  gap: 12px;
+  padding: 0 var(--tf-pad);
+}
+
+.tf-hero-rack .tf-tray-note {
+  margin: 0;
+  color: var(--tf-volt);
+}
+
+.tf-hero-hint {
+  grid-area: hint;
+  padding: 0 var(--tf-pad);
+  font-size: 0.95rem;
+  line-height: 1.35;
+  color: var(--tf-dust);
+}
+
+.tf-hero-hint p + p {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 20px;
+  color: var(--tf-chalk);
+}
+
+.tf-hero-caption {
+  display: none;
 }
 
 .tf-hero-actions {
@@ -575,98 +668,162 @@
   margin-top: 8px;
 }
 
-.tf-hero-actions .tf-btn {
-  flex: 1 1 auto;
-}
+/* On a wide screen everything is laid over one drawing. You stand beside the right-hand sleeve:
+   the plates are as tall as the screen allows, the shaft runs out to the left through the middle
+   of the frame, the headline sits above it and the weight below. Every position is a share of the
+   frame's height (--hh), because the drawing is scaled by height: the bar is at 50%, the floor at
+   88.8%, and the shoulder of the bar is 0.8 of the height in from the right-hand edge. */
+@media (min-width: 960px) and (min-aspect-ratio: 5 / 4) {
+  .tf-hero {
+    --hh: max(540px, min(calc(100svh - var(--tf-top)), 62vw));
+    --zone: calc(100vw - var(--hh) * 0.8 - var(--tf-pad) - 34px);
 
-@media (min-width: 960px) {
-  .tf-hero-deck {
-    grid-template-columns: minmax(0, 1.2fr) auto minmax(0, 0.95fr);
-    grid-template-areas: 'load read buy';
-    gap: clamp(28px, 4.4vw, 80px);
-    padding-top: 22px;
+    position: relative;
+    display: block;
+    height: var(--hh);
+    padding: 0;
+    overflow: hidden;
   }
 
-  .tf-hero-load {
-    grid-area: load;
+  .tf-hero-bar {
+    position: absolute;
+    inset: 0;
+    height: 100%;
   }
 
-  .tf-hero-read {
-    grid-area: read;
+  .tf-hero-title,
+  .tf-hero-mid,
+  .tf-hero-rack {
+    position: absolute;
+    left: var(--tf-pad);
+    width: var(--zone);
+    padding: 0;
   }
 
-  .tf-hero-buy {
-    grid-area: buy;
+  .tf-hero-title {
+    top: calc(var(--hh) * 0.036);
+    font-size: min(calc(var(--zone) / 3.5), calc(var(--hh) * 0.262));
+    pointer-events: none;
   }
 
-  .tf-hero-load .tf-lede {
-    max-width: none;
-    font-size: 1.06rem;
+  .tf-hero-title br {
+    display: inline;
   }
 
-  .tf-hero-load {
-    grid-template-columns: minmax(0, 1fr) auto;
+  .tf-hero-mid {
+    top: calc(var(--hh) * 0.55);
+    display: flex;
+    align-items: flex-end;
+    gap: clamp(20px, 3vw, 54px);
   }
 
-  .tf-hero-load > .tf-lede {
-    grid-column: 1 / -1;
+  .tf-hero-read,
+  .tf-hero-cost {
+    padding: 0;
   }
 
-  /* The tray's two parts join the column's own grid, so its note can sit beside the plates on the bar. */
-  .tf-hero-load > .tf-tray {
-    display: contents;
+  .tf-hero-cost {
+    justify-items: start;
+    gap: 6px;
+    text-align: left;
   }
 
-  .tf-hero-load .tf-tray-plates {
-    grid-column: 1 / -1;
-  }
-
-  .tf-hero-load .tf-tray-note {
-    grid-column: 2;
-    grid-row: 3;
-    align-self: center;
+  .tf-hero-buy > .tf-btn {
     margin: 0;
-    max-width: 16rem;
-    text-align: right;
-    color: var(--tf-volt);
-  }
-
-  .tf-hero-load .tf-ends {
-    grid-column: 1;
-    grid-row: 3;
-  }
-}
-
-/* A short laptop screen: the headline gives up height so the plates you tap stay above the fold. */
-@media (min-width: 960px) and (max-height: 790px) {
-  .tf-hero .tf-mega {
-    font-size: min(calc((100vw - 2 * var(--tf-pad)) / 5.36), 22svh);
-  }
-
-  .tf-hero-deck {
-    padding-top: 14px;
-  }
-
-  .tf-hero .tf-tray-plate {
-    min-height: 52px;
   }
 
   .tf-hero-kg {
-    font-size: clamp(4.4rem, 7.4vw, 7rem);
+    font-size: min(calc(var(--hh) * 0.2), calc(var(--zone) / 4.3));
   }
 
-  /* Plates first, the explanation after: the controls clear the bottom edge of the screen. */
-  .tf-hero-load .tf-tray-plates {
-    grid-row: 1;
+  .tf-hero-buy {
+    flex: 0 1 19rem;
+    display: grid;
+    gap: 8px;
   }
 
-  .tf-hero-load .tf-ends,
-  .tf-hero-load .tf-tray-note {
-    grid-row: 2;
+  .tf-hero-price {
+    font-size: calc(var(--hh) * 0.07);
   }
 
-  .tf-hero-load > .tf-lede {
-    grid-row: 3;
+  .tf-hero-buy .tf-btn {
+    min-height: clamp(48px, calc(var(--hh) * 0.07), 58px);
+    padding: 0 18px;
+  }
+
+  .tf-hero-read,
+  .tf-hero-cost,
+  .tf-hero-buy > .tf-btn {
+    grid-area: auto;
+  }
+
+  /* The rack stands on the same floor as the bar. */
+  .tf-hero-rack {
+    --rack: calc(var(--hh) * 0.105);
+
+    bottom: calc(var(--hh) * 0.112);
+    width: min(var(--zone), 26rem);
+  }
+
+  /* Said just above the rack, without moving anything. */
+  .tf-hero-rack .tf-tray-note {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 8px);
+    width: var(--zone);
+    font-size: 0.85rem;
+  }
+
+  /* Under the floor, at the right, beneath the plates. */
+  .tf-hero-hint {
+    position: absolute;
+    right: var(--tf-pad);
+    bottom: calc(var(--hh) * 0.028);
+    padding: 0;
+    font-size: 0.88rem;
+  }
+
+  .tf-hero-hint p:first-child {
+    display: none;
+  }
+
+  .tf-hero-hint .tf-text-btn {
+    min-height: 44px;
+    font-size: 0.9rem;
+  }
+
+  .tf-hero-buy .tf-btn {
+    font-size: 1.12rem;
+  }
+}
+
+/* With room beside the rack, the hint sits there and what is on each end is noted under the plates. */
+@media (min-width: 1240px) and (min-aspect-ratio: 5 / 4) {
+  .tf-hero-hint {
+    left: calc(var(--tf-pad) + 26rem + clamp(16px, 2vw, 32px));
+    right: auto;
+    bottom: calc(var(--hh) * 0.112);
+    width: calc(var(--zone) - 26rem - clamp(16px, 2vw, 32px));
+    max-width: 22rem;
+  }
+
+  .tf-hero-hint p:first-child {
+    display: block;
+  }
+
+  .tf-hero-hint .tf-text-btn {
+    min-height: 36px;
+  }
+
+  .tf-hero-buy .tf-btn {
+    font-size: 1.32rem;
+  }
+
+  .tf-hero-caption {
+    position: absolute;
+    right: var(--tf-pad);
+    bottom: calc(var(--hh) * 0.04);
+    display: block;
   }
 }
 
@@ -747,8 +904,9 @@
   }
 
   .tf-rate {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) auto;
+    grid-template-columns: 40% minmax(0, 1fr) auto;
     align-items: baseline;
+    padding-top: 22px;
   }
 
   .tf-rate-eg {
@@ -818,9 +976,6 @@
   color: var(--tf-dust);
 }
 
-.tf-tray-note:empty {
-  display: none;
-}
 
 .tf-lane:hover .tf-lane-name {
   color: var(--tf-volt);
@@ -1224,6 +1379,70 @@
     padding: 0;
     text-align: right;
   }
+}
+
+/* On the shop page each group is a band: its name stays at the left while its shelves pass. */
+.tf-shop .tf-cat {
+  border-top: 2px solid var(--tf-chalk);
+}
+
+.tf-shop .tf-cat-head {
+  padding-top: 20px;
+}
+
+.tf-shop .tf-cat-head .tf-label {
+  flex-basis: 100%;
+}
+
+@media (min-width: 960px) {
+  .tf-shop .tf-cat {
+    display: grid;
+    grid-template-columns: minmax(210px, 21vw) minmax(0, 1fr);
+  }
+
+  .tf-shop .tf-cat-head {
+    position: sticky;
+    top: var(--tf-top);
+    align-self: start;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 22px 22px 30px var(--tf-pad);
+  }
+
+  .tf-shop .tf-cat-name {
+    font-size: clamp(2.2rem, 3.3vw, 3.8rem);
+    line-height: 0.84;
+  }
+
+  .tf-shop .tf-cat-head p {
+    font-size: 0.98rem;
+  }
+
+  .tf-shop .tf-cat > ul {
+    border-top: 0;
+    border-left: 2px solid var(--tf-iron-3);
+  }
+
+  .tf-shop .tf-cat li:last-child .tf-shelf {
+    border-bottom: 0;
+  }
+
+  .tf-shop .tf-shelf {
+    grid-template-columns: minmax(180px, 23vw) minmax(0, 1fr) auto;
+  }
+
+  .tf-shop .tf-shelf-name {
+    font-size: clamp(1.9rem, 4.1vw, 4.6rem);
+  }
+
+  .tf-shop .tf-shelf-fig .tf-fig {
+    font-size: clamp(2rem, 5.4vw, 6rem);
+  }
+}
+
+.tf-shop > .tf-drop {
+  margin-top: 0;
 }
 
 /* ---------- Product ---------- */

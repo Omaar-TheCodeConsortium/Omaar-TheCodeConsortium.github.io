@@ -81,9 +81,12 @@ export function PlateFace() {
       <defs>
         <path id="tf-face-ring" d="M0 158a158 158 0 1 1 0-316a158 158 0 1 1 0 316" />
         <radialGradient id="tf-face-hub">
-          <stop offset="0.4" stopColor="#77776f" />
-          <stop offset="0.7" stopColor="#e9e9e3" />
-          <stop offset="1" stopColor="#8a8a83" />
+          <stop offset="0.38" stopColor="#8f8f88" />
+          <stop offset="0.41" stopColor="#4f4f4a" />
+          <stop offset="0.47" stopColor="#d2d2cb" />
+          <stop offset="0.88" stopColor="#b7b7af" />
+          <stop offset="0.95" stopColor="#f2f2ec" />
+          <stop offset="1" stopColor="#6e6e67" />
         </radialGradient>
       </defs>
       <circle r="225" fill="#161615" />

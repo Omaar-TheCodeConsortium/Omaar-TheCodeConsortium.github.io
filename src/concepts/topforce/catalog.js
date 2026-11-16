@@ -455,7 +455,7 @@ export const BARS = {
 };
 
 export const COLLAR_WIDTH = 38;
-export const DEFAULT_LOAD = { bar: 20, side: [20, 15, 5] };
+export const DEFAULT_LOAD = { bar: 20, side: [25, 20, 15] };
 
 export const sideThickness = (side) => side.reduce((sum, kg) => sum + loaderPlate(kg).thick, 0);
 export const roomOnSleeve = (bar, side) => BARS[bar].sleeve - COLLAR_WIDTH - sideThickness(side);
