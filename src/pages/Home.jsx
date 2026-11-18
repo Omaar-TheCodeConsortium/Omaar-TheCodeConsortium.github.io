@@ -9,6 +9,7 @@ import Fill from '../components/Fill.jsx';
 import { BUTTON_DARK, BUTTON_LIGHT, ExternalLink, LABEL, Phone, Screen, Stage, TEXT_LINK } from '../components/ProductBits.jsx';
 import { COMPANY, FOUNDERS, FOUNDER_NOTE, LAB, PRODUCTS, TIMELINE } from '../company.js';
 import { LISTED } from '../concepts/registry.js';
+import { usePortal } from '../concepts/portal/portalContext.js';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -148,33 +149,49 @@ function Hero() {
   );
 }
 
-// Real screens from everything we have built, drifting past in two rows.
+// Real screens from everything we have built, drifting past in two rows. Each picture is made
+// at the exact heights it is shown at (public/wall/<id>-h<height>.webp), so the browser never
+// has to shrink a large screenshot on the fly: shrinking it while it moves is what shimmers.
 const WALL = [
   [
-    { src: '/wall/tccos-command.webp', w: 1135, name: 'TCCOS', what: 'Command centre' },
-    { src: '/products/tea-os-home.webp', w: 436, h: 940, name: 'Spear Tea OS', what: 'Open tabs', phone: true },
-    { src: '/wall/tccos-rota.webp', w: 1142, name: 'TCCOS', what: 'Master rota' },
-    { src: '/wall/salon-warehouse.webp', w: 1239, name: 'Bespoke Salon', what: 'Retail stock' },
-    { src: '/products/tea-os-close.webp', w: 426, h: 922, name: 'Spear Tea OS', what: 'Closing a tab', phone: true },
+    { id: 'tccos-command', ratio: 454 / 224, name: 'TCCOS', what: 'Command centre' },
+    { id: 'tea-home', ratio: 101 / 218, name: 'Spear Tea OS', what: 'Open tabs', phone: true },
+    { id: 'tccos-rota', ratio: 457 / 224, name: 'TCCOS', what: 'Master rota' },
+    { id: 'salon-warehouse', ratio: 496 / 224, name: 'Bespoke Salon', what: 'Retail stock' },
+    { id: 'tea-close', ratio: 101 / 218, name: 'Spear Tea OS', what: 'Closing a tab', phone: true },
   ],
   [
-    { src: '/wall/tccos-transport.webp', w: 1141, name: 'TCCOS', what: 'Staff transport' },
-    { src: '/wall/bakery-notifications.webp', w: 1179, name: 'BakeryOS', what: 'Shift alerts' },
-    { src: '/products/tea-os-tab.webp', w: 372, h: 804, name: 'Spear Tea OS', what: 'A tab', phone: true },
-    { src: '/wall/tccos-hierarchy.webp', w: 1135, name: 'TCCOS', what: 'Organisation chart' },
-    { src: '/wall/salon-services.webp', w: 1232, name: 'Bespoke Salon', what: 'Treatments' },
+    { id: 'tccos-transport', ratio: 456 / 224, name: 'TCCOS', what: 'Staff transport' },
+    { id: 'bakery-notifications', ratio: 472 / 224, name: 'BakeryOS', what: 'Shift alerts' },
+    { id: 'tea-tab', ratio: 101 / 218, name: 'Spear Tea OS', what: 'A tab', phone: true },
+    { id: 'tccos-hierarchy', ratio: 454 / 224, name: 'TCCOS', what: 'Organisation chart' },
+    { id: 'salon-services', ratio: 493 / 224, name: 'Bespoke Salon', what: 'Treatments' },
   ],
 ];
 
+const WALL_HEIGHTS = [144, 224, 288, 448];
+
 function WallTile({ tile, hidden }) {
-  const ratio = tile.phone ? tile.w / tile.h : tile.w / 560;
+  // A phone sits inside a 3 px frame, so its picture is 6 px shorter than the tile.
+  const inner = (height) => (tile.phone ? height - 6 : height);
+  const widthAt = (height) => Math.round(inner(height) * tile.ratio);
   return (
     <figure className="m-0 flex shrink-0 flex-col gap-2" aria-hidden={hidden || undefined}>
       <span
-        className={`block h-36 overflow-hidden border border-white/15 bg-white/5 md:h-56 ${tile.phone ? 'rounded-[1.25rem] border-[3px] border-white/20' : 'rounded-md'}`}
-        style={{ aspectRatio: ratio }}
+        className={`block h-[var(--h)] overflow-hidden bg-white/5 [--h:9rem] md:[--h:14rem] ${tile.phone ? 'rounded-[1.25rem] border-[3px] border-white/20' : 'rounded-md outline outline-1 -outline-offset-1 outline-white/15'}`}
+        style={{ width: tile.phone ? `calc((var(--h) - 6px) * ${tile.ratio} + 6px)` : `calc(var(--h) * ${tile.ratio})` }}
       >
-        <img src={tile.src} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover object-left-top" />
+        <img
+          src={`/wall/${tile.id}-h224.webp`}
+          srcSet={WALL_HEIGHTS.map((height) => `/wall/${tile.id}-h${height}.webp ${widthAt(height)}w`).join(', ')}
+          sizes={`(min-width: 768px) ${widthAt(224)}px, ${widthAt(144)}px`}
+          alt=""
+          width={widthAt(224)}
+          height={inner(224)}
+          loading="lazy"
+          decoding="async"
+          className="block h-full w-full object-cover object-left-top [backface-visibility:hidden]"
+        />
       </span>
       <figcaption className="font-mono text-[10px] uppercase tracking-widest text-gray-500">
         <span className="text-gray-300">{tile.name}</span> · {tile.what}
@@ -213,7 +230,7 @@ function ProductWall() {
     <div ref={scope} className="relative overflow-hidden border-t border-gray-300 bg-black py-10 md:py-14" role="region" aria-label="Screens from our products">
       <div className="flex flex-col gap-6 md:gap-8">
         {WALL.map((row, rowIndex) => (
-          <div key={rowIndex} data-row className="flex w-max gap-4 pr-4 md:gap-6 md:pr-6">
+          <div key={rowIndex} data-row className="flex w-max gap-4 pr-4 [will-change:transform] md:gap-6 md:pr-6">
             {[...row, ...row].map((tile, index) => (
               <WallTile key={index} tile={tile} hidden={index >= row.length} />
             ))}
@@ -469,6 +486,15 @@ function Lab() {
 // ---------------------------------------------------------------- Concept builds
 
 function Concepts() {
+  const { enter } = usePortal();
+
+  // The same colour fill the concept library uses, grown from the card that was clicked.
+  const openConcept = (event, concept) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    enter(concept, event.currentTarget);
+  };
+
   return (
     <section id="concepts" aria-labelledby="concepts-title" className={FRAME}>
       <div className={`${PAD} border-b border-gray-300`}>
@@ -481,7 +507,13 @@ function Concepts() {
           const id = concept.path.split('/').filter(Boolean)[1];
           return (
             <li key={concept.path} className="w-[78%] shrink-0 snap-start md:w-auto" data-reveal>
-              <Link to={concept.path} className="group flex flex-col gap-3">
+              <Link
+                to={concept.path}
+                onClick={(event) => openConcept(event, concept)}
+                onPointerEnter={() => concept.load().catch(() => null)}
+                onFocus={() => concept.load().catch(() => null)}
+                className="group flex flex-col gap-3"
+              >
                 <span className="block overflow-hidden rounded-md border border-gray-300 shadow-[0_18px_40px_-28px_rgba(0,0,0,0.5)]">
                   <img
                     src={`/studio/${id}.webp`}
