@@ -4,7 +4,22 @@ Written 18 November 2026.
 
 ## Status
 
-Phases 2 to 5 are built, on the preview only. The home page is cut to five sections: hero, products, how we work, team, contact. Product pages are at `/products/spear-os/` and `/products/tea-os/`, and the prototypes at `/prototypes/`. The concept builds are linked from the footer.
+**Direction changed on 18 November 2026.** thecodeconsortium.com is the parent company's site, for investors, future employees, partners and reviewers. Customers go to each product's own site. The page presents the company and every product it makes, across industries. The section on positioning below is kept as background; this paragraph and the list after it describe what is built.
+
+Built, on the preview only:
+
+- **Home page.** In order:
+  - the motto "Software built to solve, not just run.";
+  - a moving wall of real product screens;
+  - the products as chapters: Spear OS, Spear Tea OS, TCCOS;
+  - how we build;
+  - the Lab (BakeryOS and Bespoke Salon, ready to deploy);
+  - the concept builds, with an enquiry button;
+  - a timeline;
+  - the founders;
+  - contact.
+- **Motion.** Done with GSAP: the headline rises in, the screen wall drifts, the product picture stays pinned while the chapters scroll, the icons draw themselves and the timeline draws as it scrolls. All of it stops when the visitor has asked for reduced motion.
+- **Pages.** `/products/spear-os/`, `/products/tea-os/`, `/products/tccos/` and `/lab/`.
 
 Facts that are still missing show as marked gaps such as "[City]". They are filled in through one file, `src/company.js`. A production build (`npm run build`) stops while any gap is left, so the site cannot reach `main` with gaps in it.
 

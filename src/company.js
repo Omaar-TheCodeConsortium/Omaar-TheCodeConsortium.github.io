@@ -38,6 +38,8 @@ export const PRODUCTS = [
   {
     slug: 'spear-os',
     name: 'Spear OS',
+    industry: 'Hospitality',
+    tags: ['Hotels and restaurants', 'Works offline', 'Subscription'],
     path: '/products/spear-os/',
     site: 'https://spear-os.com/',
     siteLabel: 'spear-os.com',
@@ -64,6 +66,8 @@ export const PRODUCTS = [
   {
     slug: 'tea-os',
     name: 'Spear Tea OS',
+    industry: 'Hospitality',
+    tags: ['Any phone', 'Sinhala, Tamil, English', 'No monthly fee'],
     path: '/products/tea-os/',
     site: 'https://teashopos.spear-os.com/',
     siteLabel: 'teashopos.spear-os.com',
@@ -94,31 +98,72 @@ export const PRODUCTS = [
       { src: '/products/tea-os-close.webp', alt: 'Spear Tea OS: closing a tab of Rs 1,950, paid in cash', width: 426, height: 922 },
     ],
   },
+  {
+    slug: 'tccos',
+    name: 'TCCOS',
+    industry: 'Workforce',
+    tags: ['BPOs', 'Rosters and payroll', 'Staff transport'],
+    path: '/products/tccos/',
+    site: null,
+    stage: 'In development',
+    stageNote: 'Not on sale yet',
+    live: false,
+    line: 'The people system for companies that run around the clock.',
+    summary:
+      'TCCOS runs the staff side of a BPO or any large shift-based business: who works where and when, leave and attendance, payroll, and the vans that bring people in for the night shift.',
+    audience: 'BPOs, contact centres and other large companies that work in shifts.',
+    pricing: null,
+    modules: [
+      { name: 'People records', detail: 'Every employee, their documents and their place in the organisation.', status: null },
+      { name: 'Rosters', detail: 'Shift patterns, rotations and the master rota.', status: null },
+      { name: 'Leave and attendance', detail: 'Applications, approvals and biometric clock-ins.', status: null },
+      { name: 'Payroll', detail: 'Salaries, EPF and ETF, and statutory holidays.', status: null },
+      { name: 'Staff transport', detail: 'Routes and manifests for the vans that bring shifts in.', status: null },
+      { name: 'Organisation chart', detail: 'Restructure teams by dragging the lines between people.', status: null },
+    ],
+    milestones: [
+      { what: 'First customer live', when: null },
+      { what: 'On sale', when: null },
+    ],
+    demo: '/project/hris-command-center',
+    shots: [
+      { src: '/wall/tccos-command-lg.webp', alt: 'TCCOS command centre: the overview screen of the workforce system', width: 1600, height: 790 },
+      { src: '/wall/tccos-rota-lg.webp', alt: 'TCCOS master rota: a week of shifts for each employee', width: 1600, height: 785 },
+    ],
+  },
 ];
 
 export const productBySlug = (slug) => PRODUCTS.find((product) => product.slug === slug);
 
-// Working demos built to test ideas outside hospitality. Not on sale.
-export const PROTOTYPES = [
+// Experiments: built to test an idea, finished enough to deploy for a business that wants one.
+export const LAB = [
   {
     path: '/project/bakery-os',
     name: 'BakeryOS',
     line: 'A counter till for a bakery: shifts, sales, promotions and stock.',
-    image: '/bakery-sales.png',
-    alt: 'BakeryOS sales report',
-  },
-  {
-    path: '/project/hris-command-center',
-    name: 'HRIS Command Center',
-    line: 'People, rosters, payroll and staff transport for a large call centre. Built as a proof of concept for a prospective customer.',
-    image: '/hris-showcase.png',
-    alt: 'HRIS Command Center overview screen',
+    image: '/wall/bakery-notifications-lg.webp',
+    alt: 'BakeryOS cashier portal: shift notifications',
   },
   {
     path: '/project/bespoke-salon',
     name: 'Bespoke Salon',
     line: 'Bookings, client records, treatments and retail stock for a hair salon.',
-    image: '/salon-showcase.png',
-    alt: 'Bespoke Salon bookings screen',
+    image: '/wall/salon-warehouse-lg.webp',
+    alt: 'Bespoke Salon: the retail stock screen',
   },
+];
+
+// Pages that hold a working demo, with the name each should go by.
+export const DEMO_PAGES = [
+  ...LAB.map((item) => ({ path: item.path, name: item.name, line: item.line, kind: 'experiment' })),
+  { path: '/project/hris-command-center', name: 'TCCOS', line: 'An early build of TCCOS, the people system for shift-based companies.', kind: 'early build' },
+];
+
+// The order in which the company's story has happened. null dates show as gaps.
+export const TIMELINE = [
+  { what: 'The Code Consortium founded', when: COMPANY.founded },
+  { what: 'Spear Tea OS released', when: null },
+  { what: 'Spear OS goes live with its first customer', when: null },
+  { what: 'TCCOS in development', when: null },
+  { what: 'Next', when: null, detail: null },
 ];

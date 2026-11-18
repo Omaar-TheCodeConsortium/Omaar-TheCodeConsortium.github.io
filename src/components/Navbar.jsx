@@ -2,12 +2,13 @@ import { useEffect, useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 
-// Sections of the home page, then pages. The concept builds are linked from the footer.
+// Sections of the home page, and the concept builds.
 const LINKS = [
   { label: 'Products', section: 'products' },
-  { label: 'How we work', section: 'model' },
-  { label: 'Team', section: 'company' },
-  { label: 'Prototypes', to: '/prototypes/' },
+  { label: 'How we build', section: 'approach' },
+  { label: 'Lab', section: 'lab' },
+  { label: 'Concepts', to: '/concepts/' },
+  { label: 'People', section: 'people' },
 ];
 
 const chars = '!<>-_\\/[]{}—=+*^?#________ABCDEFGHIJKLMNOPQRSTUVWXYZ';

@@ -13,7 +13,7 @@ const DOTS = 'bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size
 // this page says what it is, where it stands and who makes it.
 export default function ProductPage({ slug }) {
   const product = productBySlug(slug);
-  const other = PRODUCTS.find((entry) => entry.slug !== slug);
+  const others = PRODUCTS.filter((entry) => entry.slug !== slug);
   const phones = product.shots.length > 0 && product.shots[0].height > product.shots[0].width;
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function ProductPage({ slug }) {
               <Link to="/#products" className="underline decoration-gray-300 underline-offset-4 hover:decoration-black">
                 Products
               </Link>{' '}
-              · Made by {COMPANY.name}
+              · {product.industry} · Made by {COMPANY.name}
             </p>
             <Stage product={product} />
             <h1 id="product-title" className="text-5xl font-extrabold tracking-tighter md:text-7xl">
@@ -44,9 +44,16 @@ export default function ProductPage({ slug }) {
                   Open the app
                 </ExternalLink>
               ) : null}
-              <ExternalLink className={product.app ? BUTTON_LIGHT : BUTTON_DARK} href={product.site}>
-                {product.siteLabel}
-              </ExternalLink>
+              {product.site ? (
+                <ExternalLink className={product.app ? BUTTON_LIGHT : BUTTON_DARK} href={product.site}>
+                  {product.siteLabel}
+                </ExternalLink>
+              ) : null}
+              {product.demo ? (
+                <Link className={BUTTON_DARK} to={product.demo}>
+                  See an early build
+                </Link>
+              ) : null}
             </p>
           </div>
           <div className={`flex items-end justify-center gap-4 overflow-hidden px-6 pt-10 md:px-12 ${phones ? '' : 'items-center pb-10'} ${DOTS}`}>
@@ -86,7 +93,9 @@ export default function ProductPage({ slug }) {
             </div>
             <div className="border-b border-gray-300 p-6 md:border-b-0 md:border-r md:p-12">
               <dt className={LABEL}>How it’s paid for</dt>
-              <dd className="mt-3 text-lg">{product.pricing}</dd>
+              <dd className="mt-3 text-lg">
+                <Fill value={product.pricing} label="Subscription, licence, or both" />
+              </dd>
             </div>
             <div className={`p-6 md:p-12 ${DOTS}`}>
               <dt className={LABEL}>Dates</dt>
@@ -116,9 +125,11 @@ export default function ProductPage({ slug }) {
             <Link className={TEXT_LINK} to="/#company">
               Meet the team →
             </Link>
-            <Link className={TEXT_LINK} to={other.path}>
-              {other.name} →
-            </Link>
+            {others.map((other) => (
+              <Link key={other.slug} className={TEXT_LINK} to={other.path}>
+                {other.name} →
+              </Link>
+            ))}
           </p>
         </section>
       </main>

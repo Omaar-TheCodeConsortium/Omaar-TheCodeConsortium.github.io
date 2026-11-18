@@ -2,7 +2,7 @@
 // so both produce the same title, description, canonical address, robots rule and structured data.
 
 import { LISTED, LIBRARY_PATH, findConceptForPath } from '../concepts/registry.js';
-import { COMPANY, FOUNDERS, PRODUCTS, PROTOTYPES } from '../company.js';
+import { COMPANY, DEMO_PAGES, FOUNDERS, PRODUCTS } from '../company.js';
 
 export const SITE_URL = 'https://www.thecodeconsortium.com';
 export const SITE_NAME = 'The Code Consortium';
@@ -36,20 +36,19 @@ function softwareOf(product) {
   return {
     '@type': 'SoftwareApplication',
     name: product.name,
-    url: product.site,
+    url: product.site ?? `${SITE_URL}${product.path}`,
     description: `${product.line} ${product.summary}`,
     applicationCategory: 'BusinessApplication',
     creator: { '@id': ORGANISATION['@id'] },
   };
 }
 
-// The company's own pages: the home page, one page per product and the prototypes.
+// The company's own pages: the home page, one page per product and the Lab.
 function mainMeta(path) {
   if (path === '/') {
-    const [spear, tea] = PRODUCTS;
     return {
-      title: `${SITE_NAME}: makers of ${spear.name} and ${tea.name}`,
-      description: `${SITE_NAME} is a software company in ${COMPANY.country} that builds and owns Spear: ${tea.name}, a tab ledger for tea shops that is out now, and ${spear.name}, hotel and restaurant software in development with its first customer.`,
+      title: `${SITE_NAME}: software built to solve, not just run`,
+      description: `${SITE_NAME} is a software company in ${COMPANY.country} that builds and runs its own products: ${PRODUCTS.map((product) => `${product.name} (${product.industry.toLowerCase()})`).join(', ')}.`,
       canonical: `${SITE_URL}/`,
       robots: 'index,follow',
       ogType: 'website',
@@ -64,7 +63,7 @@ function mainMeta(path) {
   if (product) {
     return {
       title: `${product.name}: ${product.line.replace(/\.$/, '')} | ${SITE_NAME}`,
-      description: `${product.summary} ${product.stage}: ${product.stageNote.toLowerCase()}. Built and owned by ${SITE_NAME}.`,
+      description: `${product.summary} ${product.stage}: ${product.stageNote.toLowerCase()}. Built and run by ${SITE_NAME}.`,
       canonical: `${SITE_URL}${path}`,
       robots: 'index,follow',
       ogType: 'website',
@@ -72,11 +71,11 @@ function mainMeta(path) {
     };
   }
 
-  const prototype = PROTOTYPES.find((entry) => `${entry.path}/` === path);
+  const prototype = DEMO_PAGES.find((entry) => `${entry.path}/` === path);
   if (prototype) {
     return {
-      title: `${prototype.name}: prototype | ${SITE_NAME}`,
-      description: `${prototype.line} A working prototype with made-up data, built by ${SITE_NAME}. Not on sale.`,
+      title: `${prototype.name}: ${prototype.kind} | ${SITE_NAME}`,
+      description: `${prototype.line} A working demo with made-up data, built by ${SITE_NAME}.`,
       canonical: `${SITE_URL}${prototype.path}`,
       robots: 'index,follow',
       ogType: 'website',
@@ -96,14 +95,14 @@ function mainMeta(path) {
     };
   }
 
-  if (path === '/prototypes/') {
+  if (path === '/lab/') {
     return {
-      title: `Prototypes | ${SITE_NAME}`,
-      description: `Working prototypes ${SITE_NAME} built to test ideas outside hospitality: a bakery till, an HR system and a salon system. Not on sale.`,
+      title: `Lab | ${SITE_NAME}`,
+      description: `Experiments ${SITE_NAME} built to test ideas, each finished enough to deploy: a bakery till and a salon system.`,
       canonical: `${SITE_URL}${path}`,
       robots: 'index,follow',
       ogType: 'website',
-      jsonLd: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Prototypes', url: `${SITE_URL}${path}`, publisher: ORGANISATION },
+      jsonLd: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Lab', url: `${SITE_URL}${path}`, publisher: ORGANISATION },
     };
   }
 
@@ -111,7 +110,7 @@ function mainMeta(path) {
 }
 
 // Every page of the company's own site that is written out as HTML at build time.
-export const MAIN_ROUTES = ['/', ...PRODUCTS.map((product) => product.path), '/prototypes/'];
+export const MAIN_ROUTES = ['/', ...PRODUCTS.map((product) => product.path), '/lab/'];
 
 const normalise = (pathname) => (pathname.endsWith('/') ? pathname : `${pathname}/`);
 

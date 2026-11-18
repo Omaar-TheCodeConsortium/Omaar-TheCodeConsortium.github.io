@@ -29,13 +29,15 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/products/spear-os/" element={<ProductPage slug="spear-os" />} />
           <Route path="/products/tea-os/" element={<ProductPage slug="tea-os" />} />
-          <Route path="/prototypes/" element={<ShowcaseArchive />} />
+          <Route path="/products/tccos/" element={<ProductPage slug="tccos" />} />
+          <Route path="/lab/" element={<ShowcaseArchive />} />
+          <Route path="/prototypes" element={<Navigate to="/lab/" replace />} />
           <Route path="/project/bakery-os" element={<BakeryDashboard />} />
           <Route path="/project/hris-command-center" element={<HrisDashboard />} />
           <Route path="/project/bespoke-salon" element={<BespokeSalon />} />
-          {/* Old addresses: Spear used to leave for its own site; the archive is now the prototypes page. */}
+          {/* Old addresses: Spear used to leave for its own site; the project archive is now the Lab. */}
           <Route path="/project/spear" element={<Navigate to="/products/spear-os/" replace />} />
-          <Route path="/showcase" element={<Navigate to="/prototypes/" replace />} />
+          <Route path="/showcase" element={<Navigate to="/lab/" replace />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path={LIBRARY_PATH} element={<ConceptLibrary />} />
