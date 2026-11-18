@@ -1,135 +1,60 @@
 import { useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { LABEL, TEXT_LINK } from '../components/ProductBits.jsx';
+import { PROTOTYPES } from '../company.js';
 
-const MotionLink = motion(Link);
-
-const globalRevealProps = {
-  initial: { opacity: 0, y: 30 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: false, amount: 0.3 },
-  transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
-};
-
+// Working demos built to test ideas outside hospitality. Kept apart from the products so
+// nobody mistakes them for something on sale.
 export default function ShowcaseArchive() {
   useEffect(() => {
-    document.title = "Project Archive | The Code Consortium";
     window.scrollTo(0, 0);
   }, []);
 
   return (
-    <div className="font-sans text-black bg-gray-50 min-h-screen flex flex-col relative selection:bg-black selection:text-white">
+    <div className="relative flex min-h-screen flex-col bg-gray-50 font-sans text-black selection:bg-black selection:text-white">
       <Navbar />
-
-      <main className="flex-grow max-w-screen-2xl mx-auto border-l border-r border-gray-300 bg-white pt-24 w-full">
-        {/* Header Section */}
-        <motion.div
-          className="p-6 md:p-16 border-b border-gray-300"
-          {...globalRevealProps}
-        >
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-black">Project Archive</h1>
-          <p className="font-mono text-sm text-gray-500 uppercase max-w-md mt-4">
-            A comprehensive selection of engineered platforms and high-performance digital assets built for modern enterprises.
+      <main className="mx-auto w-full max-w-screen-2xl flex-grow border-l border-r border-gray-300 bg-white pt-20">
+        <div className="grid gap-6 border-b border-gray-300 p-6 md:grid-cols-2 md:p-16">
+          <div>
+            <p className={`${LABEL} mb-4`}>Prototypes</p>
+            <h1 className="text-5xl font-bold tracking-tight md:text-6xl">Ideas we tested</h1>
+          </div>
+          <p className="self-end text-gray-600 md:text-lg">
+            Working prototypes with made-up data, built to try out ideas outside hospitality. They are not on sale and nobody runs a business on
+            them. Our products are{' '}
+            <Link to="/#products" className="underline underline-offset-4">
+              Spear OS and Spear Tea OS
+            </Link>
+            .
           </p>
-        </motion.div>
-
-        {/* Project Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-6 md:p-8">
-          <MotionLink
-            className="block flex flex-col group hover:bg-gray-50 transition-colors bg-white overflow-hidden border border-gray-300"
-            to="/project/spear"
-            {...globalRevealProps}
-          >
-            <div className="p-6 md:p-8 overflow-hidden w-full h-48 md:h-64 border-b border-gray-300 flex items-center justify-center bg-gray-50/50">
-              <img
-                alt="Spear Hospitality Management"
-                className="w-full h-full object-contain group-hover:scale-110 transition-all duration-500 ease-in-out"
-                src="/spear-showcase.png"
-              />
-            </div>
-            <div className="p-8 flex flex-col justify-between">
-              <div className="flex justify-between items-start mb-6">
-                <h3 className="font-bold text-lg group-hover:underline decoration-2 underline-offset-4">Spear - Hotel PMS & Restaurant POS</h3>
-                <span className="material-symbols-outlined text-gray-300 group-hover:text-black transition-colors">arrow_outward</span>
-              </div>
-              <div className="font-mono text-xs tracking-widest uppercase text-gray-500 group-hover:text-black transition-colors mt-auto">
-                DETAILS <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5">→</span>
-              </div>
-            </div>
-          </MotionLink>
-          <MotionLink
-            className="block flex flex-col group hover:bg-gray-50 transition-colors bg-white overflow-hidden border border-gray-300"
-            to="/project/bakery-os"
-            {...globalRevealProps}
-          >
-            <div className="p-6 md:p-8 overflow-hidden w-full h-48 md:h-64 border-b border-gray-300 flex items-center justify-center bg-gray-50/50">
-              <img
-                alt="BakeryOS Cashier Portal"
-                className="w-full h-full object-contain group-hover:scale-110 transition-all duration-500 ease-in-out"
-                src="/bakery-showcase.png"
-              />
-            </div>
-            <div className="p-8 flex flex-col justify-between">
-              <div className="flex justify-between items-start mb-6">
-                <h3 className="font-bold text-lg group-hover:underline decoration-2 underline-offset-4">BakeryOS Cashier Portal</h3>
-                <span className="material-symbols-outlined text-gray-300 group-hover:text-black transition-colors">arrow_outward</span>
-              </div>
-              <div className="font-mono text-xs tracking-widest uppercase text-gray-500 group-hover:text-black transition-colors mt-auto">
-                DETAILS <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5">→</span>
-              </div>
-            </div>
-          </MotionLink>
-
-          <MotionLink
-            className="block flex flex-col group hover:bg-gray-50 transition-colors bg-white overflow-hidden border border-gray-300"
-            to="/project/hris-command-center"
-            {...globalRevealProps}
-          >
-            <div className="p-6 md:p-8 overflow-hidden w-full h-48 md:h-64 border-b border-gray-300 flex items-center justify-center bg-gray-50/50">
-              <img
-                alt="HRIS Command Center"
-                className="w-full h-full object-contain group-hover:scale-110 transition-all duration-500 ease-in-out"
-                src="/image(5).png"
-              />
-            </div>
-            <div className="p-8 flex flex-col justify-between">
-              <div className="flex justify-between items-start mb-6">
-                <h3 className="font-bold text-lg group-hover:underline decoration-2 underline-offset-4">HRIS Command Center</h3>
-                <span className="material-symbols-outlined text-gray-300 group-hover:text-black transition-colors">arrow_outward</span>
-              </div>
-              <div className="font-mono text-xs tracking-widest uppercase text-gray-500 group-hover:text-black transition-colors mt-auto">
-                DETAILS <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5">→</span>
-              </div>
-            </div>
-          </MotionLink>
-
-          <MotionLink
-            className="block flex flex-col group hover:bg-gray-50 transition-colors bg-white overflow-hidden border border-gray-300"
-            to="/project/bespoke-salon"
-            {...globalRevealProps}
-          >
-            <div className="p-6 md:p-8 overflow-hidden w-full h-48 md:h-64 border-b border-gray-300 flex items-center justify-center bg-gray-50/50">
-              <img
-                alt="Bespoke Salon Portal"
-                className="w-full h-full object-contain group-hover:scale-110 transition-all duration-500 ease-in-out"
-                src="/salon-showcase.png"
-              />
-            </div>
-            <div className="p-8 flex flex-col justify-between">
-              <div className="flex justify-between items-start mb-6">
-                <h3 className="font-bold text-lg group-hover:underline decoration-2 underline-offset-4">Bespoke Salon Portal</h3>
-                <span className="material-symbols-outlined text-gray-300 group-hover:text-black transition-colors">arrow_outward</span>
-              </div>
-              <div className="font-mono text-xs tracking-widest uppercase text-gray-500 group-hover:text-black transition-colors mt-auto">
-                DETAILS <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5">→</span>
-              </div>
-            </div>
-          </MotionLink>
         </div>
-      </main>
 
+        <ul className="grid grid-cols-1 gap-6 p-6 md:grid-cols-3 md:gap-8 md:p-8">
+          {PROTOTYPES.map((item) => (
+            <li key={item.path}>
+              <Link to={item.path} className="group flex h-full flex-col border border-gray-300 bg-white transition-colors hover:border-black">
+                <span className="block aspect-[16/10] overflow-hidden border-b border-gray-300 bg-gray-50">
+                  <img
+                    src={item.image}
+                    alt={item.alt}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover object-left-top transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                  />
+                </span>
+                <span className="flex flex-1 flex-col gap-3 p-6 md:p-8">
+                  <span className={LABEL}>Prototype · On hold</span>
+                  <h2 className="text-2xl font-bold tracking-tight">{item.name}</h2>
+                  <span className="text-sm text-gray-600">{item.line}</span>
+                  <span className={`${TEXT_LINK} mt-auto pt-3`}>Open the prototype →</span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </main>
       <Footer />
     </div>
   );

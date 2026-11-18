@@ -640,7 +640,7 @@ const BakeryDashboard = () => {
                                     <div className="flex-grow p-6 flex flex-col items-center justify-center text-center">
                                         <span className="material-symbols-outlined text-slate-300 text-5xl mb-3">info</span>
                                         <h4 className="text-sm font-extrabold text-slate-800 mb-1">Module Coming Soon</h4>
-                                        <p className="text-xs text-slate-400">This management dashboard sub-module is under active construction.</p>
+                                        <p className="text-xs text-slate-400">This screen is not part of the prototype.</p>
                                     </div>
                                 )}
                             </div>

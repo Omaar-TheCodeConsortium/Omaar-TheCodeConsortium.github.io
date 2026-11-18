@@ -2,6 +2,14 @@ import { useEffect, useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 
+// Sections of the home page, then pages. The concept builds are linked from the footer.
+const LINKS = [
+  { label: 'Products', section: 'products' },
+  { label: 'How we work', section: 'model' },
+  { label: 'Team', section: 'company' },
+  { label: 'Prototypes', to: '/prototypes/' },
+];
+
 const chars = '!<>-_\\/[]{}—=+*^?#________ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 function ScrambleLink({ to, onClick, children, isDarkTheme, theme }) {
@@ -139,6 +147,19 @@ export default function Navbar({ isDarkTheme = false, hideOnScroll = false, them
   const isLightFintech = theme === 'light-fintech';
   const isSalon = theme === 'salon';
 
+  const ctaClass = isLightFintech
+    ? 'bg-orange-600 border-orange-600 text-white hover:bg-transparent hover:text-orange-600'
+    : isSalon
+      ? 'bg-[#5b58f4] border-[#5b58f4] text-white hover:bg-transparent hover:text-[#5b58f4]'
+      : isDarkTheme
+        ? 'bg-blue-600 border-blue-600 text-white hover:bg-transparent hover:text-blue-400'
+        : 'bg-black text-white border-black hover:bg-white hover:text-black';
+  const drawerLinkClass = isLightFintech
+    ? 'text-slate-600 hover:text-orange-600'
+    : isSalon || isDarkTheme
+      ? 'text-slate-400 hover:text-white'
+      : 'text-gray-500 hover:text-black';
+
   return (
     <motion.nav
       animate={{ y: isVisible ? 0 : -80 }}
@@ -155,7 +176,7 @@ export default function Navbar({ isDarkTheme = false, hideOnScroll = false, them
       <div className="max-w-screen-2xl mx-auto h-full flex justify-between items-center px-6 md:px-12">
         <Link to="/" className="flex items-center gap-4">
           <img
-            alt="Logo"
+            alt=""
             className="h-12 w-auto object-contain"
             src="/logo.png"
           />
@@ -165,65 +186,29 @@ export default function Navbar({ isDarkTheme = false, hideOnScroll = false, them
             }`}>The Code Consortium</div>
         </Link>
 
-        <div className="hidden md:flex items-center space-x-8">
-          <ScrambleLink
-            to={isHomePage ? "#about" : "/#about"}
-            onClick={(e) => handleLinkClick(e, 'about')}
-            isDarkTheme={isDarkTheme}
-            theme={theme}
-          >
-            About
-          </ScrambleLink>
-          <ScrambleLink
-            to={isHomePage ? "#services" : "/#services"}
-            onClick={(e) => handleLinkClick(e, 'services')}
-            isDarkTheme={isDarkTheme}
-            theme={theme}
-          >
-            Services
-          </ScrambleLink>
-          <ScrambleLink
-            to="/showcase"
-            isDarkTheme={isDarkTheme}
-            theme={theme}
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            Showcase
-          </ScrambleLink>
-          <ScrambleLink
-            to="/concepts/"
-            isDarkTheme={isDarkTheme}
-            theme={theme}
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            Concepts
-          </ScrambleLink>
-          <ScrambleLink
-            to={isHomePage ? "#contact" : "/#contact"}
-            onClick={(e) => handleLinkClick(e, 'contact')}
-            isDarkTheme={isDarkTheme}
-            theme={theme}
-          >
-            Contact
-          </ScrambleLink>
+        <div className="hidden lg:flex items-center space-x-8">
+          {LINKS.map((link) => (
+            <ScrambleLink
+              key={link.label}
+              to={link.section ? (isHomePage ? `#${link.section}` : `/#${link.section}`) : link.to}
+              onClick={(e) => (link.section ? handleLinkClick(e, link.section) : setIsMobileMenuOpen(false))}
+              isDarkTheme={isDarkTheme}
+              theme={theme}
+            >
+              {link.label}
+            </ScrambleLink>
+          ))}
           <Link
-            className={`px-6 py-2 font-mono uppercase text-sm transition-all duration-200 border ${isLightFintech
-              ? 'bg-orange-600 border-orange-600 text-white hover:bg-transparent hover:text-orange-600'
-              : isSalon
-                ? 'bg-[#5b58f4] border-[#5b58f4] text-white hover:bg-transparent hover:text-[#5b58f4]'
-                : isDarkTheme
-                  ? 'bg-blue-600 border-blue-600 text-white hover:bg-transparent hover:text-blue-400'
-                  : 'bg-black text-white border-black hover:bg-white hover:text-black'
-              }`}
+            className={`px-6 py-2 font-mono uppercase text-sm transition-all duration-200 border ${ctaClass}`}
             to={isHomePage ? "#contact" : "/#contact"}
             onClick={(e) => handleLinkClick(e, 'contact')}
           >
-            Inquire
+            Contact us
           </Link>
         </div>
 
         <button
-          className={`md:hidden focus:outline-none transition-colors duration-300 ${isLightFintech
+          className={`lg:hidden focus:outline-none transition-colors duration-300 ${isLightFintech
             ? 'text-slate-800'
             : isDarkTheme || isSalon ? 'text-white' : 'text-black'
             }`}
@@ -238,85 +223,28 @@ export default function Navbar({ isDarkTheme = false, hideOnScroll = false, them
 
       {/* Mobile Navigation Drawer */}
       {isMobileMenuOpen && (
-        <div className={`md:hidden absolute top-20 left-0 w-full z-50 flex flex-col p-6 space-y-4 shadow-lg border-b transition-colors duration-300 ${isLightFintech
+        <div className={`lg:hidden absolute top-20 left-0 w-full z-50 flex flex-col p-6 space-y-1 shadow-lg border-b transition-colors duration-300 ${isLightFintech
           ? 'bg-[#FFF8F0] border-orange-200/50 text-slate-800'
           : isSalon
             ? 'bg-slate-900 border-indigo-500/25 text-white'
             : isDarkTheme ? 'bg-[#0b0f19] border-white/10 text-white' : 'bg-white border-gray-300'
           }`}>
+          {LINKS.map((link) => (
+            <Link
+              key={link.label}
+              className={`font-mono uppercase text-sm py-3 transition-colors duration-200 ${drawerLinkClass}`}
+              to={link.section ? (isHomePage ? `#${link.section}` : `/#${link.section}`) : link.to}
+              onClick={(e) => (link.section ? handleLinkClick(e, link.section) : setIsMobileMenuOpen(false))}
+            >
+              {link.label}
+            </Link>
+          ))}
           <Link
-            className={`font-mono uppercase text-sm transition-colors duration-200 ${isLightFintech
-              ? 'text-slate-600 hover:text-orange-600'
-              : isSalon
-                ? 'text-slate-400 hover:text-white'
-                : isDarkTheme ? 'text-slate-400 hover:text-white' : 'text-gray-500 hover:text-black'
-              }`}
-            to={isHomePage ? "#about" : "/#about"}
-            onClick={(e) => handleLinkClick(e, 'about')}
-          >
-            About
-          </Link>
-          <Link
-            className={`font-mono uppercase text-sm transition-colors duration-200 ${isLightFintech
-              ? 'text-slate-600 hover:text-orange-600'
-              : isSalon
-                ? 'text-slate-400 hover:text-white'
-                : isDarkTheme ? 'text-slate-400 hover:text-white' : 'text-gray-500 hover:text-black'
-              }`}
-            to={isHomePage ? "#services" : "/#services"}
-            onClick={(e) => handleLinkClick(e, 'services')}
-          >
-            Services
-          </Link>
-          <Link
-            className={`font-mono uppercase text-sm transition-colors duration-200 ${isLightFintech
-              ? 'text-slate-600 hover:text-orange-600'
-              : isSalon
-                ? 'text-slate-400 hover:text-white'
-                : isDarkTheme ? 'text-slate-400 hover:text-white' : 'text-gray-500 hover:text-black'
-              }`}
-            to="/showcase"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            Showcase
-          </Link>
-          <Link
-            className={`font-mono uppercase text-sm transition-colors duration-200 ${isLightFintech
-              ? 'text-slate-600 hover:text-orange-600'
-              : isSalon
-                ? 'text-slate-400 hover:text-white'
-                : isDarkTheme ? 'text-slate-400 hover:text-white' : 'text-gray-500 hover:text-black'
-              }`}
-            to="/concepts/"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            Concepts
-          </Link>
-          <Link
-            className={`font-mono uppercase text-sm transition-colors duration-200 ${isLightFintech
-              ? 'text-slate-600 hover:text-orange-600'
-              : isSalon
-                ? 'text-slate-400 hover:text-white'
-                : isDarkTheme ? 'text-slate-400 hover:text-white' : 'text-gray-500 hover:text-black'
-              }`}
+            className={`mt-3 px-6 py-3 font-mono uppercase text-sm text-center border transition-all duration-200 ${ctaClass}`}
             to={isHomePage ? "#contact" : "/#contact"}
             onClick={(e) => handleLinkClick(e, 'contact')}
           >
-            Contact
-          </Link>
-          <Link
-            className={`px-6 py-3 font-mono uppercase text-sm text-center border transition-all duration-200 ${isLightFintech
-              ? 'bg-orange-600 border-orange-600 text-white hover:bg-transparent hover:text-orange-600'
-              : isSalon
-                ? 'bg-[#5b58f4] border-[#5b58f4] text-white hover:bg-transparent hover:text-[#5b58f4]'
-                : isDarkTheme
-                  ? 'bg-blue-600 border-blue-600 text-white hover:bg-transparent hover:text-blue-400'
-                  : 'bg-black text-white border-black hover:bg-white hover:text-black'
-              }`}
-            to={isHomePage ? "#contact" : "/#contact"}
-            onClick={(e) => handleLinkClick(e, 'contact')}
-          >
-            Inquire
+            Contact us
           </Link>
         </div>
       )}

@@ -13,8 +13,8 @@ const globalRevealProps = {
 const allProjects = [
     {
         id: 'spear',
-        title: 'Spear - All-in-One Hospitality Management Software: Hotel PMS & Restaurant POS',
-        to: '/project/spear',
+        title: 'Spear OS: hotel and restaurant software',
+        to: '/products/spear-os/',
         image: '/spear-showcase.png'
     },
     {

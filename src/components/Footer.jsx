@@ -1,8 +1,25 @@
 import { Link } from 'react-router-dom';
+import { COMPANY } from '../company.js';
+
+const LINKS = [
+  { label: 'Spear OS', to: '/products/spear-os/' },
+  { label: 'Spear Tea OS', to: '/products/tea-os/' },
+  { label: 'Prototypes', to: '/prototypes/' },
+  { label: 'Concept builds', to: '/concepts/' },
+  { label: 'GitHub', href: COMPANY.github },
+  { label: 'Privacy', to: '/privacy' },
+  { label: 'Terms', to: '/terms' },
+];
 
 export default function Footer({ isDarkTheme = false, theme = "" }) {
   const isLightFintech = theme === 'light-fintech';
   const isSalon = theme === 'salon';
+  const linkClass = `transition-colors duration-300 ${isLightFintech
+    ? 'text-slate-600 hover:text-orange-600 font-semibold'
+    : isSalon
+      ? 'text-slate-400 hover:text-indigo-400 font-semibold'
+      : isDarkTheme ? 'text-slate-400 hover:text-white' : 'text-gray-500 hover:text-black'
+    }`;
 
   return (
     <footer className={`relative w-full border-t transition-colors duration-300 overflow-hidden ${isLightFintech
@@ -38,23 +55,23 @@ export default function Footer({ isDarkTheme = false, theme = "" }) {
           }`}>
           The Code Consortium
         </div>
-        <div className="flex flex-wrap justify-center md:justify-start gap-4 md:gap-8 font-mono text-xs uppercase">
-          <Link className={`transition-colors duration-300 ${isLightFintech
-            ? 'text-slate-600 hover:text-orange-600 font-semibold'
-            : isSalon
-              ? 'text-slate-400 hover:text-indigo-400 font-semibold'
-              : isDarkTheme ? 'text-slate-400 hover:text-white' : 'text-gray-500 hover:text-black'
-            }`} to="/privacy">Privacy Policy</Link>
-          <Link className={`transition-colors duration-300 ${isLightFintech
-            ? 'text-slate-600 hover:text-orange-600 font-semibold'
-            : isSalon
-              ? 'text-slate-400 hover:text-indigo-400 font-semibold'
-              : isDarkTheme ? 'text-slate-400 hover:text-white' : 'text-gray-500 hover:text-black'
-            }`} to="/terms">Terms of Service</Link>
-        </div>
+        <nav aria-label="Footer" className="flex flex-wrap justify-center md:justify-start gap-x-6 gap-y-3 font-mono text-xs uppercase">
+          {LINKS.map((link) =>
+            link.href ? (
+              <a key={link.label} className={linkClass} href={link.href} target="_blank" rel="noopener">
+                {link.label}
+                <span aria-hidden="true"> ↗</span>
+              </a>
+            ) : (
+              <Link key={link.label} className={linkClass} to={link.to}>
+                {link.label}
+              </Link>
+            ),
+          )}
+        </nav>
         <div className={`font-mono text-xs uppercase transition-colors duration-300 ${isLightFintech ? 'text-slate-500' : isDarkTheme || isSalon ? 'text-slate-500' : 'text-gray-500'
           }`}>
-          © 2026 The Code Consortium.<br className="md:hidden" /> Built with architectural precision.
+          © 2026 {COMPANY.name}
         </div>
       </div>
     </footer>

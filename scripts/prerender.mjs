@@ -13,7 +13,7 @@ const dist = path.join(root, 'dist');
 const ssrDir = path.join(root, 'dist-ssr');
 
 const server = await import(pathToFileURL(path.join(ssrDir, 'entry-server.js')).href);
-const { render, prerenderRoutes, getMeta, isIndexable, CONCEPTS, LIBRARY_PATH, SITE_URL, SITE_NAME, IS_PREVIEW } = server;
+const { render, prerenderRoutes, getMeta, isIndexable, CONCEPTS, LIBRARY_PATH, MAIN_ROUTES, SITE_URL, SITE_NAME, IS_PREVIEW } = server;
 
 const template = await readFile(path.join(dist, 'index.html'), 'utf8');
 
@@ -24,6 +24,8 @@ const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
 // A lazily loaded route keeps its styles and fonts in its own files. Without these links a
 // pre-rendered page would appear unstyled until the main script had fetched them.
 function routeAssets(route) {
+  // The company's own pages are part of the main bundle, which the template already loads.
+  if (MAIN_ROUTES.includes(route)) return '';
   const segment = route.split('/').filter(Boolean)[1];
   const key = segment ? `src/concepts/${segment}/index.jsx` : 'src/pages/ConceptLibrary.jsx';
   if (!manifest[key]) throw new Error(`prerender: ${key} is missing from the build manifest`);
@@ -85,14 +87,18 @@ for (const route of prerenderRoutes) {
 
   const body = await render(route);
   if (!body.includes('<h1')) throw new Error(`prerender: ${route} rendered without an H1`);
+  // A gap is a fact still missing from src/company.js. The preview may show them; the live site may not.
+  if (!IS_PREVIEW && body.includes('data-todo')) {
+    throw new Error(`prerender: ${route} still has gaps marked in it. Fill in the missing facts in src/company.js.`);
+  }
 
   let html = template
     .replace(TITLE_PATTERN, `<title>${escapeAttr(meta.title)}</title>`)
     .replace('</head>', `  ${headTags(meta)}\n    ${routeAssets(route)}\n  </head>`)
-    .replace(ROOT_MARKER, `<div id="root">${body}</div>`);
+    .replace(ROOT_MARKER, `<div id="root" data-prerendered="${route}">${body}</div>`);
 
   // Concept sites run without the main site's page zoom; setting the class here avoids a jump on load.
-  if (route !== LIBRARY_PATH) {
+  if (route !== LIBRARY_PATH && !MAIN_ROUTES.includes(route)) {
     html = html.replace(HTML_CLASS_MARKER, '<html class="scroll-smooth concept-root"');
   }
 
@@ -102,9 +108,9 @@ for (const route of prerenderRoutes) {
   written += 1;
 }
 
-// sitemap.xml: the home page plus every concept page that search engines may index.
+// sitemap.xml: every pre-rendered page that search engines may index.
 const today = new Date().toISOString().slice(0, 10);
-const indexable = ['/', ...prerenderRoutes.filter((route) => isIndexable(route))];
+const indexable = [...new Set(['/', ...prerenderRoutes.filter((route) => isIndexable(route))])];
 const sitemap = [
   '<?xml version="1.0" encoding="UTF-8"?>',
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
@@ -119,7 +125,13 @@ const liveConcepts = CONCEPTS.filter((concept) => concept.status === 'live');
 const llms = [
   `# ${SITE_NAME}`,
   '',
-  `> ${SITE_NAME} is a software engineering company that designs and builds websites and business platforms.`,
+  `> ${SITE_NAME} is a software company that builds, owns and runs its own products for hospitality businesses, sold under the Spear name.`,
+  '',
+  '## Products',
+  '',
+  ...MAIN_ROUTES.filter((route) => route.startsWith('/products/')).map((route) => `- [${getMeta(route).title}](${SITE_URL}${route}): ${getMeta(route).description}`),
+  '',
+  `- [Prototypes](${SITE_URL}/prototypes/): Working prototypes built to test ideas. Not on sale.`,
   '',
   '## Concept builds',
   '',

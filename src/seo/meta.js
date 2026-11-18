@@ -2,16 +2,92 @@
 // so both produce the same title, description, canonical address, robots rule and structured data.
 
 import { LISTED, LIBRARY_PATH, findConceptForPath } from '../concepts/registry.js';
+import { COMPANY, FOUNDERS, PRODUCTS } from '../company.js';
 
 export const SITE_URL = 'https://www.thecodeconsortium.com';
 export const SITE_NAME = 'The Code Consortium';
 
 const ORGANISATION = {
   '@type': 'Organization',
+  '@id': `${SITE_URL}/#organization`,
   name: SITE_NAME,
   url: `${SITE_URL}/`,
   logo: `${SITE_URL}/logo.png`,
 };
+
+// Only facts that have been supplied in src/company.js go into structured data.
+const known = (entries) => Object.fromEntries(Object.entries(entries).filter(([, value]) => value !== null && value !== undefined));
+
+function organisationInFull() {
+  return known({
+    ...ORGANISATION,
+    legalName: COMPANY.legalName,
+    foundingDate: COMPANY.founded ? String(COMPANY.founded) : null,
+    address: { '@type': 'PostalAddress', addressCountry: COMPANY.country, ...(COMPANY.city ? { addressLocality: COMPANY.city } : {}) },
+    email: COMPANY.email,
+    sameAs: [COMPANY.github, COMPANY.linkedin].filter(Boolean),
+    founder: FOUNDERS.filter((person) => person.name).map((person) =>
+      known({ '@type': 'Person', name: person.name, jobTitle: person.role, sameAs: person.linkedin ? [person.linkedin] : null }),
+    ),
+  });
+}
+
+function softwareOf(product) {
+  return {
+    '@type': 'SoftwareApplication',
+    name: product.name,
+    url: product.site,
+    description: `${product.line} ${product.summary}`,
+    applicationCategory: 'BusinessApplication',
+    creator: { '@id': ORGANISATION['@id'] },
+  };
+}
+
+// The company's own pages: the home page, one page per product and the prototypes.
+function mainMeta(path) {
+  if (path === '/') {
+    const [spear, tea] = PRODUCTS;
+    return {
+      title: `${SITE_NAME}: makers of ${spear.name} and ${tea.name}`,
+      description: `${SITE_NAME} is a software company in ${COMPANY.country} that builds and owns Spear: ${tea.name}, a tab ledger for tea shops that is out now, and ${spear.name}, hotel and restaurant software in development with its first customer.`,
+      canonical: `${SITE_URL}/`,
+      robots: 'index,follow',
+      ogType: 'website',
+      jsonLd: {
+        '@context': 'https://schema.org',
+        '@graph': [organisationInFull(), { '@type': 'WebSite', name: SITE_NAME, url: `${SITE_URL}/`, publisher: { '@id': ORGANISATION['@id'] } }, ...PRODUCTS.map(softwareOf)],
+      },
+    };
+  }
+
+  const product = PRODUCTS.find((entry) => entry.path === path);
+  if (product) {
+    return {
+      title: `${product.name}: ${product.line.replace(/\.$/, '')} | ${SITE_NAME}`,
+      description: `${product.summary} ${product.stage}: ${product.stageNote.toLowerCase()}. Built and owned by ${SITE_NAME}.`,
+      canonical: `${SITE_URL}${path}`,
+      robots: 'index,follow',
+      ogType: 'website',
+      jsonLd: { '@context': 'https://schema.org', '@graph': [softwareOf(product), ORGANISATION] },
+    };
+  }
+
+  if (path === '/prototypes/') {
+    return {
+      title: `Prototypes | ${SITE_NAME}`,
+      description: `Working prototypes ${SITE_NAME} built to test ideas outside hospitality: a bakery till, an HR system and a salon system. Not on sale.`,
+      canonical: `${SITE_URL}${path}`,
+      robots: 'index,follow',
+      ogType: 'website',
+      jsonLd: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Prototypes', url: `${SITE_URL}${path}`, publisher: ORGANISATION },
+    };
+  }
+
+  return null;
+}
+
+// Every page of the company's own site that is written out as HTML at build time.
+export const MAIN_ROUTES = ['/', ...PRODUCTS.map((product) => product.path), '/prototypes/'];
 
 const normalise = (pathname) => (pathname.endsWith('/') ? pathname : `${pathname}/`);
 
@@ -111,10 +187,12 @@ function pageMeta(concept, page) {
   };
 }
 
-// Returns null for routes outside the concept section; those pages manage their own titles.
+// Returns null for the prototype pages and legal pages; those manage their own titles.
 function metaFor(pathname) {
   const path = normalise(pathname);
   if (path === LIBRARY_PATH) return libraryMeta();
+  const main = mainMeta(path);
+  if (main) return main;
 
   const concept = findConceptForPath(path);
   if (!concept) return null;

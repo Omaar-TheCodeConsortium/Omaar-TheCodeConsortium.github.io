@@ -7,9 +7,10 @@ import App from './App.jsx';
 import { CONCEPTS, LIBRARY_PATH, conceptPaths } from './concepts/registry.js';
 
 export { CONCEPTS, LIBRARY_PATH };
-export { SITE_URL, SITE_NAME, IS_PREVIEW, getMeta, isIndexable } from './seo/meta.js';
+export { SITE_URL, SITE_NAME, IS_PREVIEW, MAIN_ROUTES, getMeta, isIndexable } from './seo/meta.js';
+import { MAIN_ROUTES } from './seo/meta.js';
 
-export const prerenderRoutes = [LIBRARY_PATH, ...CONCEPTS.flatMap(conceptPaths)];
+export const prerenderRoutes = [...MAIN_ROUTES, LIBRARY_PATH, ...CONCEPTS.flatMap(conceptPaths)];
 
 // Waits for lazy-loaded routes, so the returned HTML is the finished page.
 export async function render(url) {

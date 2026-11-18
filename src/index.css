@@ -34,3 +34,23 @@ html.concept-root::-webkit-scrollbar-track {
 html.concept-root::-webkit-scrollbar-thumb {
   background: #6b7280;
 }
+
+/* Sections of the company pages rise into place as they scroll into view. Driven by the
+   scroll position alone, so the content is always in the HTML and never hidden from
+   anything that reads the page without running it. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    [data-reveal] {
+      animation: tcc-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+
+@keyframes tcc-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
