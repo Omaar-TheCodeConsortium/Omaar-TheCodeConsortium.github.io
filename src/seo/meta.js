@@ -2,7 +2,7 @@
 // so both produce the same title, description, canonical address, robots rule and structured data.
 
 import { LISTED, LIBRARY_PATH, findConceptForPath } from '../concepts/registry.js';
-import { COMPANY, FOUNDERS, PRODUCTS } from '../company.js';
+import { COMPANY, FOUNDERS, PRODUCTS, PROTOTYPES } from '../company.js';
 
 export const SITE_URL = 'https://www.thecodeconsortium.com';
 export const SITE_NAME = 'The Code Consortium';
@@ -69,6 +69,30 @@ function mainMeta(path) {
       robots: 'index,follow',
       ogType: 'website',
       jsonLd: { '@context': 'https://schema.org', '@graph': [softwareOf(product), ORGANISATION] },
+    };
+  }
+
+  const prototype = PROTOTYPES.find((entry) => `${entry.path}/` === path);
+  if (prototype) {
+    return {
+      title: `${prototype.name}: prototype | ${SITE_NAME}`,
+      description: `${prototype.line} A working prototype with made-up data, built by ${SITE_NAME}. Not on sale.`,
+      canonical: `${SITE_URL}${prototype.path}`,
+      robots: 'index,follow',
+      ogType: 'website',
+      jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: prototype.name, url: `${SITE_URL}${prototype.path}`, publisher: ORGANISATION },
+    };
+  }
+
+  const legal = { '/terms/': 'Terms of Service', '/privacy/': 'Privacy Policy' }[path];
+  if (legal) {
+    return {
+      title: `${legal} | ${SITE_NAME}`,
+      description: `${legal} for ${SITE_NAME} and its websites.`,
+      canonical: `${SITE_URL}${path.slice(0, -1)}`,
+      robots: 'index,follow',
+      ogType: 'website',
+      jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: legal, publisher: ORGANISATION },
     };
   }
 
@@ -187,7 +211,7 @@ function pageMeta(concept, page) {
   };
 }
 
-// Returns null for the prototype pages and legal pages; those manage their own titles.
+// Returns null for addresses that have no head tags of their own.
 function metaFor(pathname) {
   const path = normalise(pathname);
   if (path === LIBRARY_PATH) return libraryMeta();

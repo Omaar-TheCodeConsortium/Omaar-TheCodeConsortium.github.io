@@ -23,7 +23,6 @@ const BespokeSalon = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        document.title = "Salon Management System | The Code Consortium";
     }, []);
 
     useEffect(() => {
