@@ -503,15 +503,20 @@ function DeskScene() {
 
 // ---------------------------------------------------------------- The app window
 
+const TAGLINE = 'Smart Platform for Every Accommodation & Restaurant';
+// Where the emblem sits on the opening card, relative to its place on the rail (centre 32, 32).
+const EMBLEM_CARD = { x: W / 2 - 32, y: 250 - 32, scale: 3.4 };
+
 const CLOCK = ['Thu 4 Oct · 14:20', 'Thu 4 Oct · 20:42', 'Sun 7 Oct · 11:05'];
 
 function Window() {
   return (
     <div className="absolute inset-0 overflow-hidden bg-[#f7f1e6] font-['Manrope_Variable',system-ui,sans-serif] text-[14px] leading-[1.45] text-[#221b16]">
       <aside className="absolute bottom-0 left-0 top-0 w-16 border-r border-[rgba(199,154,69,0.28)] bg-[#ede5d4]">
-        <img src="/products/spear-emblem.webp" alt="" width={36} height={36} className="absolute left-[14px] top-[14px] h-9 w-9" />
+        <img data-sp="rail-emblem" src="/products/spear-emblem.webp" alt="" width={36} height={36} className="absolute left-[14px] top-[14px] h-9 w-9" />
         <span
           data-sp="rail-mark"
+          data-rail=""
           className="absolute left-2 h-12 w-12 rounded-lg border border-[rgba(199,154,69,0.28)] bg-[#f7f1e6] shadow-[0_2px_8px_rgba(34,27,22,0.06)]"
           style={{ top: RAIL_TOP, transform: `translateY(${SCENE_RAIL[0] * RAIL_STEP}px)` }}
         />
@@ -519,6 +524,7 @@ function Window() {
           <span
             key={key}
             data-sp={`rail-${key}`}
+            data-rail=""
             className="absolute left-2 flex h-12 w-12 items-center justify-center"
             style={{ top: RAIL_TOP + i * RAIL_STEP, color: i === SCENE_RAIL[0] ? '#7c5801' : 'rgba(92,79,68,0.8)' }}
           >
@@ -528,7 +534,7 @@ function Window() {
         ))}
       </aside>
 
-      <header className="absolute left-16 right-0 top-0 flex h-14 items-center justify-between border-b border-[rgba(199,154,69,0.28)] bg-[#ede5d4]/70 px-6">
+      <header data-sp="header" className="absolute left-16 right-0 top-0 flex h-14 items-center justify-between border-b border-[rgba(199,154,69,0.28)] bg-[#ede5d4]/70 px-6">
         <div className="leading-tight">
           <p className="text-[12px] font-bold uppercase tracking-[0.08em]">Spear OS</p>
           <p className="text-[12px] text-[#5c4f44]">The Grand Azure Hotel &amp; Bistro</p>
@@ -564,7 +570,35 @@ function Window() {
           <path d="M2 2 L2 27 L8.5 21 L13 31 L17.5 29 L13 19.5 L22 19.5 Z" fill="#221b16" stroke="#fbf7ef" strokeWidth="2" strokeLinejoin="round" />
         </svg>
       </div>
-      <div data-sp="cover" className="pointer-events-none invisible absolute inset-0 z-40 bg-[#f7f1e6] opacity-0" />
+
+      {/* The opening card. The emblem flies from here to its place on the rail. */}
+      <div data-sp="intro-bg" className="pointer-events-none absolute inset-0 z-40 bg-[#f7f1e6]">
+        <img data-sp="wordmark" src="/products/spear-wordmark.webp" alt="" width={1280} height={143} className="absolute h-auto" style={{ left: W / 2 - 220, top: 340, width: 440 }} />
+        <p data-sp="tagline" className="absolute inset-x-0 top-[414px] text-center text-[13px] font-semibold uppercase tracking-[0.16em] text-[#5c4f44]">
+          {TAGLINE.split(' ').map((word, i) => (
+            <span key={i}>
+              {i > 0 ? ' ' : ''}
+              {word === 'for' || word === '&' ? (
+                word
+              ) : (
+                <>
+                  <b className="font-bold text-[#7c5801]">{word[0]}</b>
+                  {word.slice(1)}
+                </>
+              )}
+            </span>
+          ))}
+        </p>
+      </div>
+      <img
+        data-sp="intro-emblem"
+        src="/products/spear-emblem.webp"
+        alt=""
+        width={36}
+        height={36}
+        className="pointer-events-none absolute left-[14px] top-[14px] z-[45] h-9 w-9"
+        style={{ transform: `translate(${EMBLEM_CARD.x}px, ${EMBLEM_CARD.y}px) scale(${EMBLEM_CARD.scale})` }}
+      />
     </div>
   );
 }
@@ -573,6 +607,8 @@ function Window() {
 
 // Camera shots for phones: the top-left corner and width of the region in view, in canvas pixels.
 const SHOTS = {
+  logo: { x: 220, y: 0, w: 600 },
+  rail: { x: 0, y: 0, w: 600 },
   toast: { x: 520, y: 0, w: 520 },
   calendar: { x: 40, y: 96, w: 520 },
   menu: { x: 64, y: 16, w: 600 },
@@ -630,8 +666,10 @@ function build(root, phone, onTime) {
 
   // Scene 1: a Booking.com booking lands on the calendar.
   tl.addLabel('s0', 0);
-  tl.fromTo(q('cover'), { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.5, ease: 'power1.out' }, 0);
-  if (phone) tl.set(canvas, { '--cx': SHOTS.toast.x, '--cy': SHOTS.toast.y, '--cw': SHOTS.toast.w }, 0);
+  const card = [q('intro-emblem'), q('wordmark'), q('tagline')];
+  tl.fromTo(card, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.2, ease: 'power1.in' }, 0);
+  tl.fromTo(q('intro-bg'), { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.5, ease: 'power1.out' }, 0.2);
+  if (phone) tl.set(canvas, { '--cx': SHOTS.toast.x, '--cy': SHOTS.toast.y, '--cw': SHOTS.toast.w }, 0.2);
   tl.fromTo(q('toast'), { autoAlpha: 0, y: -18 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'back.out(1.4)', immediateRender: false }, 0.7);
   cam(SHOTS.calendar, 2.3);
   wash('row204', 2.9);
@@ -681,21 +719,62 @@ function build(root, phone, onTime) {
   show('hk', t2 + 4.2, { y: 0, x: 0, scale: 1 });
   tl.fromTo(q('rail-dot'), { autoAlpha: 0, scale: 0 }, { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'back.out(2)', immediateRender: false }, t2 + 4.4);
   tl.addLabel('s2hold', t2 + 4.8);
-  tl.fromTo(q('cover'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, ease: 'power1.in', immediateRender: false }, t2 + 7.2);
+  // Back to the card for a moment before the next round.
+  const end = t2 + 7.2;
+  tl.set(q('intro-emblem'), { ...EMBLEM_CARD, autoAlpha: 0 }, end);
+  tl.set([q('wordmark'), q('tagline')], { y: 0, autoAlpha: 0 }, end);
+  tl.fromTo(q('intro-bg'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, ease: 'power1.in', immediateRender: false }, end);
+  if (phone) tl.set(canvas, { '--cx': SHOTS.logo.x, '--cy': SHOTS.logo.y, '--cw': SHOTS.logo.w }, end + 0.5);
+  tl.fromTo(card, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45, stagger: 0.08, ease: 'power1.out', immediateRender: false }, end + 0.55);
+  tl.set({}, {}, end + 2.2);
   if (!phone) tl.set(canvas, FULL_VARS, 0);
   return tl;
 }
 const FULL_VARS = { '--cx': FULL.x, '--cy': FULL.y, '--cw': FULL.w };
+const shotVars = (shot) => ({ '--cx': shot.x, '--cy': shot.y, '--cw': shot.w });
+
+// Where the first round starts after the opening, past the card fading out.
+const FILM_START = 0.7;
+
+// The opening, played once when the preview first comes into view: the logo card, then the emblem
+// flies to its place on the rail and the app builds up around it.
+function buildIntro(root, phone, done, onComplete) {
+  const q = (name) => root.querySelector(`[data-sp="${name}"]`);
+  const canvas = root.querySelector('[data-canvas]');
+  const rail = root.querySelectorAll('[data-rail]');
+  if (done) {
+    gsap.set([q('intro-bg'), q('intro-emblem')], { autoAlpha: 0 });
+    if (phone) gsap.set(canvas, shotVars(SHOTS.toast));
+    return null;
+  }
+  gsap.set(q('rail-emblem'), { autoAlpha: 0 });
+  if (phone) gsap.set(canvas, shotVars(SHOTS.logo));
+  const tl = gsap.timeline({ paused: true, onComplete });
+  tl.to([q('wordmark'), q('tagline')], { autoAlpha: 0, y: -10, duration: 0.35, stagger: 0.06, ease: 'power1.in' }, 1.0)
+    .to(q('intro-emblem'), { x: 0, y: 0, scale: 1, duration: 0.9, ease: 'power3.inOut' }, 1.2)
+    .to(q('intro-bg'), { autoAlpha: 0, duration: 0.5, ease: 'power1.inOut' }, 1.6)
+    .fromTo(q('header'), { autoAlpha: 0, y: -14 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out', immediateRender: false }, 1.6)
+    .fromTo(rail, { autoAlpha: 0, x: -12 }, { autoAlpha: 1, x: 0, duration: 0.4, stagger: 0.05, ease: 'power2.out', immediateRender: false }, 1.7)
+    .fromTo(q('scene0'), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power2.out', immediateRender: false }, 1.8)
+    .set(q('rail-emblem'), { autoAlpha: 1 }, 2.1)
+    .set(q('intro-emblem'), { autoAlpha: 0 }, 2.1);
+  if (phone) {
+    tl.to(canvas, { ...shotVars(SHOTS.rail), duration: 0.9, ease: 'power3.inOut' }, 1.2);
+    tl.to(canvas, { ...shotVars(SHOTS.toast), duration: 0.9, ease: 'power3.inOut' }, 2.2);
+  }
+  return tl;
+}
 
 export default function SpearPreview({ className = '' }) {
   const root = useRef(null);
   const box = useRef(null);
   const film = useRef(null);
+  const intro = useRef(null);
   const bars = useRef([]);
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [still, setStill] = useState(false);
-  const state = useRef({ active: 0, visible: false, paused: false, still: false });
+  const state = useRef({ active: 0, visible: false, seen: false, introDone: false, paused: false, still: false });
 
   // Scale the drawing to the width it is given.
   useLayoutEffect(() => {
@@ -711,7 +790,12 @@ export default function SpearPreview({ className = '' }) {
   const sync = () => {
     const tl = film.current;
     if (!tl) return;
-    const { visible, paused: held, still: frozen } = state.current;
+    const { visible, seen, introDone, paused: held, still: frozen } = state.current;
+    if (!introDone && intro.current) {
+      tl.pause();
+      intro.current.paused(held || !visible || !seen);
+      return;
+    }
     tl.paused(held || frozen || !visible);
   };
 
@@ -738,10 +822,19 @@ export default function SpearPreview({ className = '' }) {
         film.current = tl;
         state.current.still = reduce;
         setStill(reduce);
+        if (reduce) state.current.introDone = true;
+        intro.current = buildIntro(root.current, phone, state.current.introDone, () => {
+          state.current.introDone = true;
+          intro.current = null;
+          tl.seek(FILM_START, false);
+          sync();
+        });
         if (reduce) tl.seek('s0hold', false);
+        else if (state.current.introDone) tl.seek(FILM_START, false);
         sync();
         return () => {
           film.current = null;
+          intro.current = null;
         };
       });
       return () => mm.revert();
@@ -751,10 +844,15 @@ export default function SpearPreview({ className = '' }) {
 
   // Play only while on screen.
   useLayoutEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      state.current.visible = entry.isIntersecting;
-      sync();
-    });
+    // The opening waits until a third of the preview is in view, so a quick scroll still catches it.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        state.current.visible = entry.isIntersecting;
+        if (entry.intersectionRatio >= 0.35) state.current.seen = true;
+        sync();
+      },
+      { threshold: [0, 0.35] },
+    );
     observer.observe(box.current);
     return () => observer.disconnect();
   }, []);
@@ -767,6 +865,7 @@ export default function SpearPreview({ className = '' }) {
   const jump = (index) => {
     const tl = film.current;
     if (!tl) return;
+    if (intro.current) intro.current.progress(1);
     if (state.current.still || state.current.paused) tl.seek(`s${index}hold`, false);
     else tl.seek(`s${index}`, false);
   };
