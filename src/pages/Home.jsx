@@ -602,44 +602,43 @@ function Journey() {
 
 // ---------------------------------------------------------------- People
 
+// The founders' portraits sit side by side as one strip, colour-matched by scripts/team-photos.mjs,
+// with each person's name, role and links underneath.
+function FounderPortrait({ person }) {
+  return person.photo ? (
+    <img src={person.photo} alt={`Portrait of ${person.name}`} width={640} height={800} loading="lazy" decoding="async" className="block aspect-[4/5] h-auto w-full object-cover" />
+  ) : (
+    <span className={`flex aspect-[4/5] items-center justify-center border border-gray-300 font-mono text-xs uppercase tracking-widest ${DOTS}`}>
+      <Fill value={null} label="Portrait" />
+    </span>
+  );
+}
+
 function Founder({ person, index }) {
   return (
-    <li className="w-[82%] shrink-0 snap-start sm:w-auto" data-reveal>
-      <figure className="m-0 flex h-full flex-col">
-        <span className={`relative flex aspect-[4/5] items-end overflow-hidden border border-gray-300 ${DOTS}`}>
-          {person.photo ? (
-            <img src={person.photo} alt={person.name ? `Portrait of ${person.name}` : ''} width={640} height={800} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover grayscale transition duration-700 hover:grayscale-0" />
-          ) : (
-            <span className="m-auto font-mono text-xs uppercase tracking-widest">
-              <Fill value={null} label="Portrait" />
-            </span>
-          )}
-        </span>
-        <figcaption className="flex flex-1 flex-col gap-2 pt-6">
-          <h3 className="text-2xl font-bold tracking-tight">
-            <Fill value={person.name} label={`Founder ${index + 1}`} />
-          </h3>
-          <p className={LABEL}>
-            <Fill value={person.role} label="Role" />
-          </p>
-          <p className="text-sm leading-relaxed text-gray-600">
-            <Fill value={person.bio} label="A line on their background" />
-          </p>
-          <p className="mt-auto flex flex-wrap gap-x-6 gap-y-2 pt-2">
-            {person.linkedin ? (
-              <ExternalLink className={TEXT_LINK} href={person.linkedin}>
-                LinkedIn
-              </ExternalLink>
-            ) : null}
-            {person.github ? (
-              <ExternalLink className={TEXT_LINK} href={person.github}>
-                GitHub
-              </ExternalLink>
-            ) : null}
-            {person.linkedin || person.github ? null : <Fill value={null} label="LinkedIn or GitHub" />}
-          </p>
-        </figcaption>
-      </figure>
+    <li className="flex flex-col items-center gap-2 text-center" data-reveal>
+      <h3 className="text-2xl font-bold tracking-tight">
+        <Fill value={person.name} label={`Founder ${index + 1}`} />
+      </h3>
+      <p className={LABEL}>
+        <Fill value={person.role} label="Role" />
+      </p>
+      <p className="max-w-xs text-sm leading-relaxed text-gray-600">
+        <Fill value={person.bio} label="A line on their background" />
+      </p>
+      <p className="mt-auto flex flex-wrap justify-center gap-x-6 gap-y-2 pt-2">
+        {person.linkedin ? (
+          <ExternalLink className={TEXT_LINK} href={person.linkedin}>
+            LinkedIn
+          </ExternalLink>
+        ) : null}
+        {person.github ? (
+          <ExternalLink className={TEXT_LINK} href={person.github}>
+            GitHub
+          </ExternalLink>
+        ) : null}
+        {person.linkedin || person.github ? null : <Fill value={null} label="LinkedIn or GitHub" />}
+      </p>
     </li>
   );
 }
@@ -652,11 +651,18 @@ function People() {
           Everyone who builds our products works for {COMPANY.name}. Right now that is the three of us.
         </Heading>
       </div>
-      <ul className="flex max-w-6xl snap-x snap-mandatory gap-6 overflow-x-auto px-6 py-12 sm:grid sm:grid-cols-3 sm:overflow-visible md:gap-10 md:p-16">
-        {FOUNDERS.map((person, index) => (
-          <Founder key={person.name ?? index} person={person} index={index} />
-        ))}
-      </ul>
+      <div className="mx-auto max-w-5xl px-6 py-12 md:px-16 md:py-20">
+        <div className="grid grid-cols-3 overflow-hidden bg-black" data-reveal>
+          {FOUNDERS.map((person, index) => (
+            <FounderPortrait key={person.name ?? index} person={person} />
+          ))}
+        </div>
+        <ul className="mt-8 grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-6 md:mt-10">
+          {FOUNDERS.map((person, index) => (
+            <Founder key={person.name ?? index} person={person} index={index} />
+          ))}
+        </ul>
+      </div>
       <figure className="m-0 border-t border-gray-300 px-6 py-16 md:px-16 md:py-24" data-reveal>
         <blockquote className="max-w-4xl text-2xl font-semibold leading-snug tracking-tight md:text-4xl">
           <Fill value={FOUNDER_NOTE ? `“${FOUNDER_NOTE}”` : null} label="A few sentences from the founders: why you started, and what you are building towards" />
