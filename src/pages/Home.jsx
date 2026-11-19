@@ -602,48 +602,71 @@ function Journey() {
 
 // ---------------------------------------------------------------- People
 
-// The founders' portraits sit side by side as one strip, colour-matched by scripts/team-photos.mjs,
-// with each person's name, role and links underneath.
-function FounderPortrait({ person }) {
-  return person.photo ? (
-    <img src={person.photo} alt={`Portrait of ${person.name}`} width={640} height={800} loading="lazy" decoding="async" className="block aspect-[4/5] h-auto w-full object-cover" />
-  ) : (
-    <span className={`flex aspect-[4/5] items-center justify-center border border-gray-300 font-mono text-xs uppercase tracking-widest ${DOTS}`}>
-      <Fill value={null} label="Portrait" />
-    </span>
+// The founders' portraits sit side by side as one strip (cropped to match by scripts/team-photos.mjs),
+// with each person's name, role and links underneath. On screens with a pointer they rest in black
+// and white; pointing at a founder lifts their portrait and details slightly and brings in the colour.
+const LIFT = 'transition-[transform,filter,box-shadow,color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]';
+
+function FounderPortrait({ person, active, hold }) {
+  return (
+    <div
+      onPointerEnter={hold}
+      className={`relative ${LIFT} ${active ? 'z-10 motion-safe:scale-[1.04] shadow-[0_24px_48px_-16px_rgba(0,0,0,0.55)]' : 'z-0'}`}
+    >
+      {person.photo ? (
+        <img
+          src={person.photo}
+          alt={`Portrait of ${person.name}`}
+          width={600}
+          height={800}
+          loading="lazy"
+          decoding="async"
+          className={`block aspect-[3/4] h-auto w-full object-cover ${LIFT} ${active ? '' : '[@media(hover:hover)]:grayscale'}`}
+        />
+      ) : (
+        <span className={`flex aspect-[3/4] items-center justify-center border border-gray-300 font-mono text-xs uppercase tracking-widest ${DOTS}`}>
+          <Fill value={null} label="Portrait" />
+        </span>
+      )}
+    </div>
   );
 }
 
-function Founder({ person, index }) {
+function Founder({ person, index, active, hold }) {
   return (
-    <li className="flex flex-col items-center gap-2 text-center" data-reveal>
-      <h3 className="text-2xl font-bold tracking-tight">
-        <Fill value={person.name} label={`Founder ${index + 1}`} />
-      </h3>
-      <p className={LABEL}>
-        <Fill value={person.role} label="Role" />
-      </p>
-      <p className="max-w-xs text-sm leading-relaxed text-gray-600">
-        <Fill value={person.bio} label="A line on their background" />
-      </p>
-      <p className="mt-auto flex flex-wrap justify-center gap-x-6 gap-y-2 pt-2">
-        {person.linkedin ? (
-          <ExternalLink className={TEXT_LINK} href={person.linkedin}>
-            LinkedIn
-          </ExternalLink>
-        ) : null}
-        {person.github ? (
-          <ExternalLink className={TEXT_LINK} href={person.github}>
-            GitHub
-          </ExternalLink>
-        ) : null}
-        {person.linkedin || person.github ? null : <Fill value={null} label="LinkedIn or GitHub" />}
-      </p>
+    <li data-reveal onPointerEnter={hold} onFocus={hold}>
+      <div className={`flex h-full flex-col items-center gap-2 text-center ${LIFT} ${active ? 'motion-safe:scale-[1.03]' : ''}`}>
+        <h3 className="text-2xl font-bold tracking-tight">
+          <Fill value={person.name} label={`Founder ${index + 1}`} />
+        </h3>
+        <p className={LABEL}>
+          <Fill value={person.role} label="Role" />
+        </p>
+        <p className={`max-w-xs text-sm leading-relaxed ${LIFT} ${active ? 'text-gray-900' : 'text-gray-600'}`}>
+          <Fill value={person.bio} label="A line on their background" />
+        </p>
+        <p className="mt-auto flex flex-wrap justify-center gap-x-6 gap-y-2 pt-2">
+          {person.linkedin ? (
+            <ExternalLink className={TEXT_LINK} href={person.linkedin}>
+              LinkedIn
+            </ExternalLink>
+          ) : null}
+          {person.github ? (
+            <ExternalLink className={TEXT_LINK} href={person.github}>
+              GitHub
+            </ExternalLink>
+          ) : null}
+          {person.linkedin || person.github ? null : <Fill value={null} label="LinkedIn or GitHub" />}
+        </p>
+      </div>
     </li>
   );
 }
 
 function People() {
+  // The founder being pointed at, or focused by keyboard; null when the pointer leaves the group.
+  const [active, setActive] = useState(null);
+
   return (
     <section id="people" aria-labelledby="people-title" className={FRAME}>
       <div className={`${PAD} border-b border-gray-300`}>
@@ -651,15 +674,21 @@ function People() {
           Everyone who builds our products works for {COMPANY.name}. Right now that is the three of us.
         </Heading>
       </div>
-      <div className="mx-auto max-w-5xl px-6 py-12 md:px-16 md:py-20">
-        <div className="grid grid-cols-3 overflow-hidden bg-black" data-reveal>
+      <div
+        className="mx-auto max-w-5xl px-6 py-12 md:px-16 md:py-20"
+        onPointerLeave={() => setActive(null)}
+        onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) setActive(null);
+        }}
+      >
+        <div className="grid grid-cols-3 bg-black" data-reveal>
           {FOUNDERS.map((person, index) => (
-            <FounderPortrait key={person.name ?? index} person={person} />
+            <FounderPortrait key={person.name ?? index} person={person} active={active === index} hold={() => setActive(index)} />
           ))}
         </div>
         <ul className="mt-8 grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-6 md:mt-10">
           {FOUNDERS.map((person, index) => (
-            <Founder key={person.name ?? index} person={person} index={index} />
+            <Founder key={person.name ?? index} person={person} index={index} active={active === index} hold={() => setActive(index)} />
           ))}
         </ul>
       </div>
