@@ -7,6 +7,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Fill from '../components/Fill.jsx';
 import { BUTTON_DARK, BUTTON_LIGHT, ExternalLink, LABEL, Phone, Screen, Stage, TEXT_LINK } from '../components/ProductBits.jsx';
+import SpearPreview from '../components/SpearPreview.jsx';
 import { COMPANY, FOUNDERS, FOUNDER_NOTE, LAB, PRODUCTS, TIMELINE } from '../company.js';
 import { LISTED } from '../concepts/registry.js';
 import { usePortal } from '../concepts/portal/portalContext.js';
@@ -246,6 +247,7 @@ function ProductWall() {
 // ---------------------------------------------------------------- Products
 
 function ProductVisual({ product }) {
+  if (product.preview) return <SpearPreview />;
   if (product.slug === 'tea-os') {
     return (
       <span className="flex items-end justify-center gap-3 md:gap-5">

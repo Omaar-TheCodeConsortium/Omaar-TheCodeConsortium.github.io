@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Fill from '../components/Fill.jsx';
 import { BUTTON_DARK, BUTTON_LIGHT, ExternalLink, LABEL, ModuleList, Phone, Screen, Stage, TEXT_LINK } from '../components/ProductBits.jsx';
+import SpearPreview from '../components/SpearPreview.jsx';
 import { COMPANY, PRODUCTS, productBySlug } from '../company.js';
 
 const FRAME = 'max-w-screen-2xl mx-auto w-full border-l border-r border-gray-300 bg-white';
@@ -57,7 +58,9 @@ export default function ProductPage({ slug }) {
             </p>
           </div>
           <div className={`flex items-end justify-center gap-4 overflow-hidden px-6 pt-10 md:px-12 ${phones ? '' : 'items-center pb-10'} ${DOTS}`}>
-            {phones ? (
+            {product.preview ? (
+              <SpearPreview className="max-w-3xl" />
+            ) : phones ? (
               product.shots.map((shot, index) => (
                 <Phone key={shot.src} shot={shot} eager className={`w-1/3 max-w-[230px] ${index === 1 ? 'mb-12' : '-mb-6'}`} />
               ))
