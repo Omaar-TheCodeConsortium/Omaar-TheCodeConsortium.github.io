@@ -33,7 +33,7 @@ export const FOUNDERS = [
     github: 'https://github.com/Omaar-TheCodeConsortium',
     linkedin: 'https://www.linkedin.com/in/omaar-fazey-b7504726a',
     photo: '/team/omaar.webp',
-    bio: 'Started out teaching maths, moved into sales, then into business intelligence, building performance reporting in Power BI and an inventory system in Python and Django. Runs operations and sales here, and leads the work on TCCOS.',
+    bio: 'Came to software from sales. Builds backend systems in Python and C++, including TCCOS and the Spear OS backend, and runs operations and sales here.',
   },
   {
     name: 'Manuka Yashan',
