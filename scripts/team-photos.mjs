@@ -11,6 +11,11 @@ const CROPS = {
   manuka: { left: 0, top: 4, width: 1493, height: 1991 },
 };
 
+// Photos used exactly as supplied, with no crop. Bhagya's is on trial (2026-11-19); delete the
+// entry to go back to the matched crop above.
+const AS_IS = { bhagya: 'bhagya-uncropped.png' };
+
 for (const [name, crop] of Object.entries(CROPS)) {
-  await sharp(`photo-originals/team/${name}.jpg`).extract(crop).resize(OUT.width, OUT.height).webp({ quality: 80 }).toFile(`public/team/${name}.webp`);
+  const image = AS_IS[name] ? sharp(`photo-originals/team/${AS_IS[name]}`) : sharp(`photo-originals/team/${name}.jpg`).extract(crop).resize(OUT.width, OUT.height);
+  await image.webp({ quality: 80 }).toFile(`public/team/${name}.webp`);
 }
