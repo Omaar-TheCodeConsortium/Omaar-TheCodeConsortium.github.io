@@ -608,7 +608,7 @@ function Founder({ person, index }) {
       <figure className="m-0 flex h-full flex-col">
         <span className={`relative flex aspect-[4/5] items-end overflow-hidden border border-gray-300 ${DOTS}`}>
           {person.photo ? (
-            <img src={person.photo} alt={person.name ?? ''} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover grayscale transition duration-700 hover:grayscale-0" />
+            <img src={person.photo} alt={person.name ? `Portrait of ${person.name}` : ''} width={640} height={800} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover grayscale transition duration-700 hover:grayscale-0" />
           ) : (
             <span className="m-auto font-mono text-xs uppercase tracking-widest">
               <Fill value={null} label="Portrait" />
@@ -625,14 +625,18 @@ function Founder({ person, index }) {
           <p className="text-sm leading-relaxed text-gray-600">
             <Fill value={person.bio} label="A line on their background" />
           </p>
-          <p className="mt-auto pt-2">
+          <p className="mt-auto flex flex-wrap gap-x-6 gap-y-2 pt-2">
             {person.linkedin ? (
               <ExternalLink className={TEXT_LINK} href={person.linkedin}>
                 LinkedIn
               </ExternalLink>
-            ) : (
-              <Fill value={null} label="LinkedIn" />
-            )}
+            ) : null}
+            {person.github ? (
+              <ExternalLink className={TEXT_LINK} href={person.github}>
+                GitHub
+              </ExternalLink>
+            ) : null}
+            {person.linkedin || person.github ? null : <Fill value={null} label="LinkedIn or GitHub" />}
           </p>
         </figcaption>
       </figure>

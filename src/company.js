@@ -12,22 +12,37 @@ export const COMPANY = {
   city: null,
   country: 'Sri Lanka',
   email: null, // the address the site should show for general enquiries
-  github: 'https://github.com/Omaar-TheCodeConsortium',
+  github: 'https://github.com/The-Code-Consortium',
   linkedin: null, // the company's LinkedIn page, if it has one
 };
 
 // Each founder needs a public profile link: programmes check the team against outside sources.
-// photo is a path under public/, e.g. '/team/omaar.jpg'.
+// photo is a path under public/, cropped 4:5 from photo-originals/team/.
 export const FOUNDERS = [
+  {
+    name: 'Bhagya Ekanayaka',
+    role: 'Co-founder and Chief Executive Officer',
+    github: 'https://github.com/poornabhagya',
+    linkedin: null,
+    photo: '/team/bhagya.webp',
+    bio: null, // one or two sentences: what they did before and what they own here
+  },
   {
     name: 'Omaar Fazey',
     role: 'Co-founder and Chief Operating Officer',
+    github: 'https://github.com/Omaar-TheCodeConsortium',
     linkedin: 'https://www.linkedin.com/in/omaar-fazey-b7504726a',
-    photo: null,
-    bio: null, // one or two sentences: what they did before and what they own here
+    photo: '/team/omaar.webp',
+    bio: 'Started out teaching maths, moved into sales, then into business intelligence, building performance reporting in Power BI and an inventory system in Python and Django. Runs operations and sales here, and leads the work on TCCOS.',
   },
-  { name: null, role: null, linkedin: null, photo: null, bio: null },
-  { name: null, role: null, linkedin: null, photo: null, bio: null },
+  {
+    name: 'Manuka Yashan',
+    role: 'Co-founder and Chief Financial Officer',
+    github: 'https://github.com/ManukaYashan',
+    linkedin: null,
+    photo: '/team/manuka.webp',
+    bio: null,
+  },
 ];
 
 // Why we are building Spear, in the founders' own words. Three to five sentences.

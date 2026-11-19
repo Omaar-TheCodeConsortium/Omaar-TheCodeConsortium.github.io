@@ -27,7 +27,7 @@ function organisationInFull() {
     email: COMPANY.email,
     sameAs: [COMPANY.github, COMPANY.linkedin].filter(Boolean),
     founder: FOUNDERS.filter((person) => person.name).map((person) =>
-      known({ '@type': 'Person', name: person.name, jobTitle: person.role, sameAs: person.linkedin ? [person.linkedin] : null }),
+      known({ '@type': 'Person', name: person.name, jobTitle: person.role, sameAs: [person.linkedin, person.github].filter(Boolean) }),
     ),
   });
 }
