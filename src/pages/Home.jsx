@@ -681,7 +681,7 @@ function People() {
           if (!event.currentTarget.contains(event.relatedTarget)) setActive(null);
         }}
       >
-        <div className="grid grid-cols-3 bg-black" data-reveal>
+        <div className="grid grid-cols-3 gap-3 sm:gap-6" data-reveal>
           {FOUNDERS.map((person, index) => (
             <FounderPortrait key={person.name ?? index} person={person} active={active === index} hold={() => setActive(index)} />
           ))}
