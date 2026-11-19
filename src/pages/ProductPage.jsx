@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import Fill from '../components/Fill.jsx';
 import { BUTTON_DARK, BUTTON_LIGHT, ExternalLink, LABEL, ModuleList, Phone, Screen, Stage, TEXT_LINK } from '../components/ProductBits.jsx';
 import SpearPreview from '../components/SpearPreview.jsx';
+import ModuleMap from '../components/ModuleMap.jsx';
 import { COMPANY, PRODUCTS, productBySlug } from '../company.js';
 
 const FRAME = 'max-w-screen-2xl mx-auto w-full border-l border-r border-gray-300 bg-white';
@@ -22,7 +23,7 @@ export default function ProductPage({ slug }) {
   }, [slug]);
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-gray-50 font-sans text-black antialiased selection:bg-black selection:text-white">
+    <div className="relative flex min-h-screen flex-col overflow-x-clip bg-gray-50 font-sans text-black antialiased selection:bg-black selection:text-white">
       <Navbar />
       <main className="flex-grow pt-20">
         <section aria-labelledby="product-title" className={`${FRAME} grid grid-cols-1 lg:grid-cols-2`}>
@@ -72,16 +73,20 @@ export default function ProductPage({ slug }) {
 
         <div aria-hidden="true" className="h-16 w-full border-b border-t border-gray-300 bg-gray-50" />
 
-        <section aria-labelledby="does-title" className={`${FRAME} grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]`}>
-          <div className="border-b border-gray-300 p-6 md:border-b-0 md:border-r md:p-16">
-            <h2 id="does-title" className="text-4xl font-bold tracking-tight md:text-5xl">
-              What it does
-            </h2>
-          </div>
-          <div className="p-6 md:p-16">
-            <ModuleList modules={product.modules} />
-          </div>
-        </section>
+        {product.modules.some((module) => module.group) ? (
+          <ModuleMap product={product} frame={FRAME} />
+        ) : (
+          <section aria-labelledby="does-title" className={`${FRAME} grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]`}>
+            <div className="border-b border-gray-300 p-6 md:border-b-0 md:border-r md:p-16">
+              <h2 id="does-title" className="text-4xl font-bold tracking-tight md:text-5xl">
+                What it does
+              </h2>
+            </div>
+            <div className="p-6 md:p-16">
+              <ModuleList modules={product.modules} />
+            </div>
+          </section>
+        )}
 
         <div aria-hidden="true" className="h-16 w-full border-b border-t border-gray-300 bg-gray-50" />
 

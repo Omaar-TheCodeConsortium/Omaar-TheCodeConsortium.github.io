@@ -76,6 +76,13 @@ export const PRODUCTS = [
       { what: 'First customer live', when: null },
       { what: 'Open to new customers', when: null },
     ],
+    // How modules hand work to each other, shown beside the module list.
+    connections: [
+      { from: 'Channel manager', to: 'Hotel PMS', line: 'Booking.com, Expedia and Airbnb bookings land on one room calendar.' },
+      { from: 'Offline POS', to: 'Hotel PMS', line: 'A dinner charged to a room is on the guest’s bill before they leave the table.' },
+      { from: 'Hotel website', to: 'Reservations and floor plan', line: 'Guests book their own table on the floor plan the restaurant drew.' },
+      { from: 'Hotel PMS', to: 'Housekeeping and supplies', line: 'Checking a guest out sends the room to be cleaned.' },
+    ],
     preview: true, // shown as the animated preview in src/components/SpearPreview.jsx
     shots: [],
   },

@@ -17,31 +17,7 @@ export function Stage({ product }) {
   );
 }
 
-// Modules with a group are listed under a heading for each group.
 export function ModuleList({ modules }) {
-  const groups = [...new Set(modules.map((module) => module.group).filter(Boolean))];
-  if (groups.length > 0) {
-    return (
-      <div className="space-y-12">
-        {groups.map((group) => {
-          const members = modules.filter((module) => module.group === group);
-          return (
-            <section key={group} aria-label={group}>
-              <h3 className="mb-4 flex items-baseline justify-between text-2xl font-bold tracking-tight">
-                {group}
-                <span className={LABEL}>{members.length} modules</span>
-              </h3>
-              <Modules modules={members} />
-            </section>
-          );
-        })}
-      </div>
-    );
-  }
-  return <Modules modules={modules} />;
-}
-
-function Modules({ modules }) {
   return (
     <ul className="border-t border-gray-300">
       {modules.map((module) => (
