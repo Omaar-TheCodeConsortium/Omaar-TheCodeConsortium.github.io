@@ -11,10 +11,11 @@ import sharp from 'sharp';
 const OUT = { width: 600, height: 800 };
 const SOURCE = { width: 1493, height: 1991 }; // the originals are 1493 × 2000; 3:4 needs 9 px off the bottom
 // Where the print sits on each shirt, in original pixels: its centre, its top edge and its width.
+// A chest print on the wearer's left, so it shows on the right of the picture.
 const PRINT = {
-  bhagya: { x: 731, top: 1690, width: 330 },
-  omaar: { x: 761, top: 1640, width: 330 },
-  manuka: { x: 753, top: 1700, width: 330 },
+  bhagya: { x: 1000, top: 1640, width: 220 },
+  omaar: { x: 1030, top: 1600, width: 220 },
+  manuka: { x: 1020, top: 1650, width: 220 },
 };
 const INK = [188, 188, 186]; // light grey
 const STRENGTH = 0.3; // how much of the ink shows over the black shirt
