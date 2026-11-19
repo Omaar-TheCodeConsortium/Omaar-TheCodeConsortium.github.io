@@ -155,17 +155,17 @@ function Hero() {
 // has to shrink a large screenshot on the fly: shrinking it while it moves is what shimmers.
 const WALL = [
   [
-    { id: 'tccos-command', ratio: 454 / 224, name: 'TCCOS', what: 'Command centre' },
+    { id: 'tccos-command', ratio: 454 / 224, name: 'TCC OS', what: 'Command centre' },
     { id: 'tea-home', ratio: 101 / 218, name: 'Spear Tea OS', what: 'Open tabs', phone: true },
-    { id: 'tccos-rota', ratio: 457 / 224, name: 'TCCOS', what: 'Master rota' },
+    { id: 'tccos-rota', ratio: 457 / 224, name: 'TCC OS', what: 'Master rota' },
     { id: 'salon-warehouse', ratio: 496 / 224, name: 'Bespoke Salon', what: 'Retail stock' },
     { id: 'tea-close', ratio: 101 / 218, name: 'Spear Tea OS', what: 'Closing a tab', phone: true },
   ],
   [
-    { id: 'tccos-transport', ratio: 456 / 224, name: 'TCCOS', what: 'Staff transport' },
+    { id: 'tccos-transport', ratio: 456 / 224, name: 'TCC OS', what: 'Staff transport' },
     { id: 'bakery-notifications', ratio: 472 / 224, name: 'BakeryOS', what: 'Shift alerts' },
     { id: 'tea-tab', ratio: 101 / 218, name: 'Spear Tea OS', what: 'A tab', phone: true },
-    { id: 'tccos-hierarchy', ratio: 454 / 224, name: 'TCCOS', what: 'Organisation chart' },
+    { id: 'tccos-hierarchy', ratio: 454 / 224, name: 'TCC OS', what: 'Organisation chart' },
     { id: 'salon-services', ratio: 493 / 224, name: 'Bespoke Salon', what: 'Treatments' },
   ],
 ];

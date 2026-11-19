@@ -33,7 +33,7 @@ export const FOUNDERS = [
     github: 'https://github.com/Omaar-TheCodeConsortium',
     linkedin: 'https://www.linkedin.com/in/omaar-fazey-b7504726a',
     photo: '/team/omaar.webp',
-    bio: 'Came to software from sales. Builds backend systems in Python and C++, including TCCOS and the Spear OS backend, and runs operations and sales here.',
+    bio: 'Omaar leads operations and sales at The Code Consortium and oversees its backend development. His background is in sales and business intelligence.',
   },
   {
     name: 'Manuka Yashan',
@@ -138,7 +138,7 @@ export const PRODUCTS = [
   },
   {
     slug: 'tccos',
-    name: 'TCCOS',
+    name: 'TCC OS',
     industry: 'Workforce',
     tags: ['BPOs', 'Rosters and payroll', 'Staff transport'],
     path: '/products/tccos/',
@@ -148,7 +148,7 @@ export const PRODUCTS = [
     live: false,
     line: 'The people system for companies that run around the clock.',
     summary:
-      'TCCOS runs the staff side of a BPO or any large shift-based business: who works where and when, leave and attendance, payroll, and the vans that bring people in for the night shift.',
+      'TCC OS runs the staff side of a BPO or any large shift-based business: who works where and when, leave and attendance, payroll, and the vans that bring people in for the night shift.',
     audience: 'BPOs, contact centres and other large companies that work in shifts.',
     pricing: null,
     modules: [
@@ -165,8 +165,8 @@ export const PRODUCTS = [
     ],
     demo: '/project/hris-command-center',
     shots: [
-      { src: '/wall/tccos-command-lg.webp', alt: 'TCCOS command centre: the overview screen of the workforce system', width: 1600, height: 790 },
-      { src: '/wall/tccos-rota-lg.webp', alt: 'TCCOS master rota: a week of shifts for each employee', width: 1600, height: 785 },
+      { src: '/wall/tccos-command-lg.webp', alt: 'TCC OS command centre: the overview screen of the workforce system', width: 1600, height: 790 },
+      { src: '/wall/tccos-rota-lg.webp', alt: 'TCC OS master rota: a week of shifts for each employee', width: 1600, height: 785 },
     ],
   },
 ];
@@ -194,7 +194,7 @@ export const LAB = [
 // Pages that hold a working demo, with the name each should go by.
 export const DEMO_PAGES = [
   ...LAB.map((item) => ({ path: item.path, name: item.name, line: item.line, kind: 'experiment' })),
-  { path: '/project/hris-command-center', name: 'TCCOS', line: 'An early build of TCCOS, the people system for shift-based companies.', kind: 'early build' },
+  { path: '/project/hris-command-center', name: 'TCC OS', line: 'An early build of TCC OS, the people system for shift-based companies.', kind: 'early build' },
 ];
 
 // The order in which the company's story has happened. null dates show as gaps.
@@ -202,6 +202,6 @@ export const TIMELINE = [
   { what: 'The Code Consortium founded', when: COMPANY.founded },
   { what: 'Spear Tea OS released', when: null },
   { what: 'Spear OS goes live with its first customer', when: null },
-  { what: 'TCCOS in development', when: null },
+  { what: 'TCC OS in development', when: null },
   { what: 'Next', when: null, detail: null },
 ];

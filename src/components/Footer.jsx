@@ -4,7 +4,7 @@ import { COMPANY } from '../company.js';
 const LINKS = [
   { label: 'Spear OS', to: '/products/spear-os/' },
   { label: 'Spear Tea OS', to: '/products/tea-os/' },
-  { label: 'TCCOS', to: '/products/tccos/' },
+  { label: 'TCC OS', to: '/products/tccos/' },
   { label: 'Lab', to: '/lab/' },
   { label: 'Concept builds', to: '/concepts/' },
   { label: 'GitHub', href: COMPANY.github },
