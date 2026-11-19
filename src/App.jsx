@@ -14,6 +14,8 @@ import { useSeo } from './seo/useSeo.js';
 
 // The concept section is loaded on demand so the main site's bundle does not grow with it.
 const ConceptLibrary = lazy(() => import('./pages/ConceptLibrary.jsx'));
+// The project brief is only reached by a link we send, so it is not part of the main bundle either.
+const Brief = lazy(() => import('./pages/Brief.jsx'));
 // A concept that sits `within` another is served by that concept's own routes.
 const conceptRoutes = CONCEPTS.filter((concept) => !concept.within).map((concept) => ({ path: concept.path, Page: lazy(concept.load) }));
 
@@ -40,6 +42,7 @@ export default function App() {
           <Route path="/showcase" element={<Navigate to="/lab/" replace />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/brief/" element={<Brief />} />
           <Route path={LIBRARY_PATH} element={<ConceptLibrary />} />
           {conceptRoutes.map(({ path, Page }) => (
             <Route key={path} path={`${path}*`} element={<Page />} />

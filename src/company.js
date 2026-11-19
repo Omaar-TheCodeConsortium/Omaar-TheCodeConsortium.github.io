@@ -11,7 +11,7 @@ export const COMPANY = {
   founded: null, // year, e.g. 2024
   city: null,
   country: 'Sri Lanka',
-  email: null, // the address the site should show for general enquiries
+  email: 'contact@thecodeconsortium.com',
   github: 'https://github.com/The-Code-Consortium',
   linkedin: null, // the company's LinkedIn page, if it has one
 };

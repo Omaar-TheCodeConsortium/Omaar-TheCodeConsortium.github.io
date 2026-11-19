@@ -25,3 +25,8 @@ dist-ssr
 
 # Full-size photo originals; web-ready copies are in src/concepts/*/photos
 photo-originals
+
+# Cloudflare Worker local state
+worker/node_modules
+worker/.wrangler
+worker/.dev.vars

@@ -1,0 +1,23 @@
+# The Code Consortium forms. See worker/README.md for setting it up.
+name = "tcc-forms"
+main = "src/index.js"
+compatibility_date = "2025-06-01"
+
+# Served at its own address on our domain. Cloudflare creates the DNS record on deploy.
+routes = [{ pattern = "forms.thecodeconsortium.com", custom_domain = true }]
+
+[vars]
+TO_EMAIL = "contact@thecodeconsortium.com"
+FROM_EMAIL = "The Code Consortium <contact@thecodeconsortium.com>"
+# The sites allowed to send forms here: the live site, its www address, the preview and local development.
+ALLOWED_ORIGINS = "https://www.thecodeconsortium.com,https://thecodeconsortium.com,https://omaar-thecodeconsortium.github.io,http://localhost:5173,http://localhost:4173"
+
+# At most 4 sends a minute per connection, and per email address.
+[[ratelimits]]
+name = "LIMITER"
+namespace_id = "1001"
+simple = { limit = 4, period = 60 }
+
+# Secrets, set once with `npx wrangler secret put <NAME>` and never written here:
+#   RESEND_API_KEY    from resend.com, Sending access to thecodeconsortium.com
+#   TURNSTILE_SECRET  the secret key of the Turnstile widget

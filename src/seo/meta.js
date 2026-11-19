@@ -95,6 +95,18 @@ function mainMeta(path) {
     };
   }
 
+  // Tools we send customers a link to. Not linked from the site and kept out of search engines.
+  if (path === '/brief/') {
+    return {
+      title: `Project brief | ${SITE_NAME}`,
+      description: `Tell ${SITE_NAME} what you need built: a website, a business system or an app. Your answers come to us as one document.`,
+      canonical: `${SITE_URL}${path}`,
+      robots: 'noindex,nofollow',
+      ogType: 'website',
+      jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Project brief', publisher: ORGANISATION },
+    };
+  }
+
   if (path === '/lab/') {
     return {
       title: `Lab | ${SITE_NAME}`,
@@ -110,7 +122,8 @@ function mainMeta(path) {
 }
 
 // Every page of the company's own site that is written out as HTML at build time.
-export const MAIN_ROUTES = ['/', ...PRODUCTS.map((product) => product.path), '/lab/'];
+// /brief/ is among them so it loads like a company page, but it is noindex and stays out of the sitemap.
+export const MAIN_ROUTES = ['/', ...PRODUCTS.map((product) => product.path), '/lab/', '/brief/'];
 
 const normalise = (pathname) => (pathname.endsWith('/') ? pathname : `${pathname}/`);
 

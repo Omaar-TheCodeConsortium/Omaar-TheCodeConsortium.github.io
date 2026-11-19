@@ -11,6 +11,8 @@ import SpearPreview from '../components/SpearPreview.jsx';
 import { COMPANY, FOUNDERS, FOUNDER_NOTE, LAB, PRODUCTS, TIMELINE } from '../company.js';
 import { LISTED } from '../concepts/registry.js';
 import { usePortal } from '../concepts/portal/portalContext.js';
+import Turnstile from '../forms/Turnstile.jsx';
+import { sendForm } from '../forms/send.js';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -713,21 +715,37 @@ function People() {
 const FIELD =
   'w-full rounded-none border border-gray-300 bg-white p-3 text-base outline-none transition-colors focus:border-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black';
 
+const elapsed = (start) => Date.now() - start;
+
+// Sent through our own forms service (worker/), with Cloudflare's check that the sender is a person.
 function Contact() {
-  const [status, setStatus] = useState('idle');
+  const [status, setStatus] = useState({ state: 'idle' });
+  const [token, setToken] = useState('');
+  const [round, setRound] = useState(0);
+  const opened = useRef(0);
+
+  useEffect(() => {
+    opened.current = elapsed(0);
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setStatus('sending');
-    try {
-      const response = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: new FormData(event.target) });
-      const data = await response.json();
-      if (!data.success) throw new Error(data.message);
-      setStatus('sent');
-      event.target.reset();
-    } catch (error) {
-      console.error(error);
-      setStatus('failed');
+    const form = event.currentTarget;
+    if (!token) {
+      setStatus({ state: 'failed', error: 'The check that you’re a person hasn’t finished. Wait a moment and try again.' });
+      return;
+    }
+    setStatus({ state: 'sending' });
+    const body = new FormData(form);
+    body.append('token', token);
+    body.append('started', String(elapsed(opened.current)));
+    const result = await sendForm('/contact', body);
+    setRound((value) => value + 1);
+    if (result.ok) {
+      setStatus({ state: 'sent' });
+      form.reset();
+    } else {
+      setStatus({ state: 'failed', error: result.error });
     }
   };
 
@@ -774,8 +792,13 @@ function Contact() {
         </div>
         <div className={`${PAD} ${DOTS}`}>
           <form onSubmit={handleSubmit} className="space-y-6">
-            <input type="hidden" name="access_key" value="ee215dd3-7169-4d3b-9de9-596561d47a29" />
-            <input type="hidden" name="subject" value="Message from thecodeconsortium.com" />
+            {/* Hidden from people; bots fill it in and their messages are dropped. */}
+            <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+              <label>
+                Website
+                <input name="website" tabIndex={-1} autoComplete="off" defaultValue="" />
+              </label>
+            </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <label className="block">
                 <span className={`${LABEL} mb-2 block text-black`}>Name</span>
@@ -801,12 +824,13 @@ function Contact() {
               <span className={`${LABEL} mb-2 block text-black`}>Message</span>
               <textarea name="message" className={`${FIELD} resize-none`} rows="5" required />
             </label>
-            <button className={`${BUTTON_DARK} w-full rounded-none disabled:cursor-not-allowed disabled:opacity-50`} type="submit" disabled={status === 'sending'}>
-              {status === 'sending' ? 'Sending…' : 'Send message'}
+            <Turnstile onToken={setToken} round={round} />
+            <button className={`${BUTTON_DARK} w-full rounded-none disabled:cursor-not-allowed disabled:opacity-50`} type="submit" disabled={status.state === 'sending'}>
+              {status.state === 'sending' ? 'Sending…' : 'Send message'}
             </button>
-            <p role="status" className="min-h-[1.5rem] font-mono text-xs uppercase tracking-widest">
-              {status === 'sent' ? 'Sent. We’ll reply by email.' : null}
-              {status === 'failed' ? 'That didn’t send. Please try again.' : null}
+            <p role="status" className="min-h-[1.5rem] text-sm">
+              {status.state === 'sent' ? <span className="font-mono text-xs uppercase tracking-widest">Sent. A copy is on its way to your inbox, and we’ll reply by email.</span> : null}
+              {status.state === 'failed' ? <span className="text-red-700">{status.error}</span> : null}
             </p>
           </form>
         </div>
