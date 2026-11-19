@@ -504,8 +504,9 @@ function DeskScene() {
 // ---------------------------------------------------------------- The app window
 
 const TAGLINE = 'Smart Platform for Every Accommodation & Restaurant';
-// Where the emblem sits on the opening card, relative to its place on the rail (centre 32, 32).
-const EMBLEM_CARD = { x: W / 2 - 32, y: 250 - 32, scale: 3.4 };
+// The wordmark on the opening card. It shrinks into the app's top bar.
+const CARD_MARK = { left: W / 2 - 260, top: 286, width: 520 };
+const HEAD_MARK_W = 125;
 
 const CLOCK = ['Thu 4 Oct · 14:20', 'Thu 4 Oct · 20:42', 'Sun 7 Oct · 11:05'];
 
@@ -513,7 +514,7 @@ function Window() {
   return (
     <div className="absolute inset-0 overflow-hidden bg-[#f7f1e6] font-['Manrope_Variable',system-ui,sans-serif] text-[14px] leading-[1.45] text-[#221b16]">
       <aside className="absolute bottom-0 left-0 top-0 w-16 border-r border-[rgba(199,154,69,0.28)] bg-[#ede5d4]">
-        <img data-sp="rail-emblem" src="/products/spear-emblem.webp" alt="" width={36} height={36} className="absolute left-[14px] top-[14px] h-9 w-9" />
+        <img src="/products/spear-emblem.webp" alt="" width={36} height={36} className="absolute left-[14px] top-[14px] h-9 w-9" />
         <span
           data-sp="rail-mark"
           data-rail=""
@@ -536,7 +537,7 @@ function Window() {
 
       <header data-sp="header" className="absolute left-16 right-0 top-0 flex h-14 items-center justify-between border-b border-[rgba(199,154,69,0.28)] bg-[#ede5d4]/70 px-6">
         <div className="leading-tight">
-          <p className="text-[12px] font-bold uppercase tracking-[0.08em]">Spear OS</p>
+          <img data-sp="head-wordmark" src="/products/spear-wordmark.webp" alt="" width={1280} height={143} className="mb-1 block h-auto" style={{ width: HEAD_MARK_W }} />
           <p className="text-[12px] text-[#5c4f44]">The Grand Azure Hotel &amp; Bistro</p>
         </div>
         <div className="flex h-9 w-[300px] items-center gap-2 rounded-full border border-[rgba(199,154,69,0.28)] bg-[#f7f1e6] px-4 text-[13px] text-[#5c4f44]">
@@ -571,10 +572,9 @@ function Window() {
         </svg>
       </div>
 
-      {/* The opening card. The emblem flies from here to its place on the rail. */}
+      {/* The opening card. The wordmark shrinks from here into the top bar. */}
       <div data-sp="intro-bg" className="pointer-events-none absolute inset-0 z-40 bg-[#f7f1e6]">
-        <img data-sp="wordmark" src="/products/spear-wordmark.webp" alt="" width={1280} height={143} className="absolute h-auto" style={{ left: W / 2 - 220, top: 340, width: 440 }} />
-        <p data-sp="tagline" className="absolute inset-x-0 top-[414px] text-center text-[13px] font-semibold uppercase tracking-[0.16em] text-[#5c4f44]">
+        <p data-sp="tagline" className="absolute inset-x-0 top-[378px] text-center text-[13px] font-semibold uppercase tracking-[0.16em] text-[#5c4f44]">
           {TAGLINE.split(' ').map((word, i) => (
             <span key={i}>
               {i > 0 ? ' ' : ''}
@@ -591,13 +591,13 @@ function Window() {
         </p>
       </div>
       <img
-        data-sp="intro-emblem"
-        src="/products/spear-emblem.webp"
+        data-sp="wordmark"
+        src="/products/spear-wordmark.webp"
         alt=""
-        width={36}
-        height={36}
-        className="pointer-events-none absolute left-[14px] top-[14px] z-[45] h-9 w-9"
-        style={{ transform: `translate(${EMBLEM_CARD.x}px, ${EMBLEM_CARD.y}px) scale(${EMBLEM_CARD.scale})` }}
+        width={1280}
+        height={143}
+        className="pointer-events-none absolute z-[45] h-auto"
+        style={{ ...CARD_MARK, transformOrigin: '0 0' }}
       />
     </div>
   );
@@ -666,7 +666,7 @@ function build(root, phone, onTime) {
 
   // Scene 1: a Booking.com booking lands on the calendar.
   tl.addLabel('s0', 0);
-  const card = [q('intro-emblem'), q('wordmark'), q('tagline')];
+  const card = [q('wordmark'), q('tagline')];
   tl.fromTo(card, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.2, ease: 'power1.in' }, 0);
   tl.fromTo(q('intro-bg'), { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.5, ease: 'power1.out' }, 0.2);
   if (phone) tl.set(canvas, { '--cx': SHOTS.toast.x, '--cy': SHOTS.toast.y, '--cw': SHOTS.toast.w }, 0.2);
@@ -721,8 +721,8 @@ function build(root, phone, onTime) {
   tl.addLabel('s2hold', t2 + 4.8);
   // Back to the card for a moment before the next round.
   const end = t2 + 7.2;
-  tl.set(q('intro-emblem'), { ...EMBLEM_CARD, autoAlpha: 0 }, end);
-  tl.set([q('wordmark'), q('tagline')], { y: 0, autoAlpha: 0 }, end);
+  tl.set(q('wordmark'), { x: 0, y: 0, scale: 1, autoAlpha: 0 }, end);
+  tl.set(q('tagline'), { y: 0, autoAlpha: 0 }, end);
   tl.fromTo(q('intro-bg'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, ease: 'power1.in', immediateRender: false }, end);
   if (phone) tl.set(canvas, { '--cx': SHOTS.logo.x, '--cy': SHOTS.logo.y, '--cw': SHOTS.logo.w }, end + 0.5);
   tl.fromTo(card, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45, stagger: 0.08, ease: 'power1.out', immediateRender: false }, end + 0.55);
@@ -733,31 +733,45 @@ function build(root, phone, onTime) {
 const FULL_VARS = { '--cx': FULL.x, '--cy': FULL.y, '--cw': FULL.w };
 const shotVars = (shot) => ({ '--cx': shot.x, '--cy': shot.y, '--cw': shot.w });
 
+// The top-left corner of an element on the canvas, ignoring transforms.
+function spot(root, el) {
+  const canvas = root.querySelector('[data-canvas]');
+  let x = 0;
+  let y = 0;
+  while (el && el !== canvas) {
+    x += el.offsetLeft;
+    y += el.offsetTop;
+    el = el.offsetParent;
+  }
+  return { x, y };
+}
+
 // Where the first round starts after the opening, past the card fading out.
 const FILM_START = 0.7;
 
-// The opening, played once when the preview first comes into view: the logo card, then the emblem
-// flies to its place on the rail and the app builds up around it.
+// The opening, played once when the preview first comes into view: the logo card, then the wordmark
+// shrinks into the top bar and the app builds up around it.
 function buildIntro(root, phone, done, onComplete) {
   const q = (name) => root.querySelector(`[data-sp="${name}"]`);
   const canvas = root.querySelector('[data-canvas]');
   const rail = root.querySelectorAll('[data-rail]');
   if (done) {
-    gsap.set([q('intro-bg'), q('intro-emblem')], { autoAlpha: 0 });
+    gsap.set([q('intro-bg'), q('wordmark')], { autoAlpha: 0 });
     if (phone) gsap.set(canvas, shotVars(SHOTS.toast));
     return null;
   }
-  gsap.set(q('rail-emblem'), { autoAlpha: 0 });
+  gsap.set(q('head-wordmark'), { autoAlpha: 0 });
+  const slot = () => spot(root, q('head-wordmark'));
   if (phone) gsap.set(canvas, shotVars(SHOTS.logo));
   const tl = gsap.timeline({ paused: true, onComplete });
-  tl.to([q('wordmark'), q('tagline')], { autoAlpha: 0, y: -10, duration: 0.35, stagger: 0.06, ease: 'power1.in' }, 1.0)
-    .to(q('intro-emblem'), { x: 0, y: 0, scale: 1, duration: 0.9, ease: 'power3.inOut' }, 1.2)
+  tl.to(q('tagline'), { autoAlpha: 0, y: 10, duration: 0.35, ease: 'power1.in' }, 1.0)
+    .to(q('wordmark'), { x: () => slot().x - CARD_MARK.left, y: () => slot().y - CARD_MARK.top, scale: HEAD_MARK_W / CARD_MARK.width, duration: 1.0, ease: 'power3.inOut' }, 1.1)
     .to(q('intro-bg'), { autoAlpha: 0, duration: 0.5, ease: 'power1.inOut' }, 1.6)
     .fromTo(q('header'), { autoAlpha: 0, y: -14 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out', immediateRender: false }, 1.6)
     .fromTo(rail, { autoAlpha: 0, x: -12 }, { autoAlpha: 1, x: 0, duration: 0.4, stagger: 0.05, ease: 'power2.out', immediateRender: false }, 1.7)
     .fromTo(q('scene0'), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power2.out', immediateRender: false }, 1.8)
-    .set(q('rail-emblem'), { autoAlpha: 1 }, 2.1)
-    .set(q('intro-emblem'), { autoAlpha: 0 }, 2.1);
+    .set(q('head-wordmark'), { autoAlpha: 1 }, 2.1)
+    .set(q('wordmark'), { autoAlpha: 0 }, 2.1);
   if (phone) {
     tl.to(canvas, { ...shotVars(SHOTS.rail), duration: 0.9, ease: 'power3.inOut' }, 1.2);
     tl.to(canvas, { ...shotVars(SHOTS.toast), duration: 0.9, ease: 'power3.inOut' }, 2.2);
