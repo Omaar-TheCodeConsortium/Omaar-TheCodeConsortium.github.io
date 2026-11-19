@@ -20,12 +20,12 @@ export const COMPANY = {
 // photo is a path under public/, cropped 4:5 from photo-originals/team/.
 export const FOUNDERS = [
   {
-    name: 'Bhagya Ekanayaka',
+    name: 'Bhagya Ekanayake',
     role: 'Co-founder and Chief Executive Officer',
     github: 'https://github.com/poornabhagya',
-    linkedin: null,
+    linkedin: 'https://www.linkedin.com/in/bhagyaekanayake/',
     photo: '/team/bhagya.webp',
-    bio: null, // one or two sentences: what they did before and what they own here
+    bio: 'Bhagya leads company vision and technical direction at The Code Consortium and oversees its product development and cloud architecture. His background is in full-stack software engineering and cloud systems.',
   },
   {
     name: 'Omaar Fazey',
