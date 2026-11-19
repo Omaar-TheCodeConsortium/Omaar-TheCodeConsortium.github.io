@@ -39,9 +39,9 @@ export const FOUNDERS = [
     name: 'Manuka Yashan',
     role: 'Co-founder and Chief Financial Officer',
     github: 'https://github.com/ManukaYashan',
-    linkedin: null,
+    linkedin: 'https://www.linkedin.com/in/manukayashan/',
     photo: '/team/manuka.webp',
-    bio: null,
+    bio: 'Manuka oversees financial planning and business strategy at The Code Consortium while contributing to frontend development and product design. His background is in frontend engineering, UI/UX design, and modern web technologies.',
   },
 ];
 
